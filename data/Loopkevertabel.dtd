@@ -1,0 +1,15 @@
+﻿<!ELEMENT loopkevertabel (table+) >
+<!ELEMENT table (choice+) >
+<!ATTLIST table id ID  #REQUIRED >
+<!ATTLIST table name CDATA  #REQUIRED >
+<!ELEMENT choice (option+) >
+<!ATTLIST choice id ID  #REQUIRED>
+<!ELEMENT option (criterion,(family|subfamily)?,(target|species)) >
+<!ELEMENT criterion (#PCDATA) >
+<!ELEMENT family (#PCDATA) >
+<!ELEMENT subfamily (#PCDATA) >
+<!ELEMENT target EMPTY >
+<!ATTLIST target id IDREF  #REQUIRED >
+<!ELEMENT species (#PCDATA) >
+<!ATTLIST species id ID  #REQUIRED >
+

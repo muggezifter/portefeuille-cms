@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE tree SYSTEM "tree.dtd">
+<tree id="t0">
+  <branch id="t1">
+    <criterion><![CDATA[het is <em>groot</em>]]></criterion>
+    <branch id="t1-1">
+      <criterion><![CDATA[het is een <em>ding</em>]]></criterion>
+      <branch id="t1-1-1">
+        <criterion><![CDATA[het <em>beweegt</em>]]></criterion>
+        <branch id="t1-1-1-1">
+          <criterion><![CDATA[het <em>vaart</em>]]></criterion>
+          <leaf><![CDATA[Cruiseschip]]></leaf>
+        </branch>
+        <branch id="t1-1-1-2">
+          <criterion><![CDATA[het <em>vliegt</em>]]></criterion>
+          <leaf><![CDATA[Jumbo Jet]]></leaf>
+        </branch>
+      </branch>
+      <branch id="t1-1-2">
+        <criterion><![CDATA[het <em>staat stil</em>]]></criterion>
+        <branch id="t1-1-2-1">
+          <criterion><![CDATA[het is <em>bewoond</em>]]></criterion>
+          <leaf><![CDATA[Flatgebouw]]></leaf>
+        </branch>
+        <branch id="t1-1-2-2">
+          <criterion><![CDATA[het is <em>niet bewoond</em>]]></criterion>
+          <branch id="t1-1-2-2-1">
+            <criterion><![CDATA[het <em>geeft licht</em>]]></criterion>
+            <leaf><![CDATA[Lantarenpaal]]></leaf>
+          </branch>
+          <branch id="t1-1-2-2-2">
+            <criterion><![CDATA[het <em>bevat water</em>]]></criterion>
+            <leaf><![CDATA[Watertoren]]></leaf>
+          </branch>
+        </branch>
+      </branch>
+    </branch>
+    <branch id="t1-2">
+      <criterion><![CDATA[het <em>leeft</em>]]></criterion>
+      <branch id="t1-2-1">
+        <criterion><![CDATA[het <em>zwemt</em>]]></criterion>
+        <leaf><![CDATA[Walvis]]></leaf>
+      </branch>
+      <branch id="t1-2-2">
+        <criterion><![CDATA[het <em>loopt</em>]]></criterion>
+        <branch id="t1-2-2-1">
+          <criterion><![CDATA[het heeft een <em>slurf</em>]]></criterion>
+          <leaf><![CDATA[Olifant]]></leaf>
+        </branch>
+        <branch id="t1-2-2-2">
+          <criterion><![CDATA[het heeft een <em>hoorn</em>]]></criterion>
+          <leaf><![CDATA[Rhinoceros]]></leaf>
+        </branch>
+      </branch>
+    </branch>
+  </branch>
+  <branch id="t2">
+    <criterion><![CDATA[het is <em>klein</em>]]></criterion>
+    <branch id="t2-1">
+      <criterion><![CDATA[het is een <em>dier</em>]]></criterion>
+      <leaf><![CDATA[Muis]]></leaf>
+    </branch>
+    <branch id="t2-2">
+      <criterion><![CDATA[het is een <em>voorwerp</em>]]></criterion>
+      <leaf><![CDATA[Garenklosje]]></leaf>
+    </branch>
+  </branch>
+</tree>

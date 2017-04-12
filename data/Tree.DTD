@@ -1,0 +1,6 @@
+﻿<!ELEMENT tree (branch+) >
+<!ATTLIST tree id ID  #REQUIRED>
+<!ELEMENT branch (criterion,(branch+|leaf)) >
+<!ATTLIST branch id ID  #REQUIRED>
+<!ELEMENT criterion (#PCDATA) >
+<!ELEMENT leaf (#PCDATA) >
