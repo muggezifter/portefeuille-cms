@@ -325,7 +325,7 @@ a.githublink {
 @media screen and (min-width: 48em) {
 
     .content {
-      padding: 10px 10px 2em 10px;
+      padding: 0 10px 2em 10px;
     }
 
     .content.item {
