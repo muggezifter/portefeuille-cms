@@ -14,7 +14,8 @@
     <link rel="stylesheet" href="/css/grids-responsive-min.css">
     <!--<![endif]-->
     <link rel="stylesheet" href="/css/custom.css">
-
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/font-awesome.css">
 </head>
 <body>
 <div class="pure-g wrapper">
@@ -35,7 +36,6 @@
         <div class="item-details">sculpture, mdf and mirrors, 1996
             <div class="prev-next">
                 <a href="../trickle/">prev</a>&nbsp;
-                <!--<a href="../improvisation/">prev</a>&nbsp;-->
                 <a href="../improvisation/">next</a>
             </div>
         </div>
@@ -43,19 +43,34 @@
        
         <div class="pure-u-1 pure-u-md-7-12 item-text">
             <p>
-            Two people can sit back to back in this sculpture. Their seats are the two ends of the same piece of wood. Thi means that they will be able to feel eachothers movements. They can see eachother through the tube, which has four mirrors and functions as a double periscope.</p>
+            Two people can sit back to back in this sculpture. Their seats are the two ends of the same piece of wood. This means that they will be able to feel each others movements. They can see each other through the tube, which has four mirrors and functions as a double periscope.</p>
 
         
         </div>
         <div class="pure-u-1 pure-u-md-1-3 txtright">
             <br />
-            <img class="pure-img" src="/images/twoseater/model.jpg"/>
+            <img class="pure-img" id="stl" src="/images/twoseater/model.jpg"/>
             <span class="clicktoenlarge">click to enlarge</span>
         </div>
     </div>
 </div>
-<div id="popup"><div class="stl">
-<script src="https://embed.github.com/view/3d/muggezifter/3dmodels/master/tweezitter/tweezitter.stl?height=700&width=700"></script></div>
+<div id="popup">
+
+    <div class="stl"><i class="fa fa-window-close"></i>
+    <iframe frameborder='0' title='tweezitter.stl'></iframe>
+    </div>
 </div>
+<script type="text/javascript">
+$("#stl").click(function(){
+    if (! $("#popup .stl iframe").attr('src')){
+    $("#popup .stl iframe").attr('src','https://render.githubusercontent.com/view/3d?url=https://raw.githubusercontent.com/muggezifter/3dmodels/master/tweezitter/tweezitter.stl');
+    }
+    $("#popup").height($("body").height()).show();
+});
+
+$("#popup").click(function(){
+    $("#popup").hide();
+});
+</script>
 </body>
 </html>
