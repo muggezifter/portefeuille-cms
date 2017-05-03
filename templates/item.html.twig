@@ -1,0 +1,50 @@
+{% extends "layout.html.twig" %}
+
+{% block content %}
+    <div class="pure-u-1 pure-u-md-4-5 content item{% if contentclass is defined %} {{ contentclass }}{% endif %}">
+
+       <h1 class="item-title">{{ title }}</h1>
+
+        <div class="item-details">{{ details }}
+            <div class="prev-next">
+                <a href="../{{ previous }}/">prev</a>&nbsp;
+                <a href="../{{ next }}/">next</a>
+            </div>
+        </div>
+
+        {% if topbanner_type is defined %}
+            {% if topbanner_type == 'vimeo' %}
+                {{ include('partials/banner.vimeo.twig', {
+                blackbox : topbanner_blackbox,
+                vimeo_id : topbanner_vimeo_id
+                })}}
+            {% endif %}
+        {% endif %}
+
+        {% if custom_html is defined %}
+            {{ custom_html | raw }}
+        {% endif %}           
+
+        {% if textcol is defined %}
+            <div class="pure-u-1 pure-u-md-7-12 item-text">     
+              {{ textcol | raw }}
+            </div>
+        {% endif %}
+       
+        {% if sidebar is defined %}
+            <div class="pure-u-1 pure-u-md-1-3 txtright">
+                {{ sidebar | raw }}
+            </div>
+        {% endif %}
+
+        {% if bottombanner_type is defined %}
+            {% if bottombanner_type == 'vimeo' %}
+                {{ include('partials/banner.vimeo.twig', {
+                blackbox : bottombanner_blackbox,
+                vimeo_id : bottombanner_vimeo_id
+                })}}
+            {% endif %}
+        {% endif %}
+
+    </div>
+{% endblock %}

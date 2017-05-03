@@ -1,6 +1,7 @@
 {% extends "layout.html.twig" %}
 
 {% block content %}
+	<div class="pure-u-1 pure-u-md-4-5 content{% if contentclass is defined %} {{ contentclass }}{% endif %}">
 	{% for item in items %}
         <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-4 pure-u-lg-1-5 pure-u-xl-1-6 thumbnail">
             <a href="{{ item.link }}">
@@ -9,4 +10,5 @@
             </a>
         </div>
 	{% endfor %}
+</div>
 {% endblock %}
