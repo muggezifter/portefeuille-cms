@@ -1,0 +1,12 @@
+; database 
+driver = mysql
+host = localhost
+database = wordpress
+
+; properties	
+charset = utf8
+collation = utf8_unicode_ci
+
+; credentials
+username = [username]
+password = [password]

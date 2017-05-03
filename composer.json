@@ -1,0 +1,9 @@
+{
+    "require": {
+        "illuminate/database": "4.1.*",
+        "twig/twig": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {"Rietveld\\": "src/"}
+    }
+}
