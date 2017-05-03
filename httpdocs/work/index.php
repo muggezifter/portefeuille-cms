@@ -43,7 +43,7 @@ $items = array(array(
         ));
 
 $page->render(
-    'section',
+    'category',
     array (
         'section' =>'work',
         'items' => $items,

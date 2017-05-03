@@ -6,8 +6,7 @@ $page = new Page('../../../templates','../../../cache');
 
 
 $text = <<<TXT
-<p>
-            A radio controlled model car can be driven across a wooden platform. A postcard with the image of Malevich's
+			<p>A radio controlled model car can be driven across a wooden platform. A postcard with the image of Malevich's
             <i>Black Square</i> is attached to the top of the car. A camera is suspended above the platform. The camera
             is connected to a computer. Image recognition software keeps track of the location of the square in relation
             to a triangular grid of 12 points. Each point of the grid is marked with a musical note. The twelve notes of
@@ -18,20 +17,12 @@ $text = <<<TXT
             plucking of each note is relative tot the distance of the car to the corresponding point. This means the
             music can be controlled by driving the car to different locations</p>
 
-            <p>Source code for this project: <br /><a href="https://github.com/muggezifter/improvisation" class="githublink"><i class="fa fa-github"></i> github.com/muggezifter/improvisation</a> </p>
 TXT;
 
-$sidebar = <<<SB
-            <br />
-            <img class="pure-img" src="/images/improvisation/car.jpg"/>
-            <br />
-            <img class="pure-img" src="/images/improvisation/control.jpg"/>
-            <br />
-SB;
-
-
-
-
+$sidebar = array(
+	array('type' => 'image','thumbnail' => '/images/improvisation/car.jpg'),
+	array('type' => 'image','thumbnail' => '/images/improvisation/control.jpg'),
+);
 
 $page->render(
     'item',
@@ -49,5 +40,6 @@ $page->render(
         'bottombanner_vimeo_id' => 209773839,
         'textcol' => $text,
         'sidebar' => $sidebar,
+        'githublinks' => array('github.com/muggezifter/improvisation'),
     )
 );

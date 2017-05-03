@@ -19,7 +19,7 @@ $items = array(array(
         ));
 
 $page->render(
-    'section',
+    'category',
     array(
         'section' =>'publications',
         'items' => $items,
