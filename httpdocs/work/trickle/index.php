@@ -29,10 +29,16 @@ $sidebar = array(
     array('type' => 'image','thumbnail' => '/images/trickle/uitnodiging.jpg'),
 );
 
-$page->render(
+$menu = [
+    ['label'=>'work','slug'=>'work','active'=>true],
+    ['label'=>'about','slug'=>'about','active'=>false],
+    ['label'=>'publications','slug'=>'publications','active'=>false],
+];
+
+echo $page->render(
     'item',
     array (
-        'section' => 'work',
+        'menu' => $menu,
         'title' => 'sijpelen/trickle',
         'details' => 'installation, galerie mirta de mare, 2003',
         'previous' => 'pijnacker',

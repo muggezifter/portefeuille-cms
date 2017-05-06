@@ -19,7 +19,6 @@ class Page {
 	}
 
 	public function render($template, $pagecontent) {
-		$template = $this->twig->load($template.'.html.twig');
-		echo $template->render($pagecontent);
+		return $this->twig->load($template.'.html.twig')->render($pagecontent);
 	}
 }

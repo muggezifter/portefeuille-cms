@@ -57,10 +57,17 @@ email:  <a href="mailto:muggezifter@gmail.com">muggezifter@gmail.com</a></pre>
             and navigating these other domains, and -who knows- vice versa.</p>
 C0NTENT;
 
-$page->render(
+
+$menu = [
+    ['label'=>'work','slug'=>'work','active'=>false],
+    ['label'=>'about','slug'=>'about','active'=>true],
+    ['label'=>'publications','slug'=>'publications','active'=>false],
+];
+
+echo $page->render(
     'raw',
     array(
-        'section' =>'about',
+        'menu' =>$menu,
         'content' => $content,
         'contentclass' => 'item'
     )

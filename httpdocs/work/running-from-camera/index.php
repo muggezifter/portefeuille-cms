@@ -15,11 +15,17 @@ $text = <<<TXT
         <p>
 TXT;
 
+$menu = [
+    ['label'=>'work','slug'=>'work','active'=>true],
+    ['label'=>'about','slug'=>'about','active'=>false],
+    ['label'=>'publications','slug'=>'publications','active'=>false],
+];
 
-$page->render(
+
+echo $page->render(
     'item',
     array (
-        'section' => 'work',
+        'menu' => $menu,
         'title' => 'running from camera',
         'details' => 'photo series, 2006-ongoing',
         'previous' => 'planet-crooswijk',

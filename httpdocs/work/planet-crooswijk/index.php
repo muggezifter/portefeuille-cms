@@ -34,10 +34,16 @@ $headitems=<<<HEAD
     <script src="http://openlayers.org/api/OpenLayers.js"></script>
 HEAD;
 
-$page->render(
+$menu = [
+    ['label'=>'work','slug'=>'work','active'=>true],
+    ['label'=>'about','slug'=>'about','active'=>false],
+    ['label'=>'publications','slug'=>'publications','active'=>false],
+];
+
+echo $page->render(
     'item',
     array (
-        'section' => 'work',
+        'menu' => $menu,
         'title' => 'planet crooswijk',
         'details' => 'web-based work, 2012',
         'previous' => 'epicycles',

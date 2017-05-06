@@ -27,15 +27,11 @@
         <div class="pure-menu">
             <span class="pure-menu-heading">gert rietveld</span>
             <ul class="pure-menu-list">
-                <li class="pure-menu-item {% if section == 'work' %}pure-menu-selected{% endif %}">
-                	<a href="/work/" class="pure-menu-link">work</a>
+                {% for item in menu %}
+                    <li class="pure-menu-item {% if item.active %}pure-menu-selected{% endif %}">
+                    <a href="/{{ item.slug }}/" class="pure-menu-link">{{ item.label }}</a>
                 </li>
-                <li class="pure-menu-item {% if section == 'about' %}pure-menu-selected{% endif %}">
-                	<a href="/about/" class="pure-menu-link">about</a>
-                </li>
-                <li class="pure-menu-item {% if section == 'publications' %}pure-menu-selected{% endif %}">
-                	<a href="/publications/" class="pure-menu-link">publications</a>
-                </li>
+                {% endfor %}
             </ul>
         </div>
     </div>

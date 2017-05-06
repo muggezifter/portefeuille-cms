@@ -30,10 +30,16 @@ $sidebar = array(
     array('type' => 'small_image','thumbnail' => '/images/khl4/app.png'),
 );
 
-$page->render(
+$menu = [
+    ['label'=>'work','slug'=>'work','active'=>true],
+    ['label'=>'about','slug'=>'about','active'=>false],
+    ['label'=>'publications','slug'=>'publications','active'=>false],
+];
+
+echo $page->render(
     'item',
     array (
-        'section' => 'work',
+        'menu' => $menu,
         'title' => 'khl4',
         'details' => '12-channel sound installation, 2016',
         'previous' => 'improvisation',

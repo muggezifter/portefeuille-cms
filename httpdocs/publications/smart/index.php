@@ -4,10 +4,17 @@ namespace Rietveld;
 require_once('../../../vendor/autoload.php');
 $page = new Page('../../../templates','../../../cache');
 
-$page->render(
+
+$menu = [
+    ['label'=>'work','slug'=>'work','active'=>false],
+    ['label'=>'about','slug'=>'about','active'=>false],
+    ['label'=>'publications','slug'=>'publications','active'=>true],
+];
+
+echo $page->render(
     'item',
     array (
-        'section' => 'publications',
+        'menu' => $menu,
         'title' => 'smart papers: a snare for the eye',
         'details' => 'booklet, a5, 16 pages, 2003',
         'previous' => 'cbk',

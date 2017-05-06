@@ -51,10 +51,16 @@ $sidebar = array(
     array('type' => 'image','thumbnail' => '/images/from-here-to-tokyo/tarrow.jpg'),
 );
 
-$page->render(
+$menu = [
+    ['label'=>'work','slug'=>'work','active'=>true],
+    ['label'=>'about','slug'=>'about','active'=>false],
+    ['label'=>'publications','slug'=>'publications','active'=>false],
+];
+
+echo $page->render(
     'item',
     array (
-        'section' => 'work',
+        'menu' => $menu,
         'title' => 'from here to tokyo',
         'details' => 'installation, 2003',
         'previous' => 'running-from-camera',

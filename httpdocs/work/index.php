@@ -1,7 +1,10 @@
 <?php
 namespace Rietveld;
 
-require_once('../../vendor/autoload.php');
+require('../../vendor/autoload.php');
+
+use Symfony\Component\HttpFoundation\Response;
+
 $page = new Page('../../templates','../../cache');
 
 $items = array(array(
@@ -42,10 +45,22 @@ $items = array(array(
             'legend'=>'twoseater'
         ));
 
-$page->render(
-    'category',
-    array (
-        'section' =>'work',
-        'items' => $items,
-    )
-);
+$menu = [
+    ['label'=>'work','slug'=>'work','active'=>true],
+    ['label'=>'about','slug'=>'about','active'=>false],
+    ['label'=>'publications','slug'=>'publications','active'=>false],
+];
+
+$content = $page->render('category',compact('menu','items'));
+
+
+$response = new Response();
+
+$response->setContent($content);
+$response->setStatusCode(Response::HTTP_OK);
+
+// set a HTTP response header
+$response->headers->set('Content-Type', 'text/html');
+
+// print the HTTP headers followed by the content
+$response->send();

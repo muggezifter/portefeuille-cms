@@ -23,12 +23,16 @@ $raw =<<< RAW
 
 RAW;
 
+$menu = [
+    ['label'=>'work','slug'=>'work','active'=>true],
+    ['label'=>'about','slug'=>'about','active'=>false],
+    ['label'=>'publications','slug'=>'publications','active'=>false],
+];
 
-
-$page->render(
+echo $page->render(
     'item',
     array (
-        'section' => 'work',
+        'menu' => $menu,
         'title' => 'pijnacker',
         'details' => 'installation with mirrors, welzijnsvoorziening het tolhek, pijnacker, 2003',
         'previous' => 'from-here-to-tokyo',

@@ -14,11 +14,16 @@ $text = <<<TXT
 
 TXT;
 
+$menu = [
+    ['label'=>'work','slug'=>'work','active'=>true],
+    ['label'=>'about','slug'=>'about','active'=>false],
+    ['label'=>'publications','slug'=>'publications','active'=>false],
+];
 
-$page->render(
+echo $page->render(
     'item',
     array (
-        'section' => 'work',
+        'menu' => $menu,
         'title' => 'epicycles',
         'details' => 'video, 20 minutes, 1986 1987 1989 1990 2015',
         'previous' => 'khl4',

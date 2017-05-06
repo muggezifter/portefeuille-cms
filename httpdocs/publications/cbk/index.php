@@ -4,10 +4,16 @@ namespace Rietveld;
 require_once('../../../vendor/autoload.php');
 $page = new Page('../../../templates','../../../cache');
 
-$page->render(
+$menu = [
+    ['label'=>'work','slug'=>'work','active'=>false],
+    ['label'=>'about','slug'=>'about','active'=>false],
+    ['label'=>'publications','slug'=>'publications','active'=>true],
+];
+
+echo $page->render(
     'item',
     array (
-        'section' => 'publications',
+        'menu' => $menu,
         'title' => 'cbk publication',
         'details' => 'booklet, a4, 20 pages, 1989',
         'previous' => 'timboektoe',

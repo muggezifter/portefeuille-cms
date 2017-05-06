@@ -24,10 +24,16 @@ $sidebar = array(
 	array('type' => 'image','thumbnail' => '/images/improvisation/control.jpg'),
 );
 
-$page->render(
+$menu = [
+    ['label'=>'work','slug'=>'work','active'=>true],
+    ['label'=>'about','slug'=>'about','active'=>false],
+    ['label'=>'publications','slug'=>'publications','active'=>false],
+];
+
+echo $page->render(
     'item',
     array (
-        'section' => 'work',
+        'menu' => $menu,
         'title' => 'improvisation',
         'details' => 'interactive sound installation, 2017',
         'previous' => 'twoseater',

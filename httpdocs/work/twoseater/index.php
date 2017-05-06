@@ -36,10 +36,16 @@ $("#popup").click(function(){
 </script>
 SC;
 
-$page->render(
+$menu = [
+    ['label'=>'work','slug'=>'work','active'=>true],
+    ['label'=>'about','slug'=>'about','active'=>false],
+    ['label'=>'publications','slug'=>'publications','active'=>false],
+];
+
+echo $page->render(
     'item',
     array (
-        'section' => 'work',
+        'menu' => $menu,
         'title' => 'twoseater',
         'details' => 'installation, sculpture, mdf and mirrors, 1996',
         'previous' => 'trickle',
