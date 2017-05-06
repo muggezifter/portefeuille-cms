@@ -22,12 +22,12 @@
             {% if topbanner_type == 'vimeo' %}
                 {{ include('partials/banner.vimeo.twig', {
                 blackbox : topbanner_blackbox,
-                vimeo_id : topbanner_vimeo_id
+                vimeo_id : topbanner_embed_identifier
                 })}}
             {% endif %}
             {% if topbanner_type == 'archive_text' %}
                 {{ include('partials/banner.archive.text.twig', {
-                slug : topbanner_archive_slug
+                slug : topbanner_embed_identifier
                 })}}
             {% endif %}
             {% if topbanner_type == 'image' %}
@@ -80,12 +80,12 @@
             {% if bottombanner_type == 'vimeo' %}
                 {{ include('partials/banner.vimeo.twig', {
                 blackbox : bottombanner_blackbox,
-                vimeo_id : bottombanner_vimeo_id
+                vimeo_id : bottombanner_embed_identifier
                 })}}
             {% endif %}
             {% if bottombanner_type == 'archive_text' %}
                 {{ include('partials/banner.archive.text.twig', {
-                slug : bottombanner_archive_slug
+                slug : bottombanner_embed_identifier
                 })}}
             {% endif %}
             {% if bottombanner_type == 'image' %}

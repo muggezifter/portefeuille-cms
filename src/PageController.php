@@ -4,27 +4,53 @@ namespace Rietveld;
 use Rietveld\Models\Post;
 use Rietveld\Models\Category;
 use Rietveld\Template;
+use Rietveld\BaseController;
 
-class PageController {
 
+class PageController extends BaseController {
 
 	public function renderPage($slug) {
 		$post=Post::with('postType','category')->where('slug',$slug)->first();
 		switch($post->postType->template) {
 			case 'category':
-				echo $this->getCategoryIndex($post->category_id,$post->slug);
+				$content=$this->getCategoryIndex($post->category_id,$post->slug);
+				$this->response($content);
 				break;
 			case 'raw':
-				echo $this->getPage($post->raw,$post->slug);
+				$content= $this->getPage($post->raw,$post->slug);
+				$this->response($content);
 				break;
 			default:
-				echo "template not found";
+				$this->pageNotFound();
 			}
+
 	}
 
 	public function renderItem($category, $slug) {
+		
+		$post = Post::with('categories','bottombannerType','topbannerType')
+			 ->where('slug',$slug)->first() ;
+		if(!$post) return $this->pageNotFound();
 
+		$categories = $post->categories->map(function($i){ return $i->slug; })->toArray();
+		if (!in_array($category,$categories)) return $this->pageNotFound();
+
+		$template = new Template('item');
+
+		$vars=$post->toArray();
+		$vars['menu'] =$this->getMenu($category);
+
+		$vars['previous']='p';
+		$vars['next']='p';
+
+		$vars['topbanner_type']=$post->topbannerType->type;
+		echo $vars;
+		$content = $template->render($vars);
+
+		$this->response($content);
 	}
+
+
 
 	private function getMenu($active) {
 		$posts=Post::where('in_menu',1)
@@ -55,7 +81,7 @@ class PageController {
             	'legend'=>$post->title
 			];
 		}
-		echo $template->render([
+		return $template->render([
 			'menu'=>$this->getMenu($slug),
 			'items'=>$items
 			]);

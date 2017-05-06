@@ -17,7 +17,7 @@ error_reporting(E_ALL);
 
 $pc = new PageController();
 
-$pc->renderPage('publications');//pc->renderPage('about');
+$pc->renderItem('publications','cbk');//pc->renderPage('about');
 
 /*
 $items = array(array(
