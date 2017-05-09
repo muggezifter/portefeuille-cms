@@ -22,14 +22,11 @@ pre,
   }
 }
 
-.bgwhite {
-  background-color: white;
-}
-
 .mb10 {
   padding-bottom: 10px;
   max-width: 400px;
 }
+
 .wrapper {
   max-width: 1600px;
   /* margin: 0 auto;*/
@@ -51,12 +48,13 @@ pre,
   color: red;
 }
 
-.pure-menu-item a.pure-menu-link{
-  background-color: transparent !important;
-}
-
-.pure-menu-item a:hover {
-  font-weight: 600;
+.pure-menu-item  {
+  a.pure-menu-link{
+    background-color: transparent !important;
+  }
+  a:hover {
+    font-weight: 600;
+  }
 }
 
 body {

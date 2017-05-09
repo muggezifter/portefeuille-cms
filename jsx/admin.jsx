@@ -5,30 +5,33 @@ import ListControl from './_list';
 class Admin extends React.Component{
 	constructor(props) {
         super(props);
-        this.state={
-        	menu : {
+        this.state = {
+        	menu: {
         		active :''
         	},
             view: '',
-            list : []
+            list: []
         };
     }
 
     menuClickHandler(event) {
         var list = event.target.getAttribute('data-list');
-        jQuery.getJSON("/admin/" + list)
-            .done(data => {
-                const newState = update(this.state, {
-                    menu: {
-                        active: {$set: list}
-                    },
+        jQuery.getJSON({ 
+            url: "/admin/" + list,
+            statusCode: { 403: function(xhr) {
+                if(window.console) console.log(xhr.responseText);
+                window.location.replace('/login');          }
+            }
+        }).done(data => {
+            const newState = update(this.state, {
+                menu: {
+                    active: {$set: list}
+                },
                     view: {$set:'list'},
                     list: {$set: data}
                 });
-                this.setState(newState);
-
+            this.setState(newState);
         });
-
     }
 
     listClickHandler(event) {
@@ -48,7 +51,7 @@ class Admin extends React.Component{
 					/>
 					</div>
 			    </div>
-                <div className="pure-u-4-5 bgwhite">
+                <div className="pure-u-4-5">
                 { this.state.view == 'list'?
                     <ListControl 
                         listheading={ this.state.menu.active }

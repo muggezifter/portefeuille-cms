@@ -41,10 +41,10 @@ var ListControl = function (_React$Component) {
 																				this.props.list.map(function (list) {
 																								return React.createElement(
 																												"li",
-																												{ className: "pure-menu-item" },
+																												{ className: "pure-menu-item", key: list.id },
 																												React.createElement(
 																																"a",
-																																{ href: "#", onClick: _this2.props.listClickHandler, className: "pure-menu-link", "data-item": "items" },
+																																{ href: "#", onClick: _this2.props.listClickHandler, className: "pure-menu-link", "data-item": list.slug },
 																																list.name
 																												)
 																								);
@@ -174,7 +174,14 @@ var Admin = function (_React$Component) {
             var _this2 = this;
 
             var list = event.target.getAttribute('data-list');
-            jQuery.getJSON("/admin/" + list).done(function (data) {
+            jQuery.getJSON({
+                url: "/admin/" + list,
+                statusCode: { 403: function _(xhr) {
+                        if (window.console) console.log(xhr.responseText);
+                        window.location.replace('/login');
+                    }
+                }
+            }).done(function (data) {
                 var newState = (0, _immutabilityHelper2.default)(_this2.state, {
                     menu: {
                         active: { $set: list }
@@ -216,7 +223,7 @@ var Admin = function (_React$Component) {
                 ),
                 React.createElement(
                     'div',
-                    { className: 'pure-u-4-5 bgwhite' },
+                    { className: 'pure-u-4-5' },
                     this.state.view == 'list' ? React.createElement(_list2.default, {
                         listheading: this.state.menu.active,
                         list: this.state.list,

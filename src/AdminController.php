@@ -65,14 +65,14 @@ class AdminController extends BaseController {
 				$list = $this->getPostList(self::POST_TYPE_ID_ITEM);
 				break;
 			case "categories":
-				$list = Category::select('name','online')->get()->toArray();
+				$list = Category::select('id','name','slug','online')->get()->toArray();
 				break;
 		}
 		$this->jsonResponse($list);
 	}
 
 	private function getPostList($typeid) {
-		return Post::where('post_type_id',$typeid)->select('title AS name','online')->get()->toArray();
+		return Post::where('post_type_id',$typeid)->select('id','title AS name','slug','online')->get()->toArray();
 	}
 
 	public function apiChecks() {

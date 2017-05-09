@@ -6,8 +6,8 @@ export default class ListControl extends React.Component {
 			     <ul className="pure-menu-list">
 				  {
 				  	this.props.list.map (
-				  		(list) => <li className='pure-menu-item'>
-				  		<a href="#" onClick={ this.props.listClickHandler } className="pure-menu-link" data-item='items'>{ list.name }</a>
+				  		(list) => <li className='pure-menu-item' key={ list.id }>
+				  		<a href="#" onClick={ this.props.listClickHandler } className="pure-menu-link" data-item={ list.slug }>{ list.name }</a>
 				  		</li>
       				)
 				  }
