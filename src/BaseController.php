@@ -2,19 +2,28 @@
 namespace Rietveld;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class BaseController {
 
 	protected function response($content, $statusCode=Response::HTTP_OK){
 		$response = new Response();
-		$response->setContent($content);
-		$response->setStatusCode($statusCode);
 		$response->headers->set('Content-Type', 'text/html');
+		$response->setContent($content)->setStatusCode($statusCode)->send();
+	}
+
+	public function pageNotFound() { 
+		$this->response("<b>error 404:</b> sorry, that page does not exist",Response::HTTP_NOT_FOUND);
+	}
+
+	public function redirect($url) {
+		$response = new RedirectResponse($url);
 		$response->send();
 	}
 
-	protected function pageNotFound() { 
-		$this->response("sorry, that page is not here",Response::HTTP_NOT_FOUND);
+	protected function jsonResponse(array $content, $statusCode=Response::HTTP_OK){
+		$response = new JsonResponse($content,$statusCode);
+		$response->send();
 	}
-
 }

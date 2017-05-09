@@ -29,7 +29,7 @@
             <ul class="pure-menu-list">
                 {% for item in menu %}
                     <li class="pure-menu-item {% if item.active %}pure-menu-selected{% endif %}">
-                    <a href="/{{ item.slug }}/" class="pure-menu-link">{{ item.label }}</a>
+                    <a href="/{{ item.slug }}" class="pure-menu-link">{{ item.label }}</a>
                 </li>
                 {% endfor %}
             </ul>

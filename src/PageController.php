@@ -11,6 +11,7 @@ class PageController extends BaseController {
 
 	public function renderPage($slug) {
 		$post=Post::with('postType','category')->where('slug',$slug)->first();
+		if(!$post) return $this->pageNotFound();
 		switch($post->postType->template) {
 			case 'category':
 				$content=$this->getCategoryIndex($post->category_id,$post->slug);
@@ -23,28 +24,42 @@ class PageController extends BaseController {
 			default:
 				$this->pageNotFound();
 			}
-
 	}
 
-	public function renderItem($category, $slug) {
-		
+	public function renderItem($category, $slug) {		
+		// check if slug is valid
 		$post = Post::with('categories','bottombannerType','topbannerType')
 			 ->where('slug',$slug)->first() ;
 		if(!$post) return $this->pageNotFound();
 
-		$categories = $post->categories->map(function($i){ return $i->slug; })->toArray();
-		if (!in_array($category,$categories)) return $this->pageNotFound();
+		// check if category is valid
+		$categories = $post
+			->categories
+			->map(function($i){ return $i->slug; })
+			->toArray();
+		if (!in_array($category,$categories))  return $this->pageNotFound();
+
+		// find previous and next within category
+		$slugs = Category::with('posts')
+			->where('slug',$category)
+			->first()
+			->posts()
+			->where('online',1)
+			->orderBy('category_post.order_id')
+			->get()
+			->map(function($i){ return $i->slug; })
+			->toArray();
+		$i = array_search($slug,$slugs);
+		$l = count($slugs);
+
+		// get template vars
+		$vars = $post->toArray();
+		$vars['menu'] = $this->getMenu($category);
+		$vars['previous'] = '/'.$category.'/'.$slugs[$i==0?$l-1:$i-1];
+		$vars['next'] = '/'.$category.'/'.$slugs[($i+1)%$l];
+		$vars['topbanner_type']=$post->topbannerType->type;
 
 		$template = new Template('item');
-
-		$vars=$post->toArray();
-		$vars['menu'] =$this->getMenu($category);
-
-		$vars['previous']='p';
-		$vars['next']='p';
-
-		$vars['topbanner_type']=$post->topbannerType->type;
-		echo $vars;
 		$content = $template->render($vars);
 
 		$this->response($content);

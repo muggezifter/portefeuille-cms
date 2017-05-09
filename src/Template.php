@@ -9,7 +9,6 @@ class Template {
 	private $template;
 
 	public function __construct($template) {
-
 		$this->template = $template.'.html.twig';
 
 		$loader = new Twig_Loader_Filesystem('../templates');

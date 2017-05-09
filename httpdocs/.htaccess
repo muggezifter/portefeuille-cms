@@ -1,2 +1,4 @@
-RewriteEngine On
-RewriteRule ^$ /work [L]
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule . index.php [L]
+SetEnv session.use_cookies='0';
