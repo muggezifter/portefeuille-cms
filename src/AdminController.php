@@ -8,6 +8,7 @@ use Rietveld\Template;
 use Rietveld\BaseController;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class AdminController extends BaseController {
 
@@ -48,14 +49,13 @@ class AdminController extends BaseController {
 			$this->redirect('/admin');
 		} else {
 			// set flash messages
-			$this->session->getFlashBag()->add('error', 'username or password incorrect');
+			$this->session->getFlashBag()->add('error', 'username and/or password incorrect');
 			$this->session->set('permissions','');
 			$this->redirect('/login');
 		}
 	}
 
 	public function apiList($type) {
-		//$this->apiChecks();
 		$list= [];
 		switch($type) {
 			case "pages":
@@ -78,19 +78,21 @@ class AdminController extends BaseController {
 	public function apiChecks() {
 		if (! $this->request->isXmlHttpRequest()) {
 			$this->pageNotFound();
-			exit();
+			return false;
 		}
 		if ($this->session->get('permissions')!='admin'){
-			$this->jsonResponse(['authentication_required'],Request::HTTP_FORBIDDEN);
-			exit;
+			$this->jsonResponse(['authentication_required'],Response::HTTP_FORBIDDEN);
+			return false;
 		}
+		return true;
 	}
 
 	private function renderAdminPage() {
-		$this->checklogin();
-		$template = new Template('admin');
-		$content = $template->render([]);
-		$this->response($content);
+		if ($this->isLoggedIn()) {
+			$template = new Template('admin');
+			$content = $template->render([]);
+			$this->response($content);
+		}
 	}
 
 	private function renderLoginPage() {
@@ -100,10 +102,11 @@ class AdminController extends BaseController {
 		$this->response($content);
 	}
 
-	private function checkLogin() {
+	private function isLoggedIn() {
 		if ($this->session->get('permissions')!='admin'){
 			$this->redirect('/login');
-			exit;
+			return false;
 		}
+		return true;
 	}
 }

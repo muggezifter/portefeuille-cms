@@ -1,7 +1,12 @@
+[general]
+sitename='[your sitename]'
+siteurl='[your site url]]'
+
+[database]
 ; database 
 driver = mysql
-host = localhost
-database = wordpress
+host = [your host]
+database = [your dbname]
 
 ; properties	
 charset = utf8

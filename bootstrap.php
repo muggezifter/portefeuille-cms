@@ -3,11 +3,11 @@ require "vendor/autoload.php";
 
 use Illuminate\Database\Capsule\Manager;
 
-// get db credentials from ini file
-$dbconfig = parse_ini_file('config/db.ini');
 
+$config = parse_ini_file('config/config.ini',true);
 
+define("SITENAME",$config["general"]["sitename"]);
 // boot eloquent
 $manager = new Manager();
-$manager->addConnection($dbconfig);
+$manager->addConnection($config['database']);
 $manager->bootEloquent();
