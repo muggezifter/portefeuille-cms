@@ -1,8 +1,8 @@
 <?php
 require "../bootstrap.php";
 
-use Rietveld\PageController;
-use Rietveld\AdminController;
+use Portefeuille\PageController;
+use Portefeuille\AdminController;
 
 $router = new AltoRouter();
 $pc = new PageController();

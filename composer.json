@@ -6,6 +6,6 @@
         "altorouter/altorouter": "^1.2"
     },
     "autoload": {
-        "psr-4": {"Rietveld\\": "src/"}
+        "psr-4": {"Portefeuille\\": "src/"}
     }
 }

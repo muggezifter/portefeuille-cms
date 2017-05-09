@@ -1,5 +1,5 @@
 <?php
-namespace Rietveld;
+namespace Portefeuille;
 
 require_once('../../vendor/autoload.php');
 $page = new Page('../../templates','../../cache');

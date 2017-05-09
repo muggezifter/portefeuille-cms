@@ -16,13 +16,13 @@ class Admin extends React.Component{
 
     menuClickHandler(event) {
         var list = event.target.getAttribute('data-list');
-        jQuery.getJSON("/admin/"+list)
+        jQuery.getJSON("/admin/" + list)
             .done(data => {
                 const newState = update(this.state, {
                     menu: {
                         active: {$set: list}
                     },
-                    view: {$set :'list'},
+                    view: {$set:'list'},
                     list: {$set: data}
                 });
                 this.setState(newState);
@@ -33,6 +33,7 @@ class Admin extends React.Component{
 
     listClickHandler(event) {
         var item = event.target.getAttribute('data-item');
+        alert(item);
     }
 
     render() {
@@ -48,11 +49,13 @@ class Admin extends React.Component{
 					</div>
 			    </div>
                 <div className="pure-u-4-5 bgwhite">
-                <ListControl 
-                    listheading={ this.state.menu.active }
-                    list={ this.state.list }
-                    listClickHandler = { this.listClickHandler.bind(this) } 
-                />
+                { this.state.view == 'list'?
+                    <ListControl 
+                        listheading={ this.state.menu.active }
+                        list={ this.state.list }
+                        listClickHandler = { this.listClickHandler.bind(this) } 
+                    /> : ''
+                }
                 </div>
 		    </div>
     	);

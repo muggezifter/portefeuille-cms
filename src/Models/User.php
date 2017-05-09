@@ -1,6 +1,6 @@
 <?php
 
-namespace Rietveld\Models;
+namespace Portefeuille\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

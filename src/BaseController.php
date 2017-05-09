@@ -1,5 +1,5 @@
 <?php
-namespace Rietveld;
+namespace Portefeuille;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;

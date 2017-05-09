@@ -1,10 +1,10 @@
 <?php
-namespace Rietveld;
+namespace Portefeuille;
 
-use Rietveld\Models\Post;
-use Rietveld\Models\Category;
-use Rietveld\Template;
-use Rietveld\BaseController;
+use Portefeuille\Models\Post;
+use Portefeuille\Models\Category;
+use Portefeuille\Template;
+use Portefeuille\BaseController;
 
 
 class PageController extends BaseController {

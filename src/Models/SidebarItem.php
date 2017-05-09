@@ -1,6 +1,6 @@
 <?php
 
-namespace Rietveld\Models;
+namespace Portefeuille\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,10 +10,10 @@ class SidebarItem extends Model
 	public $timestamps = false;
 
 	public function sidebarType() {
-		return $this->belongsTo('Rietveld\Models\SidebarItemType');
+		return $this->belongsTo('Portefeuille\Models\SidebarItemType');
 	}
 
 	public function post() {
-		return $this->belongsTo('Rietveld\Models\Post');
+		return $this->belongsTo('Portefeuille\Models\Post');
 	}
 }

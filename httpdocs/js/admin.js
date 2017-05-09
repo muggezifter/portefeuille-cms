@@ -44,7 +44,7 @@ var ListControl = function (_React$Component) {
 																												{ className: "pure-menu-item" },
 																												React.createElement(
 																																"a",
-																																{ href: "#", onClick: _this2.props.listClickHandler, className: "pure-menu-link", "data-list": "items" },
+																																{ href: "#", onClick: _this2.props.listClickHandler, className: "pure-menu-link", "data-item": "items" },
 																																list.name
 																												)
 																								);
@@ -189,6 +189,7 @@ var Admin = function (_React$Component) {
         key: 'listClickHandler',
         value: function listClickHandler(event) {
             var item = event.target.getAttribute('data-item');
+            alert(item);
         }
     }, {
         key: 'render',
@@ -216,11 +217,11 @@ var Admin = function (_React$Component) {
                 React.createElement(
                     'div',
                     { className: 'pure-u-4-5 bgwhite' },
-                    React.createElement(_list2.default, {
+                    this.state.view == 'list' ? React.createElement(_list2.default, {
                         listheading: this.state.menu.active,
                         list: this.state.list,
                         listClickHandler: this.listClickHandler.bind(this)
-                    })
+                    }) : ''
                 )
             );
         }

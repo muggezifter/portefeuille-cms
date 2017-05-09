@@ -1,11 +1,11 @@
 <?php
-namespace Rietveld;
+namespace Portefeuille;
 
-use Rietveld\Models\Post;
-use Rietveld\Models\Category;
-use Rietveld\Models\User;
-use Rietveld\Template;
-use Rietveld\BaseController;
+use Portefeuille\Models\Post;
+use Portefeuille\Models\Category;
+use Portefeuille\Models\User;
+use Portefeuille\Template;
+use Portefeuille\BaseController;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

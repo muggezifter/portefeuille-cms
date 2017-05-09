@@ -1,5 +1,5 @@
 <?php
-namespace Rietveld;
+namespace Portefeuille;
 
 require('../../vendor/autoload.php');
 

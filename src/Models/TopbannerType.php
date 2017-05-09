@@ -1,5 +1,5 @@
 <?php
-namespace Rietveld\Models;
+namespace Portefeuille\Models;
 
 class TopbannerType extends BannerType
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Rietveld\Models;
+namespace Portefeuille\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class BannerType extends Model
 {
 	public function posts() {
-		return $this->hasMany('Rietveld\Models\Post');
+		return $this->hasMany('Portefeuille\Models\Post');
 	}
 }

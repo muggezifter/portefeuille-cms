@@ -1,5 +1,5 @@
 <?php
-namespace Rietveld;
+namespace Portefeuille;
 
 use Twig_Environment;
 use Twig_Loader_Filesystem;
