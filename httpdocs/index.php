@@ -16,6 +16,7 @@ $router->addRoutes([
 	// admin routes
 	['GET', '/[admin|login:action]', function($action)use($ac){ $ac->renderPage($action);  },'admin'],
 	['POST','/admin/login', function()use($ac){ $ac->login(); },'post_login'],
+	['GET','/admin/logout', function()use($ac){ $ac->apiChecks() &&$ac->logout(); },'logout'],
 	['GET', '/admin/[pages|items|categories:type]', function($type)use($ac){ $ac->apiChecks() && $ac->apiList($type); },'admin_list'],
 	['GET','/admin/[pages|items|categories:type]/[a:slug]', function($type,$slug)use($ac){ $ac->apiChecks() && $ac->apiItem($type,$slug); },'admin_item'],
 

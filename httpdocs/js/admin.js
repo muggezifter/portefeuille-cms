@@ -34,7 +34,9 @@ var EditorControl = function (_React$Component) {
                 }) : React.createElement(ItemEditorControl, {
                     type: this.props.type,
                     item: this.props.item,
-                    inputChangeHandler: this.props.inputChangeHandler
+                    inputChangeHandler: this.props.inputChangeHandler,
+                    itemSaveHandler: this.props.itemSaveHandler,
+                    formResetHandler: this.props.formResetHandler
                 })
             );
         }
@@ -64,7 +66,7 @@ var ItemEditorControl = function (_React$Component2) {
                     "h1",
                     { className: "item-title" },
                     this.props.type,
-                    ": ",
+                    " :: ",
                     this.props.item.title || 'new item'
                 ),
                 React.createElement(
@@ -75,30 +77,30 @@ var ItemEditorControl = function (_React$Component2) {
                         { className: "pure-control-group" },
                         React.createElement(
                             "label",
-                            { "for": "email" },
+                            { "for": "title" },
                             "title"
                         ),
-                        React.createElement("input", { id: "title", type: "title", placeholder: "title", value: this.props.item.title })
+                        React.createElement("input", { name: "title", className: "pure-u-3-4", type: "text", value: this.props.item.title, onChange: this.props.inputChangeHandler })
                     ),
                     React.createElement(
                         "div",
                         { className: "pure-control-group" },
                         React.createElement(
                             "label",
-                            { "for": "email" },
+                            { "for": "slug" },
                             "slug"
                         ),
-                        React.createElement("input", { id: "slug", type: "slug", placeholder: "slug", value: this.props.item.slug })
+                        React.createElement("input", { name: "slug", type: "text", placeholder: "slug", value: this.props.item.slug, onChange: this.props.inputChangeHandler })
                     ),
                     this.props.type == "items" ? React.createElement(
                         "div",
                         { className: "pure-control-group" },
                         React.createElement(
                             "label",
-                            { "for": "email" },
+                            { "for": "details" },
                             "details"
                         ),
-                        React.createElement("input", { id: "details", type: "details", placeholder: "details", value: this.props.item.details })
+                        React.createElement("input", { name: "details", className: "pure-u-3-4", type: "text", placeholder: "details", value: this.props.item.details, onChange: this.props.inputChangeHandler })
                     ) : '',
                     this.props.type == "items" ? React.createElement(
                         "div",
@@ -108,7 +110,7 @@ var ItemEditorControl = function (_React$Component2) {
                             { "for": "thumbnail" },
                             "thumbnail"
                         ),
-                        React.createElement("input", { id: "thumbnail", type: "thumbnail", placeholder: "thumbnail", value: this.props.item.details })
+                        React.createElement("input", { name: "thumbnail", type: "text", placeholder: "thumbnail", value: this.props.item.thumbnail, onChange: this.props.inputChangeHandler })
                     ) : '',
                     this.props.type == "items" ? React.createElement(
                         "div",
@@ -120,8 +122,8 @@ var ItemEditorControl = function (_React$Component2) {
                         ),
                         React.createElement(
                             "textarea",
-                            { className: "pure-u-4-5 htmledit", id: "textcol" },
-                            this.props.item.raw
+                            { className: "pure-u-3-4 htmledit", name: "textcol" },
+                            this.props.item.textcol
                         )
                     ) : '',
                     React.createElement(
@@ -134,7 +136,7 @@ var ItemEditorControl = function (_React$Component2) {
                         ),
                         React.createElement(
                             "textarea",
-                            { className: "pure-u-4-5 htmledit", id: "raw" },
+                            { className: "pure-u-3-4 htmledit", name: "raw" },
                             this.props.item.raw
                         )
                     ),
@@ -145,7 +147,7 @@ var ItemEditorControl = function (_React$Component2) {
                             "label",
                             { "for": "in_menu", "class": "pure-checkbox" },
                             React.createElement("input", { name: "in_menu", type: "checkbox", checked: this.props.item.in_menu == 1, onChange: this.props.inputChangeHandler }),
-                            " show in menu"
+                            "show in menu"
                         )
                     ) : '',
                     React.createElement(
@@ -155,7 +157,7 @@ var ItemEditorControl = function (_React$Component2) {
                             "label",
                             { "for": "online", "class": "pure-checkbox" },
                             React.createElement("input", { name: "online", type: "checkbox", checked: this.props.item.online == 1, onChange: this.props.inputChangeHandler }),
-                            " published"
+                            "published"
                         )
                     ),
                     React.createElement(
@@ -163,8 +165,15 @@ var ItemEditorControl = function (_React$Component2) {
                         { className: "pure-controls" },
                         React.createElement(
                             "button",
-                            { type: "submit", className: "pure-button pure-button-primary" },
-                            "Submit"
+                            { type: "reset", onClick: this.props.formResetHandler, className: "pure-button editorbutton" },
+                            React.createElement("i", { className: "fa fa-undo" }),
+                            " reset"
+                        ),
+                        React.createElement(
+                            "button",
+                            { type: "submit", onClick: this.props.itemSaveHandler, className: "pure-button pure-button-primary" },
+                            React.createElement("i", { className: "fa fa-save" }),
+                            " save"
                         )
                     )
                 )
@@ -206,7 +215,7 @@ var CategoryEditorControl = function (_React$Component3) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
-				value: true
+    value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -218,47 +227,57 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var ListControl = function (_React$Component) {
-				_inherits(ListControl, _React$Component);
+    _inherits(ListControl, _React$Component);
 
-				function ListControl() {
-								_classCallCheck(this, ListControl);
+    function ListControl() {
+        _classCallCheck(this, ListControl);
 
-								return _possibleConstructorReturn(this, (ListControl.__proto__ || Object.getPrototypeOf(ListControl)).apply(this, arguments));
-				}
+        return _possibleConstructorReturn(this, (ListControl.__proto__ || Object.getPrototypeOf(ListControl)).apply(this, arguments));
+    }
 
-				_createClass(ListControl, [{
-								key: "render",
-								value: function render() {
-												var _this2 = this;
+    _createClass(ListControl, [{
+        key: "render",
+        value: function render() {
+            var _this2 = this;
 
-												return React.createElement(
-																"div",
-																{ className: "pure-menu" },
-																React.createElement(
-																				"span",
-																				{ className: "pure-menu-heading" },
-																				this.props.listheading
-																),
-																React.createElement(
-																				"ul",
-																				{ className: "pure-menu-list list" },
-																				this.props.list.map(function (list) {
-																								return React.createElement(
-																												"li",
-																												{ className: "pure-menu-item", key: list.id },
-																												React.createElement(
-																																"a",
-																																{ href: "#", onClick: _this2.props.listClickHandler, className: "pure-menu-link", "data-item": list.slug },
-																																list.name
-																												)
-																								);
-																				})
-																)
-												);
-								}
-				}]);
+            return React.createElement(
+                "div",
+                { className: "pure-menu" },
+                React.createElement(
+                    "span",
+                    { className: "pure-menu-heading" },
+                    this.props.listheading
+                ),
+                React.createElement(
+                    "ul",
+                    { className: "pure-menu-list list" },
+                    this.props.list.map(function (list) {
+                        return React.createElement(
+                            "li",
+                            { className: "pure-menu-item", key: list.id },
+                            React.createElement(
+                                "a",
+                                { href: "#", onClick: _this2.props.listClickHandler, className: "pure-menu-link", "data-item": list.slug },
+                                list.name
+                            )
+                        );
+                    }),
+                    React.createElement(
+                        "li",
+                        { className: "pure-menu-item", key: "0" },
+                        React.createElement(
+                            "a",
+                            { href: "#", onClick: this.props.listClickHandler, className: "pure-menu-link addnew", "data-item": "" },
+                            "+ new ",
+                            this.props.singular(this.props.listheading)
+                        )
+                    )
+                )
+            );
+        }
+    }]);
 
-				return ListControl;
+    return ListControl;
 }(React.Component);
 
 exports.default = ListControl;
@@ -267,7 +286,7 @@ exports.default = ListControl;
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-				value: true
+    value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -279,52 +298,70 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var MenuControl = function (_React$Component) {
-				_inherits(MenuControl, _React$Component);
+    _inherits(MenuControl, _React$Component);
 
-				function MenuControl() {
-								_classCallCheck(this, MenuControl);
+    function MenuControl() {
+        _classCallCheck(this, MenuControl);
 
-								return _possibleConstructorReturn(this, (MenuControl.__proto__ || Object.getPrototypeOf(MenuControl)).apply(this, arguments));
-				}
+        return _possibleConstructorReturn(this, (MenuControl.__proto__ || Object.getPrototypeOf(MenuControl)).apply(this, arguments));
+    }
 
-				_createClass(MenuControl, [{
-								key: 'render',
-								value: function render() {
-												return React.createElement(
-																'ul',
-																{ className: 'pure-menu-list inverted' },
-																React.createElement(
-																				'li',
-																				{ className: this.props.type == 'pages' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
-																				React.createElement(
-																								'a',
-																								{ href: '#', onClick: this.props.menuClickHandler, className: 'pure-menu-link', 'data-list': 'pages' },
-																								'pages'
-																				)
-																),
-																React.createElement(
-																				'li',
-																				{ className: this.props.type == 'items' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
-																				React.createElement(
-																								'a',
-																								{ href: '#', onClick: this.props.menuClickHandler, className: 'pure-menu-link', 'data-list': 'items' },
-																								'items'
-																				)
-																),
-																React.createElement(
-																				'li',
-																				{ className: this.props.type == 'categories' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
-																				React.createElement(
-																								'a',
-																								{ href: '#', onClick: this.props.menuClickHandler, className: 'pure-menu-link', 'data-list': 'categories' },
-																								'categories'
-																				)
-																)
-												);
-								}
-				}]);
+    _createClass(MenuControl, [{
+        key: 'render',
+        value: function render() {
+            return React.createElement(
+                'ul',
+                { className: 'pure-menu-list inverted' },
+                React.createElement(
+                    'li',
+                    { className: this.props.type == 'pages' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
+                    React.createElement(
+                        'a',
+                        { href: '#', onClick: this.props.menuClickHandler, className: 'pure-menu-link', 'data-action': 'pages' },
+                        'pages'
+                    )
+                ),
+                React.createElement(
+                    'li',
+                    { className: this.props.type == 'items' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
+                    React.createElement(
+                        'a',
+                        { href: '#', onClick: this.props.menuClickHandler, className: 'pure-menu-link', 'data-action': 'items' },
+                        'items'
+                    )
+                ),
+                React.createElement(
+                    'li',
+                    { className: this.props.type == 'categories' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
+                    React.createElement(
+                        'a',
+                        { href: '#', onClick: this.props.menuClickHandler, className: 'pure-menu-link', 'data-action': 'categories' },
+                        'categories'
+                    )
+                ),
+                React.createElement(
+                    'li',
+                    { className: this.props.type == 'menu' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
+                    React.createElement(
+                        'a',
+                        { href: '#', onClick: this.props.menuClickHandler, className: 'pure-menu-link', 'data-action': 'menu' },
+                        'menu'
+                    )
+                ),
+                React.createElement(
+                    'li',
+                    { className: this.props.type == 'logout' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
+                    React.createElement(
+                        'a',
+                        { href: '#', onClick: this.props.menuClickHandler, className: 'pure-menu-link', 'data-action': 'logout' },
+                        'logout'
+                    )
+                )
+            );
+        }
+    }]);
 
-				return MenuControl;
+    return MenuControl;
 }(React.Component);
 
 exports.default = MenuControl;
@@ -380,9 +417,24 @@ var Admin = function (_React$Component) {
     _createClass(Admin, [{
         key: 'menuClickHandler',
         value: function menuClickHandler(event) {
+            event.preventDefault();
+            var slug = event.target.getAttribute('data-action');
+            switch (slug) {
+                case 'menu':
+                    this.menuActionMenu();
+                    break;
+                case 'logout':
+                    this.menuActionLogout();
+                    break;
+                default:
+                    this.menuActionDefault(slug);
+            }
+        }
+    }, {
+        key: 'menuActionDefault',
+        value: function menuActionDefault(slug) {
             var _this2 = this;
 
-            var slug = event.target.getAttribute('data-list');
             jQuery.getJSON({
                 url: '/admin/' + slug,
                 statusCode: {
@@ -401,12 +453,64 @@ var Admin = function (_React$Component) {
             });
         }
     }, {
-        key: 'listClickHandler',
-        value: function listClickHandler(event) {
+        key: 'menuActionLogout',
+        value: function menuActionLogout() {
             var _this3 = this;
 
+            jQuery.getJSON({
+                url: '/admin/logout',
+                statusCode: {
+                    403: function _(xhr) {
+                        window.console && console.log(xhr.responseText);
+                        window.location.replace('/login');
+                    }
+                }
+            }).done(function (data) {
+                var newState = (0, _immutabilityHelper2.default)(_this3.state, {
+                    type: { $set: "logout" }
+                });
+                _this3.setState(newState);
+            });
+        }
+    }, {
+        key: 'menuActionMenu',
+        value: function menuActionMenu() {
+            var newState = (0, _immutabilityHelper2.default)(this.state, {
+                type: { $set: "menu" }
+            });
+            this.setState(newState);
+            alert("menu");
+        }
+    }, {
+        key: 'singular',
+        value: function singular(string) {
+            var singular = {
+                pages: 'page',
+                items: 'item',
+                categories: 'category'
+            };
+            return singular[string] || string;
+        }
+    }, {
+        key: 'listClickHandler',
+        value: function listClickHandler(event) {
+            event.preventDefault();
             var slug = event.target.getAttribute('data-item');
             var type = this.state.type;
+            if (slug) {
+                this.getItem(type, slug);
+            } else {
+                var newState = (0, _immutabilityHelper2.default)(this.state, {
+                    view: { $set: 'editor' },
+                    item: { $set: { title: '[new ' + this.singular(type) + ']' } }
+                });
+                this.setState(newState);
+            }
+        }
+    }, {
+        key: 'getItem',
+        value: function getItem(type, slug) {
+            var _this4 = this;
 
             jQuery.getJSON({
                 url: '/admin/' + type + '/' + slug,
@@ -418,11 +522,12 @@ var Admin = function (_React$Component) {
                 }
             }).done(function (data) {
                 if (data.length > 0) {
-                    var newState = (0, _immutabilityHelper2.default)(_this3.state, {
+                    var newState = (0, _immutabilityHelper2.default)(_this4.state, {
                         view: { $set: 'editor' },
+                        slug: { $set: slug },
                         item: { $set: data[0] }
                     });
-                    _this3.setState(newState);
+                    _this4.setState(newState);
                 }
             });
         }
@@ -438,12 +543,17 @@ var Admin = function (_React$Component) {
                 item: _defineProperty({}, name, { $set: value })
             });
             this.setState(newState);
-            //alert(name);
-            //this.setState({item:{
-            //  [name]: value
-            //}
-            //}}
-            //});
+        }
+    }, {
+        key: 'itemSaveHandler',
+        value: function itemSaveHandler(event) {
+            event.preventDefault();
+            alert("save");
+        }
+    }, {
+        key: 'formResetHandler',
+        value: function formResetHandler() {
+            this.getItem(this.state.type, this.state.slug);
         }
     }, {
         key: 'render',
@@ -472,6 +582,7 @@ var Admin = function (_React$Component) {
                     'div',
                     { className: 'pure-u-4-5' },
                     this.state.view == 'list' ? React.createElement(_list2.default, {
+                        singular: this.singular,
                         listheading: this.state.type,
                         list: this.state.list,
                         listClickHandler: this.listClickHandler.bind(this)
@@ -479,7 +590,9 @@ var Admin = function (_React$Component) {
                     this.state.view == 'editor' ? React.createElement(_editor2.default, {
                         type: this.state.type,
                         item: this.state.item,
-                        inputChangeHandler: this.inputChangeHandler.bind(this)
+                        inputChangeHandler: this.inputChangeHandler.bind(this),
+                        itemSaveHandler: this.itemSaveHandler.bind(this),
+                        formResetHandler: this.formResetHandler.bind(this)
                     }) : ''
                 )
             );

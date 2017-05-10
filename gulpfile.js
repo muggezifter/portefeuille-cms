@@ -28,7 +28,7 @@ gulp.task('bundle', function() {
         presets: ["es2015","react"]
     }))
     .bundle()
-    .on("error", function (err) { console.log("Error : " + err.message); })
+    .on("error", function (err) { console.log("Error : " + err.message);   this.emit('end'); })
     .pipe(source('bundle.js'))
     .pipe(rename({basename: 'admin'}))
     .pipe(gulp.dest('httpdocs/js'));
@@ -49,7 +49,7 @@ gulp.task('install_pure_css', function(){
 
 gulp.task('install_font_awesome', function(){
     var copyFonts = gulp.src('node_modules/font-awesome/fonts/*.*')
-    .pipe(gulp.dest('httpdocs/fonts/FontAwesome'));
+    .pipe(gulp.dest('httpdocs/fonts'));
     var copyCss = gulp.src('node_modules/font-awesome/css/font-awesome.min.css')
     .pipe(gulp.dest('httpdocs/css'));
     return merge(copyFonts,copyCss);

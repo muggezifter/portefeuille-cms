@@ -59,6 +59,11 @@ class AdminController extends BaseController
         }
     }
 
+    public function logout() {
+        $this->session->invalidate(); 
+                    $this->jsonResponse(['authentication_required'], Response::HTTP_FORBIDDEN);       
+    }
+
     public function apiList($type)
     {
         $list = [];
@@ -83,6 +88,12 @@ class AdminController extends BaseController
             case "pages":
             case "items":
                 $item = Post::where('slug', $slug)->with('categories')->get()->toArray();
+                if (count($item)) {
+                    $item[0]['categories']=array_map(
+                        function($i){ return $i["id"]; },
+                        $item[0]['categories']
+                        );
+                }
                 break;
             case "categories":
                 $item = Category::where('slug', $slug)->with('posts')->get()->toArray();

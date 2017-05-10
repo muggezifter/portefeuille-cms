@@ -1,0 +1,29 @@
+body.admin {
+    background: #777;  
+    background-image: -webkit-linear-gradient(left, #777 20%, #fff 20%, #fff 100%);
+    background-image: linear-gradient(left, #777 20%, #fff 20%, #fff 100%);
+      .editor {
+        margin-left: 1em;
+        button {
+            font-size: 0.8em;
+            margin-right: 0.5em;
+        }
+        .pure-form-aligned {
+        	.pure-control-group label {
+	        width: 7em;
+	        }
+	        .pure-controls {
+	        margin: 1.5em 0 0 8em;
+	       }
+	    }
+    }
+    .inverted * {
+	  color: white;
+	  .pure-menu-selected .pure-menu-link, 
+	  .pure-menu-selected .pure-menu-link:visited {
+	    color: #99cc00;
+	    font-weight: 600;
+	  }
+}
+a.addnew { color: #99cc00; }
+}

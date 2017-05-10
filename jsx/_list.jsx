@@ -12,6 +12,9 @@ class ListControl extends React.Component {
                           </li>
                       )
                       }
+                <li className='pure-menu-item' key='0'>
+                    <a href="#" onClick={ this.props.listClickHandler } className="pure-menu-link addnew" data-item=''>+ new { this.props.singular(this.props.listheading) }</a>
+                </li>
                 </ul>
             </div>
         );

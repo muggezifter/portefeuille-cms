@@ -13,15 +13,6 @@ pre,
   color: #777;
 }
 
-.inverted * {
-  color: white;
-  .pure-menu-selected .pure-menu-link, 
-  .pure-menu-selected .pure-menu-link:visited {
-    color: yellow;
-    font-weight: 600;
-  }
-}
-
 .mb10 {
   padding-bottom: 10px;
   max-width: 400px;
@@ -59,20 +50,11 @@ pre,
 
 body {
   margin-top: 0.8em;
-  &.admin {
-    background: #777;  
-    background-image: -webkit-linear-gradient(left, #777 20%, #fff 20%, #fff 100%);
-    background-image: linear-gradient(left, #777 20%, #fff 20%, #fff 100%);
-  }
 }
 
 .content {
   box-sizing: border-box;  
   padding: 10px 0;
-}
-
-.editor {
-  margin-left: 1em;
 }
 
 h1, .pure-menu-heading {
@@ -240,26 +222,9 @@ a.githublink {
   }
 }
 
-body.login {
-   background-color: #ddd; 
-    form,label {
-      display: block;
-      text-align: center;
-      padding: 4px;
-    }
-    form {
-      margin-top: 100px;
-    }
-    input {
-      padding: 0 0.2em;
-      border-width: 0;
-      width: 80px;
-    }
-    button {
-      margin: 8px;
-      background-color: #ddd;
-    }
-}
+@import "admin";
+@import "login";
+
 
 /** small and up **/
 @media screen and (min-width: 35.5em) {
