@@ -230,6 +230,12 @@ a.githublink {
   border-radius: 1em;
 }
 
+.list {
+  .pure-menu-link { 
+    padding: 0 1em; 
+  }
+}
+
 body.login {
    background-color: #ddd; 
     form,label {

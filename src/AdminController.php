@@ -71,15 +71,29 @@ class AdminController extends BaseController {
 		$this->jsonResponse($list);
 	}
 
+	public function apiItem($type,$slug) {
+		$item= [];
+		switch($type) {
+			case "pages":
+			case "items":
+				$item = Post::where('slug',$slug)->with('categories')->get()->toArray();
+				break;
+			case "categories":
+				$item = [];
+				break;
+		}
+		$this->jsonResponse($item);
+	}
+
 	private function getPostList($typeid) {
 		return Post::where('post_type_id',$typeid)->select('id','title AS name','slug','online')->get()->toArray();
 	}
 
 	public function apiChecks() {
-		if (! $this->request->isXmlHttpRequest()) {
-			$this->pageNotFound();
-			return false;
-		}
+		//if (! $this->request->isXmlHttpRequest()) {
+		//	$this->pageNotFound();
+		//	return false;
+		//}
 		if ($this->session->get('permissions')!='admin'){
 			$this->jsonResponse(['authentication_required'],Response::HTTP_FORBIDDEN);
 			return false;

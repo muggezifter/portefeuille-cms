@@ -3,7 +3,7 @@ export default class ListControl extends React.Component {
         return (
         		<div className="pure-menu">
 			     <span className="pure-menu-heading">{ this.props.listheading }</span>
-			     <ul className="pure-menu-list">
+			     <ul className="pure-menu-list list">
 				  {
 				  	this.props.list.map (
 				  		(list) => <li className='pure-menu-item' key={ list.id }>

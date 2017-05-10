@@ -2,6 +2,46 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var EditorControl = function (_React$Component) {
+    _inherits(EditorControl, _React$Component);
+
+    function EditorControl() {
+        _classCallCheck(this, EditorControl);
+
+        return _possibleConstructorReturn(this, (EditorControl.__proto__ || Object.getPrototypeOf(EditorControl)).apply(this, arguments));
+    }
+
+    _createClass(EditorControl, [{
+        key: "render",
+        value: function render() {
+            return React.createElement(
+                "div",
+                null,
+                "editor"
+            );
+        }
+    }]);
+
+    return EditorControl;
+}(React.Component);
+
+exports.default = EditorControl;
+
+},{}],2:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
 				value: true
 });
 
@@ -37,7 +77,7 @@ var ListControl = function (_React$Component) {
 																),
 																React.createElement(
 																				"ul",
-																				{ className: "pure-menu-list" },
+																				{ className: "pure-menu-list list" },
 																				this.props.list.map(function (list) {
 																								return React.createElement(
 																												"li",
@@ -59,7 +99,7 @@ var ListControl = function (_React$Component) {
 
 exports.default = ListControl;
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -91,7 +131,7 @@ var MenuControl = function (_React$Component) {
 																{ className: 'pure-menu-list inverted' },
 																React.createElement(
 																				'li',
-																				{ className: this.props.menu.active == 'pages' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
+																				{ className: this.props.type == 'pages' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
 																				React.createElement(
 																								'a',
 																								{ href: '#', onClick: this.props.menuClickHandler, className: 'pure-menu-link', 'data-list': 'pages' },
@@ -100,7 +140,7 @@ var MenuControl = function (_React$Component) {
 																),
 																React.createElement(
 																				'li',
-																				{ className: this.props.menu.active == 'items' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
+																				{ className: this.props.type == 'items' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
 																				React.createElement(
 																								'a',
 																								{ href: '#', onClick: this.props.menuClickHandler, className: 'pure-menu-link', 'data-list': 'items' },
@@ -109,7 +149,7 @@ var MenuControl = function (_React$Component) {
 																),
 																React.createElement(
 																				'li',
-																				{ className: this.props.menu.active == 'categories' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
+																				{ className: this.props.type == 'categories' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
 																				React.createElement(
 																								'a',
 																								{ href: '#', onClick: this.props.menuClickHandler, className: 'pure-menu-link', 'data-list': 'categories' },
@@ -125,7 +165,7 @@ var MenuControl = function (_React$Component) {
 
 exports.default = MenuControl;
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -141,6 +181,10 @@ var _menu2 = _interopRequireDefault(_menu);
 var _list = require('./_list');
 
 var _list2 = _interopRequireDefault(_list);
+
+var _editor = require('./_editor');
+
+var _editor2 = _interopRequireDefault(_editor);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -159,11 +203,10 @@ var Admin = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (Admin.__proto__ || Object.getPrototypeOf(Admin)).call(this, props));
 
         _this.state = {
-            menu: {
-                active: ''
-            },
+            type: '',
             view: '',
-            list: []
+            list: [],
+            item: {}
         };
         return _this;
     }
@@ -173,19 +216,18 @@ var Admin = function (_React$Component) {
         value: function menuClickHandler(event) {
             var _this2 = this;
 
-            var list = event.target.getAttribute('data-list');
+            var slug = event.target.getAttribute('data-list');
             jQuery.getJSON({
-                url: "/admin/" + list,
-                statusCode: { 403: function _(xhr) {
-                        if (window.console) console.log(xhr.responseText);
+                url: '/admin/' + slug,
+                statusCode: {
+                    403: function _(xhr) {
+                        window.console && console.log(xhr.responseText);
                         window.location.replace('/login');
                     }
                 }
             }).done(function (data) {
                 var newState = (0, _immutabilityHelper2.default)(_this2.state, {
-                    menu: {
-                        active: { $set: list }
-                    },
+                    type: { $set: slug },
                     view: { $set: 'list' },
                     list: { $set: data }
                 });
@@ -195,8 +237,28 @@ var Admin = function (_React$Component) {
     }, {
         key: 'listClickHandler',
         value: function listClickHandler(event) {
-            var item = event.target.getAttribute('data-item');
-            alert(item);
+            var _this3 = this;
+
+            var slug = event.target.getAttribute('data-item');
+            var type = this.state.type;
+
+            jQuery.getJSON({
+                url: '/admin/' + type + '/' + slug,
+                statusCode: {
+                    403: function _(xhr) {
+                        window.console && console.log(xhr.responseText);
+                        window.location.replace('/login');
+                    }
+                }
+            }).done(function (data) {
+                if (data.length > 0) {
+                    var newState = (0, _immutabilityHelper2.default)(_this3.state, {
+                        view: { $set: 'editor' },
+                        item: { $set: data[0] }
+                    });
+                    _this3.setState(newState);
+                }
+            });
         }
     }, {
         key: 'render',
@@ -216,7 +278,7 @@ var Admin = function (_React$Component) {
                             'admin'
                         ),
                         React.createElement(_menu2.default, {
-                            menu: this.state.menu,
+                            type: this.state.type,
                             menuClickHandler: this.menuClickHandler.bind(this)
                         })
                     )
@@ -225,9 +287,13 @@ var Admin = function (_React$Component) {
                     'div',
                     { className: 'pure-u-4-5' },
                     this.state.view == 'list' ? React.createElement(_list2.default, {
-                        listheading: this.state.menu.active,
+                        listheading: this.state.type,
                         list: this.state.list,
                         listClickHandler: this.listClickHandler.bind(this)
+                    }) : '',
+                    this.state.view == 'editor' ? React.createElement(_editor2.default, {
+                        type: this.state.type,
+                        list: this.state.item
                     }) : ''
                 )
             );
@@ -239,7 +305,7 @@ var Admin = function (_React$Component) {
 
 ReactDOM.render(React.createElement(Admin, null), document.getElementById('container'));
 
-},{"./_list":1,"./_menu":2,"immutability-helper":4}],4:[function(require,module,exports){
+},{"./_editor":1,"./_list":2,"./_menu":3,"immutability-helper":5}],5:[function(require,module,exports){
 var invariant = require('invariant');
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -439,7 +505,7 @@ function invariantMerge(target, specValue) {
   );
 }
 
-},{"invariant":5}],5:[function(require,module,exports){
+},{"invariant":6}],6:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -494,7 +560,7 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 
 }).call(this,require('_process'))
-},{"_process":6}],6:[function(require,module,exports){
+},{"_process":7}],7:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -680,4 +746,4 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}]},{},[3]);
+},{}]},{},[4]);
