@@ -60,15 +60,19 @@ pre,
 body {
   margin-top: 0.8em;
   &.admin {
-      background: #777;  
-  background-image: -webkit-linear-gradient(left, #777 20%, #fff 20%, #fff 100%);
-  background-image: linear-gradient(left, #777 20%, #fff 20%, #fff 100%);
+    background: #777;  
+    background-image: -webkit-linear-gradient(left, #777 20%, #fff 20%, #fff 100%);
+    background-image: linear-gradient(left, #777 20%, #fff 20%, #fff 100%);
   }
 }
 
 .content {
   box-sizing: border-box;  
   padding: 10px 0;
+}
+
+.editor {
+  margin-left: 1em;
 }
 
 h1, .pure-menu-heading {

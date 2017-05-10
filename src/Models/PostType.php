@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class PostType extends Model
 {
-	public $timestamps = false;
+    public $timestamps = false;
 
-	public function posts() {
-		return $this->hasMany('Portefeuille\Models\Post');
-	}
+    public function posts()
+    {
+        return $this->hasMany('Portefeuille\Models\Post');
+    }
 }

@@ -27,8 +27,15 @@ var EditorControl = function (_React$Component) {
         value: function render() {
             return React.createElement(
                 "div",
-                null,
-                "editor"
+                { className: "editor" },
+                this.props.type == 'categories' ? React.createElement(CategoryEditorControl, {
+                    item: this.props.item,
+                    inputChangeHandler: this.props.inputChangeHandler
+                }) : React.createElement(ItemEditorControl, {
+                    type: this.props.type,
+                    item: this.props.item,
+                    inputChangeHandler: this.props.inputChangeHandler
+                })
             );
         }
     }]);
@@ -37,6 +44,163 @@ var EditorControl = function (_React$Component) {
 }(React.Component);
 
 exports.default = EditorControl;
+
+var ItemEditorControl = function (_React$Component2) {
+    _inherits(ItemEditorControl, _React$Component2);
+
+    function ItemEditorControl() {
+        _classCallCheck(this, ItemEditorControl);
+
+        return _possibleConstructorReturn(this, (ItemEditorControl.__proto__ || Object.getPrototypeOf(ItemEditorControl)).apply(this, arguments));
+    }
+
+    _createClass(ItemEditorControl, [{
+        key: "render",
+        value: function render() {
+            return React.createElement(
+                "form",
+                { className: "pure-form pure-form-aligned" },
+                React.createElement(
+                    "h1",
+                    { className: "item-title" },
+                    this.props.type,
+                    ": ",
+                    this.props.item.title || 'new item'
+                ),
+                React.createElement(
+                    "fieldset",
+                    null,
+                    React.createElement(
+                        "div",
+                        { className: "pure-control-group" },
+                        React.createElement(
+                            "label",
+                            { "for": "email" },
+                            "title"
+                        ),
+                        React.createElement("input", { id: "title", type: "title", placeholder: "title", value: this.props.item.title })
+                    ),
+                    React.createElement(
+                        "div",
+                        { className: "pure-control-group" },
+                        React.createElement(
+                            "label",
+                            { "for": "email" },
+                            "slug"
+                        ),
+                        React.createElement("input", { id: "slug", type: "slug", placeholder: "slug", value: this.props.item.slug })
+                    ),
+                    this.props.type == "items" ? React.createElement(
+                        "div",
+                        { className: "pure-control-group" },
+                        React.createElement(
+                            "label",
+                            { "for": "email" },
+                            "details"
+                        ),
+                        React.createElement("input", { id: "details", type: "details", placeholder: "details", value: this.props.item.details })
+                    ) : '',
+                    this.props.type == "items" ? React.createElement(
+                        "div",
+                        { className: "pure-control-group" },
+                        React.createElement(
+                            "label",
+                            { "for": "thumbnail" },
+                            "thumbnail"
+                        ),
+                        React.createElement("input", { id: "thumbnail", type: "thumbnail", placeholder: "thumbnail", value: this.props.item.details })
+                    ) : '',
+                    this.props.type == "items" ? React.createElement(
+                        "div",
+                        { className: "pure-control-group" },
+                        React.createElement(
+                            "label",
+                            { "for": "textcol" },
+                            "text"
+                        ),
+                        React.createElement(
+                            "textarea",
+                            { className: "pure-u-4-5 htmledit", id: "textcol" },
+                            this.props.item.raw
+                        )
+                    ) : '',
+                    React.createElement(
+                        "div",
+                        { className: "pure-control-group" },
+                        React.createElement(
+                            "label",
+                            { "for": "raw" },
+                            "raw"
+                        ),
+                        React.createElement(
+                            "textarea",
+                            { className: "pure-u-4-5 htmledit", id: "raw" },
+                            this.props.item.raw
+                        )
+                    ),
+                    this.props.type == "pages" ? React.createElement(
+                        "div",
+                        { className: "pure-controls" },
+                        React.createElement(
+                            "label",
+                            { "for": "in_menu", "class": "pure-checkbox" },
+                            React.createElement("input", { name: "in_menu", type: "checkbox", checked: this.props.item.in_menu == 1, onChange: this.props.inputChangeHandler }),
+                            " show in menu"
+                        )
+                    ) : '',
+                    React.createElement(
+                        "div",
+                        { className: "pure-controls" },
+                        React.createElement(
+                            "label",
+                            { "for": "online", "class": "pure-checkbox" },
+                            React.createElement("input", { name: "online", type: "checkbox", checked: this.props.item.online == 1, onChange: this.props.inputChangeHandler }),
+                            " published"
+                        )
+                    ),
+                    React.createElement(
+                        "div",
+                        { className: "pure-controls" },
+                        React.createElement(
+                            "button",
+                            { type: "submit", className: "pure-button pure-button-primary" },
+                            "Submit"
+                        )
+                    )
+                )
+            );
+        }
+    }]);
+
+    return ItemEditorControl;
+}(React.Component);
+
+var CategoryEditorControl = function (_React$Component3) {
+    _inherits(CategoryEditorControl, _React$Component3);
+
+    function CategoryEditorControl() {
+        _classCallCheck(this, CategoryEditorControl);
+
+        return _possibleConstructorReturn(this, (CategoryEditorControl.__proto__ || Object.getPrototypeOf(CategoryEditorControl)).apply(this, arguments));
+    }
+
+    _createClass(CategoryEditorControl, [{
+        key: "render",
+        value: function render() {
+            return React.createElement(
+                "form",
+                { className: "pure-form pure-form-stacked" },
+                React.createElement(
+                    "h1",
+                    { className: "item-title" },
+                    this.props.item.name || 'new category'
+                )
+            );
+        }
+    }]);
+
+    return CategoryEditorControl;
+}(React.Component);
 
 },{}],2:[function(require,module,exports){
 "use strict";
@@ -188,6 +352,8 @@ var _editor2 = _interopRequireDefault(_editor);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -261,11 +427,30 @@ var Admin = function (_React$Component) {
             });
         }
     }, {
+        key: 'inputChangeHandler',
+        value: function inputChangeHandler(event) {
+            var target = event.target;
+            var value = target.type === 'checkbox' ? target.checked : target.value;
+            var name = target.name;
+
+            var newState = (0, _immutabilityHelper2.default)(this.state, {
+
+                item: _defineProperty({}, name, { $set: value })
+            });
+            this.setState(newState);
+            //alert(name);
+            //this.setState({item:{
+            //  [name]: value
+            //}
+            //}}
+            //});
+        }
+    }, {
         key: 'render',
         value: function render() {
             return React.createElement(
                 'div',
-                { 'class': 'pure-g wrapper admin', id: 'container' },
+                { className: 'pure-g wrapper admin' },
                 React.createElement(
                     'div',
                     { className: 'pure-u-1-5 inverted' },
@@ -293,7 +478,8 @@ var Admin = function (_React$Component) {
                     }) : '',
                     this.state.view == 'editor' ? React.createElement(_editor2.default, {
                         type: this.state.type,
-                        list: this.state.item
+                        item: this.state.item,
+                        inputChangeHandler: this.inputChangeHandler.bind(this)
                     }) : ''
                 )
             );

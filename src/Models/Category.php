@@ -7,13 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-	public $timestamps = false;
+    public $timestamps = false;
 
-	public function posts() {
-		return $this->belongsToMany('Portefeuille\Models\Post');
-	}
+    public function posts()
+    {
+        return $this->belongsToMany('Portefeuille\Models\Post');
+    }
 
-	public function indexes() {
-		return $this->hasMany('Portefeuille\Models\Post');
-	}
+    public function indexes()
+    {
+        return $this->hasMany('Portefeuille\Models\Post');
+    }
 }

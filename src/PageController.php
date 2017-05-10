@@ -7,107 +7,116 @@ use Portefeuille\Template;
 use Portefeuille\BaseController;
 
 
-class PageController extends BaseController {
+class PageController extends BaseController
+{
 
-	public function renderPage($slug) {
-		$post=Post::with('postType','category')->where('slug',$slug)->first();
-		if(!$post) return $this->pageNotFound();
-		switch($post->postType->template) {
-			case 'category':
-				$content=$this->getCategoryIndex($post->category_id,$post->slug);
-				$this->response($content);
-				break;
-			case 'raw':
-				$content= $this->getPage($post->raw,$post->slug);
-				$this->response($content);
-				break;
-			default:
-				$this->pageNotFound();
-			}
-	}
+    public function renderPage($slug)
+    {
+        $post = Post::with('postType', 'category')->where('slug', $slug)->first();
+        if (!$post) return $this->pageNotFound();
+        switch ($post->postType->template) {
+            case 'category':
+                $content = $this->getCategoryIndex($post->category_id, $post->slug);
+                $this->response($content);
+                break;
+            case 'raw':
+                $content = $this->getPage($post->raw, $post->slug);
+                $this->response($content);
+                break;
+            default:
+                $this->pageNotFound();
+        }
+    }
 
-	public function renderItem($category, $slug) {		
-		// check if slug is valid
-		$post = Post::with('categories','bottombannerType','topbannerType')
-			 ->where('slug',$slug)->first() ;
-		if(!$post) return $this->pageNotFound();
+    public function renderItem($category, $slug)
+    {
+        // check if slug is valid
+        $post = Post::with('categories', 'bottombannerType', 'topbannerType')
+            ->where('slug', $slug)->first();
+        if (!$post) return $this->pageNotFound();
 
-		// check if category is valid
-		$categories = $post
-			->categories
-			->map(function($i){ return $i->slug; })
-			->toArray();
-		if (!in_array($category,$categories))  return $this->pageNotFound();
+        // check if category is valid
+        $categories = $post
+            ->categories
+            ->map(function ($i) {
+                return $i->slug;
+            })
+            ->toArray();
+        if (!in_array($category, $categories)) return $this->pageNotFound();
 
-		// find previous and next within category
-		$slugs = Category::with('posts')
-			->where('slug',$category)
-			->first()
-			->posts()
-			->where('online',1)
-			->orderBy('category_post.order_id')
-			->get()
-			->map(function($i){ return $i->slug; })
-			->toArray();
-		$i = array_search($slug,$slugs);
-		$l = count($slugs);
+        // find previous and next within category
+        $slugs = Category::with('posts')
+            ->where('slug', $category)
+            ->first()
+            ->posts()
+            ->where('online', 1)
+            ->orderBy('category_post.order_id')
+            ->get()
+            ->map(function ($i) {
+                return $i->slug;
+            })
+            ->toArray();
+        $i = array_search($slug, $slugs);
+        $l = count($slugs);
 
-		// get template vars
-		$vars = $post->toArray();
-		$vars['menu'] = $this->getMenu($category);
-		$vars['previous'] = '/'.$category.'/'.$slugs[$i==0?$l-1:$i-1];
-		$vars['next'] = '/'.$category.'/'.$slugs[($i+1)%$l];
-		$vars['topbanner_type']=$post->topbannerType->type;
+        // get template vars
+        $vars = $post->toArray();
+        $vars['menu'] = $this->getMenu($category);
+        $vars['previous'] = '/' . $category . '/' . $slugs[$i == 0 ? $l - 1 : $i - 1];
+        $vars['next'] = '/' . $category . '/' . $slugs[($i + 1) % $l];
+        $vars['topbanner_type'] = $post->topbannerType->type;
 
-		$template = new Template('item');
-		$content = $template->render($vars);
+        $template = new Template('item');
+        $content = $template->render($vars);
 
-		$this->response($content);
-	}
+        $this->response($content);
+    }
 
 
+    private function getMenu($active)
+    {
+        $posts = Post::where('in_menu', 1)
+            ->where('online', 1)
+            ->orderBy('menu_order_id')->get();
+        $menu = [];
+        foreach ($posts as $post) {
+            $menu[] = [
+                'label' => $post->title,
+                'slug' => $post->slug,
+                'active' => $active === $post->slug
+            ];
+        }
+        return $menu;
+    }
 
-	private function getMenu($active) {
-		$posts=Post::where('in_menu',1)
-			->where('online',1)
-			->orderBy('menu_order_id')->get();
-		$menu = [];
-		foreach($posts as $post) {
-			$menu[] = [
-			'label'=>$post->title,
-			'slug'=> $post->slug,
-			'active' => $active===$post->slug
-			];
-		}
-		return $menu;
-	}
+    private function getCategoryIndex($category_id, $slug)
+    {
+        $template = new Template('category');
+        $items = [];
+        $category = Category::with('posts')
+            ->find($category_id);
+        $posts = $category->posts()->where('online', 1)->orderBy('category_post.order_id')->get();
 
-	private function getCategoryIndex($category_id,$slug) {
-		$template = new Template('category');
-		$items=[];
-		$category = Category::with('posts')
-			->find($category_id);
-		$posts=$category->posts()->where('online',1)->orderBy('category_post.order_id')->get();
+        foreach ($posts as $post) {
+            $items[] = [
+                'link' => '/' . $category->slug . '/' . $post->slug,
+                'image' => $post->thumbnail,
+                'legend' => $post->title
+            ];
+        }
+        return $template->render([
+            'menu' => $this->getMenu($slug),
+            'items' => $items
+        ]);
+    }
 
-		foreach ($posts as $post) {
-			$items[]= [
-			    'link'=>'/'.$category->slug.'/'.$post->slug,
-            	'image'=>$post->thumbnail,
-            	'legend'=>$post->title
-			];
-		}
-		return $template->render([
-			'menu'=>$this->getMenu($slug),
-			'items'=>$items
-			]);
-	}
+    private function getPage($content, $slug)
+    {
+        $template = new Template('raw');
+        return $template->render([
+            'menu' => $this->getMenu($slug),
+            'content' => $content
+        ]);
 
-	private function getPage($content,$slug) {
-		$template = new Template('raw');
-		return $template->render([
-			'menu'=>$this->getMenu($slug),
-			'content'=>$content
-			]);
-
-	}
+    }
 }

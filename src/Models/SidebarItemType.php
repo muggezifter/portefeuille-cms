@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class SidebarItemType extends Model
 {
-	public $timestamps = false;
+    public $timestamps = false;
 
-	public function sidebarItems() {
-		return $this->hasMany('Portefeuille\Models\SidebarItem');
-	}
+    public function sidebarItems()
+    {
+        return $this->hasMany('Portefeuille\Models\SidebarItem');
+    }
 }
