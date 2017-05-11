@@ -177,7 +177,8 @@ class Admin extends React.Component {
     }
 }
 
+var d={key : "value"};
 ReactDOM.render(
-    <Admin />,
+    <Admin initialdata={ d } />,
     document.getElementById('container')
 );

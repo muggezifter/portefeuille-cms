@@ -602,7 +602,8 @@ var Admin = function (_React$Component) {
     return Admin;
 }(React.Component);
 
-ReactDOM.render(React.createElement(Admin, null), document.getElementById('container'));
+var d = { key: "value" };
+ReactDOM.render(React.createElement(Admin, { initialdata: d }), document.getElementById('container'));
 
 },{"./_editor":1,"./_list":2,"./_menu":3,"immutability-helper":5}],5:[function(require,module,exports){
 var invariant = require('invariant');

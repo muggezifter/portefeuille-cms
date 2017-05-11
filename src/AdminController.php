@@ -3,6 +3,8 @@ namespace Portefeuille;
 
 use Portefeuille\Models\Post;
 use Portefeuille\Models\Category;
+use Portefeuille\Models\BannerType;
+use Portefeuille\Models\SidebarItemType;
 use Portefeuille\Models\User;
 use Portefeuille\Template;
 use Portefeuille\BaseController;
@@ -59,9 +61,17 @@ class AdminController extends BaseController
         }
     }
 
-    public function logout() {
+    public function apiLogout() {
         $this->session->invalidate(); 
                     $this->jsonResponse(['authentication_required'], Response::HTTP_FORBIDDEN);       
+    }
+
+    public function apiInit() {
+        $initdata = [];
+        $initdata['categories'] = Category::all()->toArray();
+        $initdata['bannertypes'] = BannerType::all()->toArray();
+        $initdata['sidebaritemtypes'] = SidebarItemType::all()->toArray();
+        $this->jsonResponse($initdata);    
     }
 
     public function apiList($type)
