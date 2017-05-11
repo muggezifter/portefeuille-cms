@@ -79,11 +79,11 @@ class PageController extends BaseController
     }
 
     /**
-     * @param array $content
+     * @param $content
      * @param $slug
      * @return mixed
      */
-    private function getPage(array $content, $slug)
+    private function getPage($content, $slug)
     {
         $template = new Template('raw');
         return $template->render([
