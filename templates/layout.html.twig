@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% block meta %}
-    {% endblock %} 
-    
+    {% endblock %}
+
     <title>gertrietveld.com</title>
 
     <link rel="stylesheet" href="/css/pure-min.css">
@@ -29,14 +29,14 @@
             <ul class="pure-menu-list">
                 {% for item in menu %}
                     <li class="pure-menu-item {% if item.active %}pure-menu-selected{% endif %}">
-                    <a href="/{{ item.slug }}" class="pure-menu-link">{{ item.label }}</a>
-                </li>
+                        <a href="/{{ item.slug }}" class="pure-menu-link">{{ item.label }}</a>
+                    </li>
                 {% endfor %}
             </ul>
         </div>
     </div>
-        {% block content %}
-        {% endblock %}
+    {% block content %}
+    {% endblock %}
 </div>
 {% block scripts %}
 {% endblock %}

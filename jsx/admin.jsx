@@ -14,10 +14,14 @@ class Admin extends React.Component {
         };
     }
 
+    /**
+     *
+     * @param event
+     */
     menuClickHandler(event) {
         event.preventDefault();
         const slug = event.target.getAttribute('data-action');
-        switch(slug) {
+        switch (slug) {
             case 'menu':
                 this.menuActionMenu();
                 break;
@@ -29,6 +33,10 @@ class Admin extends React.Component {
         }
     }
 
+    /**
+     *
+     * @param slug
+     */
     menuActionDefault(slug) {
         jQuery.getJSON({
             url: '/admin/' + slug,
@@ -45,9 +53,12 @@ class Admin extends React.Component {
                 list: {$set: data}
             });
             this.setState(newState);
-        });        
+        });
     }
 
+    /**
+     *
+     */
     menuActionLogout() {
         jQuery.getJSON({
             url: '/admin/logout',
@@ -65,6 +76,9 @@ class Admin extends React.Component {
         });
     }
 
+    /**
+     *
+     */
     menuActionMenu() {
         const newState = update(this.state, {
             type: {$set: "menu"}
@@ -73,31 +87,45 @@ class Admin extends React.Component {
         alert("menu");
     }
 
+    /**
+     *
+     * @param string
+     * @returns {*}
+     */
     singular(string) {
-      const singular = {
-        pages : 'page',
-        items : 'item',
-        categories : 'category'
-      }
-      return(singular[string] || string);
+        const singular = {
+            pages: 'page',
+            items: 'item',
+            categories: 'category'
+        }
+        return (singular[string] || string);
     }
 
+    /**
+     *
+     * @param event
+     */
     listClickHandler(event) {
         event.preventDefault();
         const slug = event.target.getAttribute('data-item');
         const type = this.state.type;
-        if(slug) {
-            this.getItem(type,slug);
-        } else {  
+        if (slug) {
+            this.getItem(type, slug);
+        } else {
             const newState = update(this.state, {
                 view: {$set: 'editor'},
-                item: {$set: { title: '[new ' + this.singular(type) +']' }}
+                item: {$set: {title: '[new ' + this.singular(type) + ']'}}
             });
             this.setState(newState);
         }
     }
 
-    getItem(type,slug) {
+    /**
+     *
+     * @param type
+     * @param slug
+     */
+    getItem(type, slug) {
         jQuery.getJSON({
             url: '/admin/' + type + '/' + slug,
             statusCode: {
@@ -118,6 +146,10 @@ class Admin extends React.Component {
         });
     }
 
+    /**
+     *
+     * @param event
+     */
     inputChangeHandler(event) {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -132,15 +164,26 @@ class Admin extends React.Component {
         this.setState(newState);
     }
 
+    /**
+     *
+     * @param event
+     */
     itemSaveHandler(event) {
         event.preventDefault();
         alert("save");
     }
 
+    /**
+     *
+     */
     formResetHandler() {
-        this.getItem(this.state.type,this.state.slug);
+        this.getItem(this.state.type, this.state.slug);
     }
 
+    /**
+     *
+     * @returns {XML}
+     */
     render() {
         return (
             <div className="pure-g wrapper admin">
@@ -177,7 +220,8 @@ class Admin extends React.Component {
     }
 }
 
-var d={key : "value"};
+
+var d = {key: "value"};
 ReactDOM.render(
     <Admin initialdata={ d } />,
     document.getElementById('container')

@@ -9,7 +9,7 @@
 {% block content %}
     <div class="pure-u-1 pure-u-md-4-5 content item{% if contentclass is defined %} {{ contentclass }}{% endif %}">
 
-       <h1 class="item-title">{{ title }}</h1>
+        <h1 class="item-title">{{ title }}</h1>
 
         <div class="item-details">{{ details }}
             <div class="prev-next">
@@ -21,17 +21,17 @@
         {% if topbanner_type is defined %}
             {% if topbanner_type == 'vimeo' %}
                 {{ include('partials/banner.vimeo.twig', {
-                blackbox : topbanner_blackbox,
-                vimeo_id : topbanner_embed_identifier
-                })}}
+                    blackbox : topbanner_blackbox,
+                    vimeo_id : topbanner_embed_identifier
+                }) }}
             {% endif %}
             {% if topbanner_type == 'archive_text' %}
                 {{ include('partials/banner.archive.text.twig', {
-                slug : topbanner_embed_identifier
-                })}}
+                    slug : topbanner_embed_identifier
+                }) }}
             {% endif %}
             {% if topbanner_type == 'image' %}
-                 <div class="pure-u-1">
+                <div class="pure-u-1">
                     <img class="pure-img" src="{{ topbanner_image_src }}"/>
                 </div>
             {% endif %}
@@ -42,35 +42,37 @@
 
         {% if custom_html is defined %}
             {{ custom_html | raw }}
-        {% endif %}           
+        {% endif %}
 
         {% if textcol is defined or githublinks is defined %}
-            <div class="pure-u-1 pure-u-md-7-12 item-text">  
-                {% if textcol is defined %}   
+            <div class="pure-u-1 pure-u-md-7-12 item-text">
+                {% if textcol is defined %}
                     {{ textcol | raw }}
                 {% endif %}
                 {% if githublinks is defined %}
-                <p>Source code for this project:  
-                {% for item in githublinks %}
-                    <a href="https://{{ item }}" class="githublink"><i class="fa fa-github"></i> {{ item }}</a>
-                {% endfor %}
-                </p>
+                    <p>Source code for this project:
+                        {% for item in githublinks %}
+                            <a href="https://{{ item }}" class="githublink"><i class="fa fa-github"></i> {{ item }}</a>
+                        {% endfor %}
+                    </p>
                 {% endif %}
             </div>
         {% endif %}
-       
+
         {% if sidebar is defined %}
             <div class="pure-u-1 pure-u-md-1-3 sidebar">
                 {% for item in sidebar %}
                     {% if item.type == 'image' %}
-                    <img class="pure-img" {% if item.id is defined %}id={{ item.id }}{% endif %} src="{{ item.thumbnail }}"/>
-                    {% if item.legend is defined %}<span class="legend">{{ item.legend }}</span>{% endif %}
+                        <img class="pure-img"
+                             {% if item.id is defined %}id={{ item.id }}{% endif %} src="{{ item.thumbnail }}"/>
+                        {% if item.legend is defined %}<span class="legend">{{ item.legend }}</span>{% endif %}
                     {% endif %}
                     {% if item.type == 'small_image' %}
-                    <div class="pure-u-2-3 txtright">
-                        <img class="pure-img" {% if item.id is defined %}id={{ item.id }}{% endif %} src="{{ item.thumbnail }}"/>
-                        {% if item.legend is defined %}<span class="legend">{{ item.legend }}</span>{% endif %}
-                    </div>
+                        <div class="pure-u-2-3 txtright">
+                            <img class="pure-img"
+                                 {% if item.id is defined %}id={{ item.id }}{% endif %} src="{{ item.thumbnail }}"/>
+                            {% if item.legend is defined %}<span class="legend">{{ item.legend }}</span>{% endif %}
+                        </div>
                     {% endif %}
                 {% endfor %}
             </div>
@@ -79,17 +81,17 @@
         {% if bottombanner_type is defined %}
             {% if bottombanner_type == 'vimeo' %}
                 {{ include('partials/banner.vimeo.twig', {
-                blackbox : bottombanner_blackbox,
-                vimeo_id : bottombanner_embed_identifier
-                })}}
+                    blackbox : bottombanner_blackbox,
+                    vimeo_id : bottombanner_embed_identifier
+                }) }}
             {% endif %}
             {% if bottombanner_type == 'archive_text' %}
                 {{ include('partials/banner.archive.text.twig', {
-                slug : bottombanner_embed_identifier
-                })}}
+                    slug : bottombanner_embed_identifier
+                }) }}
             {% endif %}
             {% if bottombanner_type == 'image' %}
-                 <div class="pure-u-1">
+                <div class="pure-u-1">
                     <img class="pure-img" src="{{ bottombanner_image_src }}"/>
                 </div>
             {% endif %}

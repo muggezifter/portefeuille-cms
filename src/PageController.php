@@ -1,15 +1,19 @@
 <?php
 namespace Portefeuille;
 
-use Portefeuille\Models\Post;
 use Portefeuille\Models\Category;
-use Portefeuille\Template;
-use Portefeuille\BaseController;
+use Portefeuille\Models\Post;
 
-
+/**
+ * Class PageController
+ * @package Portefeuille
+ */
 class PageController extends BaseController
 {
 
+    /**
+     * @param $slug
+     */
     public function renderPage($slug)
     {
         $post = Post::with('postType', 'category')->where('slug', $slug)->first();
@@ -28,6 +32,71 @@ class PageController extends BaseController
         }
     }
 
+    /**
+     * @param $category_id
+     * @param $slug
+     * @return mixed
+     */
+    private function getCategoryIndex($category_id, $slug)
+    {
+        $template = new Template('category');
+        $items = [];
+        $category = Category::with('posts')
+            ->find($category_id);
+        $posts = $category->posts()->where('online', 1)->orderBy('category_post.order_id')->get();
+
+        foreach ($posts as $post) {
+            $items[] = [
+                'link' => '/' . $category->slug . '/' . $post->slug,
+                'image' => $post->thumbnail,
+                'legend' => $post->title
+            ];
+        }
+        return $template->render([
+            'menu' => $this->getMenu($slug),
+            'items' => $items
+        ]);
+    }
+
+    /**
+     * @param $active
+     * @return array
+     */
+    private function getMenu($active)
+    {
+        $posts = Post::where('in_menu', 1)
+            ->where('online', 1)
+            ->orderBy('menu_order_id')->get();
+        $menu = [];
+        foreach ($posts as $post) {
+            $menu[] = [
+                'label' => $post->title,
+                'slug' => $post->slug,
+                'active' => $active === $post->slug
+            ];
+        }
+        return $menu;
+    }
+
+    /**
+     * @param array $content
+     * @param $slug
+     * @return mixed
+     */
+    private function getPage(array $content, $slug)
+    {
+        $template = new Template('raw');
+        return $template->render([
+            'menu' => $this->getMenu($slug),
+            'content' => $content
+        ]);
+
+    }
+
+    /**
+     * @param $category
+     * @param $slug
+     */
     public function renderItem($category, $slug)
     {
         // check if slug is valid
@@ -70,53 +139,5 @@ class PageController extends BaseController
         $content = $template->render($vars);
 
         $this->response($content);
-    }
-
-
-    private function getMenu($active)
-    {
-        $posts = Post::where('in_menu', 1)
-            ->where('online', 1)
-            ->orderBy('menu_order_id')->get();
-        $menu = [];
-        foreach ($posts as $post) {
-            $menu[] = [
-                'label' => $post->title,
-                'slug' => $post->slug,
-                'active' => $active === $post->slug
-            ];
-        }
-        return $menu;
-    }
-
-    private function getCategoryIndex($category_id, $slug)
-    {
-        $template = new Template('category');
-        $items = [];
-        $category = Category::with('posts')
-            ->find($category_id);
-        $posts = $category->posts()->where('online', 1)->orderBy('category_post.order_id')->get();
-
-        foreach ($posts as $post) {
-            $items[] = [
-                'link' => '/' . $category->slug . '/' . $post->slug,
-                'image' => $post->thumbnail,
-                'legend' => $post->title
-            ];
-        }
-        return $template->render([
-            'menu' => $this->getMenu($slug),
-            'items' => $items
-        ]);
-    }
-
-    private function getPage($content, $slug)
-    {
-        $template = new Template('raw');
-        return $template->render([
-            'menu' => $this->getMenu($slug),
-            'content' => $content
-        ]);
-
     }
 }

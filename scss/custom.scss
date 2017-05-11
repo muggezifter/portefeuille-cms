@@ -1,9 +1,9 @@
 @import 'fonts';
 
-html, 
-button, 
-input, 
-select, 
+html,
+button,
+input,
+select,
 textarea,
 p,
 pre,
@@ -34,13 +34,14 @@ pre,
   text-transform: none;
   padding: 0 0 0.5em 0.65em;
 }
-.pure-menu-selected .pure-menu-link, 
+
+.pure-menu-selected .pure-menu-link,
 .pure-menu-selected .pure-menu-link:visited {
   color: red;
 }
 
-.pure-menu-item  {
-  a.pure-menu-link{
+.pure-menu-item {
+  a.pure-menu-link {
     background-color: transparent !important;
   }
   a:hover {
@@ -53,7 +54,7 @@ body {
 }
 
 .content {
-  box-sizing: border-box;  
+  box-sizing: border-box;
   padding: 10px 0;
 }
 
@@ -68,7 +69,7 @@ h1, h2, h3, h4, h4, .pure-menu-heading {
 }
 
 h1.item-title {
-    margin-top: 0;
+  margin-top: 0;
 }
 
 p.first {
@@ -78,36 +79,38 @@ p.first {
 b {
   font-weight: 600;
 }
+
 .txtright {
-    float: right;
+  float: right;
 }
 
 .sidebar {
-    float: right;
-    padding-top: 1em;
+  float: right;
+  padding-top: 1em;
 }
+
 .sidebar img {
-    margin-bottom: 1em;
+  margin-bottom: 1em;
 }
 
 ul {
-    list-style-type: none;
-    margin:0;
-    padding:0;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 
 .content li {
-    padding-bottom: 0.3em;
+  padding-bottom: 0.3em;
 }
 
 .thumbnail {
-  box-sizing: border-box; 
-  margin-right: -10px; 
+  box-sizing: border-box;
+  margin-right: -10px;
   padding: 0 5px;
-  a,a:visited {
+  a, a:visited {
     color: #777;
     text-decoration: none;
-  }  
+  }
   a:hover {
     font-weight: 600;
   }
@@ -120,8 +123,8 @@ ul {
     white-space: nowrap;
     overflow: hidden
   }
-  img { 
-    margin: 0 auto; 
+  img {
+    margin: 0 auto;
   }
 
 }
@@ -147,7 +150,7 @@ ul {
   background-color: #000;
 }
 
-.content.item a, 
+.content.item a,
 .content.item a:visited {
   color: red;
   text-decoration: none;
@@ -162,21 +165,21 @@ ul {
 
 #popup {
   display: none;
-  position:absolute;
-  left:0;
-  top:0;
-  padding-top:5em;
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding-top: 5em;
   width: 100%;
   height: 100%;
   text-align: center;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   .stl {
-  position: relative;
-  margin: auto;
-  border: 0.5em solid white;
-  height: 300px;
-  width: 300px;
-  background-color:white;
+    position: relative;
+    margin: auto;
+    border: 0.5em solid white;
+    height: 300px;
+    width: 300px;
+    background-color: white;
     .fa-window-close {
       font-size: 1.5em;
       position: absolute;
@@ -192,9 +195,8 @@ ul {
   }
 }
 
-
 .videoframe {
-  width:200px;
+  width: 200px;
   height: 120px;
 }
 
@@ -217,108 +219,106 @@ a.githublink {
 }
 
 .list {
-  .pure-menu-link { 
-    padding: 0 1em; 
+  .pure-menu-link {
+    padding: 0 1em;
   }
 }
 
 @import "admin";
 @import "login";
 
-
 /** small and up **/
 @media screen and (min-width: 35.5em) {
 
-    .prev-next {
-      float: right;
-    }
+  .prev-next {
+    float: right;
+  }
 
-    .videoframe {
-      width:320px;
-      height:180px;
-    }
+  .videoframe {
+    width: 320px;
+    height: 180px;
+  }
 
-    #popup .stl {
-      height: 500px;
-      width: 500px;
-    }
+  #popup .stl {
+    height: 500px;
+    width: 500px;
+  }
 
-    #popup .stl iframe {
-      width: 500px;
-      height: 500px;
-    }
+  #popup .stl iframe {
+    width: 500px;
+    height: 500px;
+  }
 
-    .publication {
-      width: 480px;
-      height: 440px;
-    }
+  .publication {
+    width: 480px;
+    height: 440px;
+  }
 }
-
 
 /** medium and up **/
 @media screen and (min-width: 48em) {
 
-    .content {
-      padding: 0 10px 2em 10px;
-    }
+  .content {
+    padding: 0 10px 2em 10px;
+  }
 
-    .content.item {
-      padding: 0 15% 0 10px;
-    }
+  .content.item {
+    padding: 0 15% 0 10px;
+  }
 
-    .thumbnail {
-      padding: 0 10px 10px 0;
-    }
-    .publication {
-      width: 720px;
-      height: 600px;
-    }
+  .thumbnail {
+    padding: 0 10px 10px 0;
+  }
+  .publication {
+    width: 720px;
+    height: 600px;
+  }
 
-    .videoframe {
-      width:480px;
-      height:270px;
-    }
+  .videoframe {
+    width: 480px;
+    height: 270px;
+  }
 
-    #popup .stl {
-      height: 700px;
-      width: 700px;
-    }
+  #popup .stl {
+    height: 700px;
+    width: 700px;
+  }
 
-    #popup .stl iframe {
-      width: 700px;
-      height: 700px;
-    }
+  #popup .stl iframe {
+    width: 700px;
+    height: 700px;
+  }
 
-    .publication {
-      width: 640px;
-      height: 480px;
-    }
+  .publication {
+    width: 640px;
+    height: 480px;
+  }
 
 }
 
 /** large and up **/
 @media screen and (min-width: 64em) {
 
-    .videoframe {
-      width:640px;
-      height:380px;
-    }
+  .videoframe {
+    width: 640px;
+    height: 380px;
+  }
 
-     #popup .stl {
-      height: 850px;
-      width: 850px;
-    }
+  #popup .stl {
+    height: 850px;
+    width: 850px;
+  }
 
-    #popup .stl iframe {
-      width: 850px;
-      height: 850px;
-    }
+  #popup .stl iframe {
+    width: 850px;
+    height: 850px;
+  }
 
-    .publication {
-      width: 800px;
-      height: 640px;
-    }
-    
+  .publication {
+    width: 800px;
+    height: 640px;
+  }
+
 }
 
 

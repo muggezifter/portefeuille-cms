@@ -1,24 +1,24 @@
 body.login {
-   background-color: #ddd; 
-    form,label {
-      display: block;
-      text-align: center;
-      padding: 4px;
-    }
-    form {
-      margin-top: 100px;
-    }
-    input {
-      padding: 0 0.2em;
-      border-width: 0;
-      width: 80px;
-    }
-    button {
-      margin: 8px;
-      background-color: #ddd;
-    }
-    a {
-      color: red;
-      text-decoration: none;
-    }
+  background-color: #ddd;
+  form, label {
+    display: block;
+    text-align: center;
+    padding: 4px;
+  }
+  form {
+    margin-top: 100px;
+  }
+  input {
+    padding: 0 0.2em;
+    border-width: 0;
+    width: 80px;
+  }
+  button {
+    margin: 8px;
+    background-color: #ddd;
+  }
+  a {
+    color: red;
+    text-decoration: none;
+  }
 }

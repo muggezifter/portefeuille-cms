@@ -1,16 +1,16 @@
 <html>
-	<head>
-		<link rel="stylesheet" href="/css/custom.css">
-	</head>
-	<body class='login'>
-	<form action='/admin/login' name='loginform' method='post'>
-	<label>username: <input type='text' name='username'></label>
-	<label>password: <input type='password' name='password'></label>
-	<button>login</button>
-	<div class='homelink'>or go <a href="/">home</a></div>
-	</form>
-	{% for error in errors %}
-		<div class='flashmessage error'>{{ error }}</div>
-	{% endfor %}
-	<body>
+<head>
+    <link rel="stylesheet" href="/css/custom.css">
+</head>
+<body class='login'>
+<form action='/admin/login' name='loginform' method='post'>
+    <label>username: <input type='text' name='username'></label>
+    <label>password: <input type='password' name='password'></label>
+    <button>login</button>
+    <div class='homelink'>or go <a href="/">home</a></div>
+</form>
+{% for error in errors %}
+    <div class='flashmessage error'>{{ error }}</div>
+{% endfor %}
+<body>
 </html>

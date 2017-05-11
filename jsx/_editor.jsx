@@ -1,17 +1,16 @@
-export default
-class EditorControl extends React.Component {
+export default class EditorControl extends React.Component {
     render() {
         return (<div className="editor">{ this.props.type == 'categories' ?
             <CategoryEditorControl
                 item={ this.props.item }
                 inputChangeHandler={ this.props.inputChangeHandler }
             /> : <ItemEditorControl
-            	type={ this.props.type }
-            	item={ this.props.item }
-            	inputChangeHandler={ this.props.inputChangeHandler }
-            	itemSaveHandler={ this.props.itemSaveHandler }
-            	formResetHandler={ this.props.formResetHandler }
-        	/>
+            type={ this.props.type }
+            item={ this.props.item }
+            inputChangeHandler={ this.props.inputChangeHandler }
+            itemSaveHandler={ this.props.itemSaveHandler }
+            formResetHandler={ this.props.formResetHandler }
+        />
             }</div>);
     }
 }
@@ -67,8 +66,12 @@ class ItemEditorControl extends React.Component {
                         </label>
                     </div>
                     <div className="pure-controls">
-                    	<button type="reset"  onClick={ this.props.formResetHandler } className="pure-button editorbutton"><i className="fa fa-undo"></i> reset</button> 
-                        <button type="submit" onClick={ this.props.itemSaveHandler } className="pure-button pure-button-primary"><i className="fa fa-save"></i> save</button>
+                        <button type="reset"  onClick={ this.props.formResetHandler } className="pure-button editorbutton">
+                            <i className="fa fa-undo"></i>
+                            reset</button>
+                        <button type="submit" onClick={ this.props.itemSaveHandler } className="pure-button pure-button-primary">
+                            <i className="fa fa-save"></i>
+                            save</button>
                     </div>
                 </fieldset>
             </form>

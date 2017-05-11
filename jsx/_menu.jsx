@@ -1,5 +1,4 @@
-export default
-class MenuControl extends React.Component {
+export default class MenuControl extends React.Component {
     render() {
         return (
             <ul className="pure-menu-list inverted">

@@ -1,26 +1,27 @@
 <?php
 namespace Portefeuille;
 
-use Portefeuille\Models\Post;
-use Portefeuille\Models\Category;
 use Portefeuille\Models\BannerType;
+use Portefeuille\Models\Category;
+use Portefeuille\Models\Post;
 use Portefeuille\Models\SidebarItemType;
 use Portefeuille\Models\User;
-use Portefeuille\Template;
-use Portefeuille\BaseController;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 
+/**
+ * Class AdminController
+ * @package Portefeuille
+ */
 class AdminController extends BaseController
 {
-
-    private $session;
-    private $request;
 
     const POST_TYPE_ID_PAGE = 1;
     const POST_TYPE_ID_ITEM = 2;
     const POST_TYPE_ID_CATEGORY_INDEX = 3;
+    private $session;
+    private $request;
 
     public function __construct()
     {
@@ -29,6 +30,9 @@ class AdminController extends BaseController
         $this->request = Request::createFromGlobals();
     }
 
+    /**
+     * @param $action
+     */
     public function renderPage($action)
     {
         switch ($action) {
@@ -43,6 +47,44 @@ class AdminController extends BaseController
         }
     }
 
+    /**
+     *
+     */
+    private function renderAdminPage()
+    {
+        if ($this->isLoggedIn()) {
+            $template = new Template('admin');
+            $content = $template->render([]);
+            $this->response($content);
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    private function isLoggedIn()
+    {
+        if ($this->session->get('permissions') != 'admin') {
+            $this->redirect('/login');
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     *
+     */
+    private function renderLoginPage()
+    {
+        $template = new Template('login');
+        $errors = $this->session->getFlashBag()->get('error', array());
+        $content = $template->render(['errors' => $errors]);
+        $this->response($content);
+    }
+
+    /**
+     *
+     */
     public function login()
     {
         $username = $this->request->request->get('username');
@@ -61,19 +103,30 @@ class AdminController extends BaseController
         }
     }
 
-    public function apiLogout() {
-        $this->session->invalidate(); 
-                    $this->jsonResponse(['authentication_required'], Response::HTTP_FORBIDDEN);       
+    /**
+     *
+     */
+    public function apiLogout()
+    {
+        $this->session->invalidate();
+        $this->jsonResponse(['authentication_required'], Response::HTTP_FORBIDDEN);
     }
 
-    public function apiInit() {
+    /**
+     *
+     */
+    public function apiInit()
+    {
         $initdata = [];
         $initdata['categories'] = Category::all()->toArray();
         $initdata['bannertypes'] = BannerType::all()->toArray();
         $initdata['sidebaritemtypes'] = SidebarItemType::all()->toArray();
-        $this->jsonResponse($initdata);    
+        $this->jsonResponse($initdata);
     }
 
+    /**
+     * @param $type
+     */
     public function apiList($type)
     {
         $list = [];
@@ -91,6 +144,19 @@ class AdminController extends BaseController
         $this->jsonResponse($list);
     }
 
+    /**
+     * @param $typeid
+     * @return mixed
+     */
+    private function getPostList($typeid)
+    {
+        return Post::where('post_type_id', $typeid)->select('id', 'title AS name', 'slug', 'online')->get()->toArray();
+    }
+
+    /**
+     * @param $type
+     * @param $slug
+     */
     public function apiItem($type, $slug)
     {
         $item = [];
@@ -99,10 +165,12 @@ class AdminController extends BaseController
             case "items":
                 $item = Post::where('slug', $slug)->with('categories')->get()->toArray();
                 if (count($item)) {
-                    $item[0]['categories']=array_map(
-                        function($i){ return $i["id"]; },
+                    $item[0]['categories'] = array_map(
+                        function ($i) {
+                            return $i["id"];
+                        },
                         $item[0]['categories']
-                        );
+                    );
                 }
                 break;
             case "categories":
@@ -112,11 +180,9 @@ class AdminController extends BaseController
         $this->jsonResponse($item);
     }
 
-    private function getPostList($typeid)
-    {
-        return Post::where('post_type_id', $typeid)->select('id', 'title AS name', 'slug', 'online')->get()->toArray();
-    }
-
+    /**
+     * @return bool
+     */
     public function apiChecks()
     {
         //if (! $this->request->isXmlHttpRequest()) {
@@ -125,32 +191,6 @@ class AdminController extends BaseController
         //}
         if ($this->session->get('permissions') != 'admin') {
             $this->jsonResponse(['authentication_required'], Response::HTTP_FORBIDDEN);
-            return false;
-        }
-        return true;
-    }
-
-    private function renderAdminPage()
-    {
-        if ($this->isLoggedIn()) {
-            $template = new Template('admin');
-            $content = $template->render([]);
-            $this->response($content);
-        }
-    }
-
-    private function renderLoginPage()
-    {
-        $template = new Template('login');
-        $errors = $this->session->getFlashBag()->get('error', array());
-        $content = $template->render(['errors' => $errors]);
-        $this->response($content);
-    }
-
-    private function isLoggedIn()
-    {
-        if ($this->session->get('permissions') != 'admin') {
-            $this->redirect('/login');
             return false;
         }
         return true;

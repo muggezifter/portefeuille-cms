@@ -4,7 +4,10 @@ namespace Portefeuille\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-
+/**
+ * Class Category
+ * @package Portefeuille\Models
+ */
 class Category extends Model
 {
     public $timestamps = false;

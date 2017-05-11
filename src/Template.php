@@ -4,11 +4,18 @@ namespace Portefeuille;
 use Twig_Environment;
 use Twig_Loader_Filesystem;
 
+/**
+ * Class Template
+ * @package Portefeuille
+ */
 class Template
 {
     private $twig;
     private $template;
 
+    /**
+     * @param $template
+     */
     public function __construct($template)
     {
         $this->template = $template . '.html.twig';
@@ -22,7 +29,11 @@ class Template
         ));
     }
 
-    public function render($pagecontent)
+    /**
+     * @param array $pagecontent
+     * @return mixed
+     */
+    public function render(array $pagecontent)
     {
         return $this->twig->load($this->template)->render($pagecontent);
     }
