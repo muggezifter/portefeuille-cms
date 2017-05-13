@@ -1,4 +1,7 @@
 body.admin {
+  .wrapper {
+    max-width: 100%;
+  }
   background: #777;
   background-image: -webkit-linear-gradient(left, #777 20%, #fff 20%, #fff 100%);
   background-image: linear-gradient(left, #777 20%, #fff 20%, #fff 100%);
@@ -28,4 +31,8 @@ body.admin {
   a.addnew {
     color: #99cc00;
   }
+}
+
+input[type=file]::-webkit-file-upload-button,
+input[type=file]::-ms-browse {
 }

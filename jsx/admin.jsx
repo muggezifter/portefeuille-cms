@@ -1,7 +1,7 @@
 import update from 'immutability-helper';
-import MenuControl from './_menu';
-import ListControl from './_list';
-import EditorControl from './_editor';
+import Menu from './_menu';
+import List from './_list';
+import Editor from './_editor';
 
 class Admin extends React.Component {
     constructor(props) {
@@ -28,6 +28,9 @@ class Admin extends React.Component {
             case 'logout':
                 this.menuActionLogout();
                 break;
+            case 'images':
+                this.menuActionImages();
+                break;    
             default:
                 this.menuActionDefault(slug)
         }
@@ -85,6 +88,17 @@ class Admin extends React.Component {
         });
         this.setState(newState);
         alert("menu");
+    }
+
+        /**
+     *
+     */
+    menuActionImages() {
+        const newState = update(this.state, {
+            type: {$set: "images"}
+        });
+        this.setState(newState);
+        alert("images");
     }
 
     /**
@@ -190,7 +204,7 @@ class Admin extends React.Component {
                 <div className="pure-u-1-5 inverted">
                     <div className="pure-menu">
                         <span className="pure-menu-heading">admin</span>
-                        <MenuControl
+                        <Menu
                             type={ this.state.type }
                             menuClickHandler = { this.menuClickHandler.bind(this) }
                         />
@@ -198,15 +212,15 @@ class Admin extends React.Component {
                 </div>
                 <div className="pure-u-4-5">
                 { this.state.view == 'list' ?
-                    <ListControl
-                        singular={ this.singular }
-                        listheading={ this.state.type }
+                    <List
+                        type_s={ this.singular(this.state.type) }
+                        type={ this.state.type }
                         list={ this.state.list }
                         listClickHandler = { this.listClickHandler.bind(this) }
                     /> : ''
                     }
                 { this.state.view == 'editor' ?
-                    <EditorControl
+                    <Editor
                         type = { this.state.type }
                         item = { this.state.item }
                         inputChangeHandler = { this.inputChangeHandler.bind(this) }
