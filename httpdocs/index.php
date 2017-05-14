@@ -18,6 +18,7 @@ $router->addRoutes([
 	['POST','/admin/login', function()use($ac){ $ac->login(); },'post_login'],
 	['GET','/admin/logout', function()use($ac){ $ac->apiChecks() && $ac->apiLogout(); },'logout'],
 	['GET','/admin/init', function()use($ac){ $ac->apiChecks() && $ac->apiInit(); },'init'],
+	['GET','/admin/images', function()use($ac){ $ac->apiChecks() && $ac->apiImages(); },'images'],
 	['GET', '/admin/[pages|items|categories:type]', function($type)use($ac){ $ac->apiChecks() && $ac->apiList($type); },'admin_list'],
 	['GET','/admin/[pages|items|categories:type]/[a:slug]', function($type,$slug)use($ac){ $ac->apiChecks() && $ac->apiItem($type,$slug); },'admin_item'],
 

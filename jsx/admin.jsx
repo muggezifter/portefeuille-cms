@@ -84,21 +84,34 @@ class Admin extends React.Component {
      */
     menuActionMenu() {
         const newState = update(this.state, {
+            view: {$set: 'editor'},
             type: {$set: "menu"}
         });
         this.setState(newState);
-        alert("menu");
     }
 
-        /**
+    /**
      *
      */
     menuActionImages() {
-        const newState = update(this.state, {
-            type: {$set: "images"}
+        jQuery.getJSON({
+            url: '/admin/images',
+            statusCode: {
+                403: function (xhr) {
+                    window.console && console.log(xhr.responseText);
+                    window.location.replace('/login');
+                }
+            }
+        }).done(data => {
+            const newState = update(this.state, {
+                images: {$set: data},
+                view: {$set: 'editor'},
+                type: {$set: "images"}
+            });
+
+            this.setState(newState);
         });
-        this.setState(newState);
-        alert("images");
+
     }
 
     /**
@@ -170,10 +183,20 @@ class Admin extends React.Component {
         const name = target.name;
 
         const newState = update(this.state, {
-
             item: {
                 [name]: {$set: value}
             }
+        });
+        this.setState(newState);
+    }
+
+
+    setOpenFolder(event) {
+        event.preventDefault();
+        const id = event.target.getAttribute('data-folderid');
+        const opened_folder = this.state.images.filter(item=>item.id==id);
+        const newState = update(this.state, {
+            open_folder: {$set: opened_folder}
         });
         this.setState(newState);
     }
@@ -205,7 +228,7 @@ class Admin extends React.Component {
                     <div className="pure-menu">
                         <span className="pure-menu-heading">admin</span>
                         <Menu
-                            type={ this.state.type }
+                            action={ this.state.type }
                             menuClickHandler = { this.menuClickHandler.bind(this) }
                         />
                     </div>
@@ -213,15 +236,18 @@ class Admin extends React.Component {
                 <div className="pure-u-4-5">
                 { this.state.view == 'list' ?
                     <List
-                        type_s={ this.singular(this.state.type) }
-                        type={ this.state.type }
+                        type={ this.singular(this.state.type) }
+                        action={ this.state.type }
                         list={ this.state.list }
                         listClickHandler = { this.listClickHandler.bind(this) }
                     /> : ''
                     }
                 { this.state.view == 'editor' ?
                     <Editor
-                        type = { this.state.type }
+                        action = { this.state.type }
+                        images = { this.state.images }
+                        setOpenFolder={ this.setOpenFolder.bind(this) }
+                        open_folder={ this.state.open_folder }
                         item = { this.state.item }
                         inputChangeHandler = { this.inputChangeHandler.bind(this) }
                         itemSaveHandler = { this.itemSaveHandler.bind(this) }

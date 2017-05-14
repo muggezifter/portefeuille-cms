@@ -6,6 +6,7 @@ use Portefeuille\Models\Category;
 use Portefeuille\Models\Post;
 use Portefeuille\Models\SidebarItemType;
 use Portefeuille\Models\User;
+use Portefeuille\Models\ImageFolder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -142,6 +143,12 @@ class AdminController extends BaseController
                 break;
         }
         $this->jsonResponse($list);
+    }
+
+    public function apiImages()
+    {
+        $images = ImageFolder::with('images')->orderBy('name')->get()->toArray();
+        $this->jsonResponse($images);
     }
 
     /**

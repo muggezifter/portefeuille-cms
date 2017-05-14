@@ -1,38 +1,72 @@
 body.admin {
-  .wrapper {
-    max-width: 100%;
-  }
-  background: #777;
-  background-image: -webkit-linear-gradient(left, #777 20%, #fff 20%, #fff 100%);
-  background-image: linear-gradient(left, #777 20%, #fff 20%, #fff 100%);
-  .editor {
-    margin-left: 1em;
-    button {
-      font-size: 0.8em;
-      margin-right: 0.5em;
+    .wrapper {
+        max-width: 100%;
     }
-    .pure-form-aligned {
-      .pure-control-group label {
-        width: 7em;
-      }
-      .pure-controls {
-        margin: 1.5em 0 0 8em;
-      }
+    background: $text-color;
+    background-image: -webkit-linear-gradient(left, $text-color 20%, #fff 20%, #fff 100%);
+    background-image: linear-gradient(left, $text-color 20%, #fff 20%, #fff 100%);
+    .editor {
+        margin-left: 1em;
+        button {
+            font-size: 0.8em;
+            margin-right: 0.5em;
+        }
+        .pure-form-aligned {
+            .pure-control-group label {
+                width: 7em;
+            }
+            .pure-controls {
+                margin: 1.5em 0 0 8em;
+            }
+        }
     }
-  }
-  .inverted * {
-    color: white;
-    .pure-menu-selected .pure-menu-link,
-    .pure-menu-selected .pure-menu-link:visited {
-      color: #99cc00;
-      font-weight: 600;
+    .inverted * {
+        color: white;
+        .pure-menu-selected .pure-menu-link,
+        .pure-menu-selected .pure-menu-link:visited {
+            color: $active-item-color;
+            font-weight: 600;
+        }
     }
-  }
-  a.addnew {
-    color: #99cc00;
-  }
+    a.addnew {
+        color: $active-item-color;
+    }
+    input[type=file]::-webkit-file-upload-button {
+        padding: .5em 1em;
+        text-transform:lowercase;
+        box-sizing: border-box;
+        display: inline-block;
+        zoom: 1;
+        white-space: nowrap;
+        vertical-align: middle;
+        text-decoration: none;
+        border-radius: 2px;
+        border: transparent;
+        font-family: inherit;
+        background-color: #0078e7;
+        color: #fff;   
+        font-size: .8em;
+    }
+    input[type=text] {
+        padding: 0.2em 0.5em;
+        margin-right: 0.5em;
+    }
+    .folder {
+        i.fa {
+            font-size: 1.5em;
+            margin-right: 0.2em;
+            position: relative;
+            bottom: -0.1em;
+            color: $folder-color;
+        }
+        &.active i.fa {
+            color: $active-item-color;
+        }
+        font-size: 0.8em;
+    }
+    .pure-form legend {
+        color: $text-color;
+        /*border-bottom: 1px solid #777;*/
+    }
 }
 
-input[type=file]::-webkit-file-upload-button,
-input[type=file]::-ms-browse {
-}

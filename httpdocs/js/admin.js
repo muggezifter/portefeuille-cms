@@ -34,6 +34,14 @@ var _category_editor = require('./_category_editor');
 
 var _category_editor2 = _interopRequireDefault(_category_editor);
 
+var _image_editor = require('./_image_editor');
+
+var _image_editor2 = _interopRequireDefault(_image_editor);
+
+var _menu_editor = require('./_menu_editor');
+
+var _menu_editor2 = _interopRequireDefault(_menu_editor);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Editor = function Editor(props) {
@@ -45,16 +53,26 @@ var Editor = function Editor(props) {
 };
 
 var getEditor = function getEditor(props) {
-    switch (props.type) {
+    switch (props.action) {
         case 'categories':
             return React.createElement(_category_editor2.default, {
                 item: props.item,
                 inputChangeHandler: props.inputChangeHandler
             });
             break;
+        case 'images':
+            return React.createElement(_image_editor2.default, {
+                folders: props.images,
+                open_folder: props.open_folder,
+                setOpenFolder: props.setOpenFolder
+            });
+            break;
+        case 'menu':
+            return React.createElement(_menu_editor2.default, null);
+            break;
         default:
             return React.createElement(_item_editor2.default, {
-                type: props.type,
+                type: props.action,
                 item: props.item,
                 inputChangeHandler: props.inputChangeHandler,
                 itemSaveHandler: props.itemSaveHandler,
@@ -65,7 +83,100 @@ var getEditor = function getEditor(props) {
 
 exports.default = Editor;
 
-},{"./_category_editor":1,"./_item_editor":3}],3:[function(require,module,exports){
+},{"./_category_editor":1,"./_image_editor":3,"./_item_editor":4,"./_menu_editor":7}],3:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var ImageEditor = function ImageEditor(props) {
+    return React.createElement(
+        'span',
+        null,
+        React.createElement(
+            'h1',
+            { className: 'item-title' },
+            'images ',
+            props.open_folder && props.open_folder.length ? ' : ' + props.open_folder[0].name : ''
+        ),
+        React.createElement(
+            'div',
+            { className: 'pure-u-1-3' },
+            React.createElement(
+                'ul',
+                null,
+                props.folders.map(function (folder) {
+                    return React.createElement(
+                        'li',
+                        { className: 'pure-menu-item', key: folder.id },
+                        React.createElement(
+                            'a',
+                            { className: props.open_folder && props.open_folder[0].id == folder.id ? "folder active" : "folder ", onClick: props.setOpenFolder, 'data-folderid': folder.id },
+                            React.createElement('i', { className: 'fa fa-folder', 'data-folderid': folder.id }),
+                            folder.name
+                        )
+                    );
+                })
+            )
+        ),
+        React.createElement(FolderContents, {
+            content: props.open_folder && props.open_folder.length ? props.open_folder[0].images : null
+        }),
+        React.createElement(
+            'form',
+            { className: 'pure-form pure-u-1' },
+            React.createElement('br', null),
+            React.createElement(
+                'fieldset',
+                null,
+                React.createElement(
+                    'legend',
+                    null,
+                    'create a new folder'
+                ),
+                React.createElement(
+                    'label',
+                    { 'for': 'folder_name' },
+                    React.createElement('input', { type: 'text', name: 'folder_name' })
+                ),
+                React.createElement(
+                    'button',
+                    { type: 'submit', className: 'pure-button pure-button-primary' },
+                    'submit'
+                )
+            )
+        ),
+        React.createElement(
+            'form',
+            { className: 'pure-form pure-form-stacked pure-u-1' },
+            React.createElement('br', null),
+            React.createElement(
+                'fieldset',
+                null,
+                React.createElement(
+                    'legend',
+                    null,
+                    'add an image'
+                ),
+                React.createElement('input', { type: 'file', name: 'image' })
+            )
+        )
+    );
+};
+
+var FolderContents = function FolderContents(props) {
+    return React.createElement(
+        'div',
+        { className: 'pure-u-1-2' },
+        props.content ? props.content.length == 0 ? '[empty]' : props.content.map(function (image) {
+            return React.createElement('img', { src: image.url, height: '80' });
+        }) : ''
+    );
+};
+
+exports.default = ImageEditor;
+
+},{}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -180,13 +291,13 @@ var ItemEditor = function ItemEditor(props) {
                     "button",
                     { type: "reset", onClick: props.formResetHandler, className: "pure-button editorbutton" },
                     React.createElement("i", { className: "fa fa-undo" }),
-                    "reset"
+                    "\xA0reset"
                 ),
                 React.createElement(
                     "button",
                     { type: "submit", onClick: props.itemSaveHandler, className: "pure-button pure-button-primary" },
                     React.createElement("i", { className: "fa fa-save" }),
-                    "save"
+                    "\xA0save"
                 )
             )
         )
@@ -195,7 +306,7 @@ var ItemEditor = function ItemEditor(props) {
 
 exports.default = ItemEditor;
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -208,7 +319,7 @@ var List = function List(props) {
         React.createElement(
             "span",
             { className: "pure-menu-heading" },
-            props.type
+            props.action
         ),
         React.createElement(
             "ul",
@@ -231,7 +342,7 @@ var List = function List(props) {
                     "a",
                     { href: "#", onClick: props.listClickHandler, className: "pure-menu-link addnew", "data-item": "" },
                     "+ new ",
-                    props.type_s
+                    props.type
                 )
             )
         )
@@ -240,7 +351,7 @@ var List = function List(props) {
 
 exports.default = List;
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -252,7 +363,7 @@ var Menu = function Menu(props) {
         { className: 'pure-menu-list inverted' },
         React.createElement(
             'li',
-            { className: props.type == 'pages' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
+            { className: props.action == 'pages' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
             React.createElement(
                 'a',
                 { href: '#', onClick: props.menuClickHandler, className: 'pure-menu-link', 'data-action': 'pages' },
@@ -261,7 +372,7 @@ var Menu = function Menu(props) {
         ),
         React.createElement(
             'li',
-            { className: props.type == 'items' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
+            { className: props.action == 'items' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
             React.createElement(
                 'a',
                 { href: '#', onClick: props.menuClickHandler, className: 'pure-menu-link', 'data-action': 'items' },
@@ -270,7 +381,7 @@ var Menu = function Menu(props) {
         ),
         React.createElement(
             'li',
-            { className: props.type == 'categories' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
+            { className: props.action == 'categories' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
             React.createElement(
                 'a',
                 { href: '#', onClick: props.menuClickHandler, className: 'pure-menu-link', 'data-action': 'categories' },
@@ -279,7 +390,7 @@ var Menu = function Menu(props) {
         ),
         React.createElement(
             'li',
-            { className: props.type == 'images' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
+            { className: props.action == 'images' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
             React.createElement(
                 'a',
                 { href: '#', onClick: props.menuClickHandler, className: 'pure-menu-link', 'data-action': 'images' },
@@ -288,7 +399,7 @@ var Menu = function Menu(props) {
         ),
         React.createElement(
             'li',
-            { className: props.type == 'menu' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
+            { className: props.action == 'menu' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
             React.createElement(
                 'a',
                 { href: '#', onClick: props.menuClickHandler, className: 'pure-menu-link', 'data-action': 'menu' },
@@ -297,7 +408,7 @@ var Menu = function Menu(props) {
         ),
         React.createElement(
             'li',
-            { className: props.type == 'logout' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
+            { className: props.action == 'logout' ? 'pure-menu-item pure-menu-selected' : 'pure-menu-item' },
             React.createElement(
                 'a',
                 { href: '#', onClick: props.menuClickHandler, className: 'pure-menu-link', 'data-action': 'logout' },
@@ -309,7 +420,27 @@ var Menu = function Menu(props) {
 
 exports.default = Menu;
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var MenuEditor = function MenuEditor(props) {
+    return React.createElement(
+        "form",
+        { className: "pure-form pure-form-stacked" },
+        React.createElement(
+            "h1",
+            { className: "item-title" },
+            "menu"
+        )
+    );
+};
+
+exports.default = MenuEditor;
+
+},{}],8:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -444,24 +575,38 @@ var Admin = function (_React$Component) {
         key: 'menuActionMenu',
         value: function menuActionMenu() {
             var newState = (0, _immutabilityHelper2.default)(this.state, {
+                view: { $set: 'editor' },
                 type: { $set: "menu" }
             });
             this.setState(newState);
-            alert("menu");
         }
 
         /**
-        *
-        */
+         *
+         */
 
     }, {
         key: 'menuActionImages',
         value: function menuActionImages() {
-            var newState = (0, _immutabilityHelper2.default)(this.state, {
-                type: { $set: "images" }
+            var _this4 = this;
+
+            jQuery.getJSON({
+                url: '/admin/images',
+                statusCode: {
+                    403: function _(xhr) {
+                        window.console && console.log(xhr.responseText);
+                        window.location.replace('/login');
+                    }
+                }
+            }).done(function (data) {
+                var newState = (0, _immutabilityHelper2.default)(_this4.state, {
+                    images: { $set: data },
+                    view: { $set: 'editor' },
+                    type: { $set: "images" }
+                });
+
+                _this4.setState(newState);
             });
-            this.setState(newState);
-            alert("images");
         }
 
         /**
@@ -512,7 +657,7 @@ var Admin = function (_React$Component) {
     }, {
         key: 'getItem',
         value: function getItem(type, slug) {
-            var _this4 = this;
+            var _this5 = this;
 
             jQuery.getJSON({
                 url: '/admin/' + type + '/' + slug,
@@ -524,12 +669,12 @@ var Admin = function (_React$Component) {
                 }
             }).done(function (data) {
                 if (data.length > 0) {
-                    var newState = (0, _immutabilityHelper2.default)(_this4.state, {
+                    var newState = (0, _immutabilityHelper2.default)(_this5.state, {
                         view: { $set: 'editor' },
                         slug: { $set: slug },
                         item: { $set: data[0] }
                     });
-                    _this4.setState(newState);
+                    _this5.setState(newState);
                 }
             });
         }
@@ -547,8 +692,20 @@ var Admin = function (_React$Component) {
             var name = target.name;
 
             var newState = (0, _immutabilityHelper2.default)(this.state, {
-
                 item: _defineProperty({}, name, { $set: value })
+            });
+            this.setState(newState);
+        }
+    }, {
+        key: 'setOpenFolder',
+        value: function setOpenFolder(event) {
+            event.preventDefault();
+            var id = event.target.getAttribute('data-folderid');
+            var opened_folder = this.state.images.filter(function (item) {
+                return item.id == id;
+            });
+            var newState = (0, _immutabilityHelper2.default)(this.state, {
+                open_folder: { $set: opened_folder }
             });
             this.setState(newState);
         }
@@ -598,7 +755,7 @@ var Admin = function (_React$Component) {
                             'admin'
                         ),
                         React.createElement(_menu2.default, {
-                            type: this.state.type,
+                            action: this.state.type,
                             menuClickHandler: this.menuClickHandler.bind(this)
                         })
                     )
@@ -607,13 +764,16 @@ var Admin = function (_React$Component) {
                     'div',
                     { className: 'pure-u-4-5' },
                     this.state.view == 'list' ? React.createElement(_list2.default, {
-                        type_s: this.singular(this.state.type),
-                        type: this.state.type,
+                        type: this.singular(this.state.type),
+                        action: this.state.type,
                         list: this.state.list,
                         listClickHandler: this.listClickHandler.bind(this)
                     }) : '',
                     this.state.view == 'editor' ? React.createElement(_editor2.default, {
-                        type: this.state.type,
+                        action: this.state.type,
+                        images: this.state.images,
+                        setOpenFolder: this.setOpenFolder.bind(this),
+                        open_folder: this.state.open_folder,
                         item: this.state.item,
                         inputChangeHandler: this.inputChangeHandler.bind(this),
                         itemSaveHandler: this.itemSaveHandler.bind(this),
@@ -630,7 +790,7 @@ var Admin = function (_React$Component) {
 var d = { key: "value" };
 ReactDOM.render(React.createElement(Admin, { initialdata: d }), document.getElementById('container'));
 
-},{"./_editor":2,"./_list":4,"./_menu":5,"immutability-helper":7}],7:[function(require,module,exports){
+},{"./_editor":2,"./_list":5,"./_menu":6,"immutability-helper":9}],9:[function(require,module,exports){
 var invariant = require('invariant');
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -830,7 +990,7 @@ function invariantMerge(target, specValue) {
   );
 }
 
-},{"invariant":8}],8:[function(require,module,exports){
+},{"invariant":10}],10:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -885,7 +1045,7 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 
 }).call(this,require('_process'))
-},{"_process":9}],9:[function(require,module,exports){
+},{"_process":11}],11:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -1071,4 +1231,4 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}]},{},[6]);
+},{}]},{},[8]);

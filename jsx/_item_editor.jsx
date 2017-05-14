@@ -49,10 +49,10 @@ var ItemEditor = props =>
         <div className="pure-controls">
             <button type="reset"  onClick={ props.formResetHandler } className="pure-button editorbutton">
                 <i className="fa fa-undo"></i>
-                reset</button>
+                &nbsp;reset</button>
             <button type="submit" onClick={ props.itemSaveHandler } className="pure-button pure-button-primary">
                 <i className="fa fa-save"></i>
-                save</button>
+                &nbsp;save</button>
         </div>
     </fieldset>
 </form>;
