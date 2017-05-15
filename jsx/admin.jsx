@@ -1,167 +1,23 @@
+'use strict'
+
 import update from 'immutability-helper';
 import Menu from './_menu';
 import List from './_list';
-import Editor from './_editor';
+import ItemEditor from './_item_editor';
+import CategoryEditor from './_category_editor';
+import ImageEditor from './_image_editor';
+import MenuEditor from './_menu_editor';
+import * as nav from './_nav_event_handlers';
+import * as item from './_item_editor_event_handlers';
 
 class Admin extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            type: '',
-            view: '',
-            list: [],
-            item: {}
-        };
+        this.state = {};
     }
 
-    /**
-     *
-     * @param event
-     */
-    menuClickHandler(event) {
-        event.preventDefault();
-        const slug = event.target.getAttribute('data-action');
-        switch (slug) {
-            case 'menu':
-                this.menuActionMenu();
-                break;
-            case 'logout':
-                this.menuActionLogout();
-                break;
-            case 'images':
-                this.menuActionImages();
-                break;    
-            default:
-                this.menuActionDefault(slug)
-        }
-    }
-
-    /**
-     *
-     * @param slug
-     */
-    menuActionDefault(slug) {
-        jQuery.getJSON({
-            url: '/admin/' + slug,
-            statusCode: {
-                403: function (xhr) {
-                    window.console && console.log(xhr.responseText);
-                    window.location.replace('/login');
-                }
-            }
-        }).done(data => {
-            const newState = update(this.state, {
-                type: {$set: slug},
-                view: {$set: 'list'},
-                list: {$set: data}
-            });
-            this.setState(newState);
-        });
-    }
-
-    /**
-     *
-     */
-    menuActionLogout() {
-        jQuery.getJSON({
-            url: '/admin/logout',
-            statusCode: {
-                403: function (xhr) {
-                    window.console && console.log(xhr.responseText);
-                    window.location.replace('/login');
-                }
-            }
-        }).done(data => {
-            const newState = update(this.state, {
-                type: {$set: "logout"}
-            });
-            this.setState(newState);
-        });
-    }
-
-    /**
-     *
-     */
-    menuActionMenu() {
-        const newState = update(this.state, {
-            view: {$set: 'editor'},
-            type: {$set: "menu"}
-        });
-        this.setState(newState);
-    }
-
-    /**
-     *
-     */
-    menuActionImages() {
-        jQuery.getJSON({
-            url: '/admin/images',
-            statusCode: {
-                403: function (xhr) {
-                    window.console && console.log(xhr.responseText);
-                    window.location.replace('/login');
-                }
-            }
-        }).done(data => {
-            const newState = update(this.state, {
-                images: {$set: data},
-                view: {$set: 'editor'},
-                type: {$set: "images"}
-            });
-
-            this.setState(newState);
-        });
-
-    }
-
-    /**
-     *
-     * @param string
-     * @returns {*}
-     */
-    singular(string) {
-        const singular = {
-            pages: 'page',
-            items: 'item',
-            categories: 'category'
-        }
-        return (singular[string] || string);
-    }
-
-    /**
-     *
-     * @param event
-     */
-    listClickHandler(event) {
-        event.preventDefault();
-        const slug = event.target.getAttribute('data-item');
-        const type = this.state.type;
-        if (slug) {
-            this.getItem(type, slug);
-        } else {
-            const newState = update(this.state, {
-                view: {$set: 'editor'},
-                item: {$set: {title: '[new ' + this.singular(type) + ']'}}
-            });
-            this.setState(newState);
-        }
-    }
-
-    /**
-     *
-     * @param type
-     * @param slug
-     */
     getItem(type, slug) {
-        jQuery.getJSON({
-            url: '/admin/' + type + '/' + slug,
-            statusCode: {
-                403: function (xhr) {
-                    window.console && console.log(xhr.responseText);
-                    window.location.replace('/login');
-                }
-            }
-        }).done(data => {
+        this.getFromApi('/admin/' + type + '/' + slug,data => {
             if (data.length > 0) {
                 const newState = update(this.state, {
                     view: {$set: 'editor'},
@@ -173,23 +29,24 @@ class Admin extends React.Component {
         });
     }
 
-    /**
-     *
-     * @param event
-     */
-    inputChangeHandler(event) {
-        const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-
-        const newState = update(this.state, {
-            item: {
-                [name]: {$set: value}
-            }
-        });
-        this.setState(newState);
+    validate(name,value) {
+        switch (name) {
+            case 'folder_name':
+                if( /[^a-zA-Z0-9]/.test(value) ) {
+                    this.setError(name, 'invalid folder name');
+                    return false;
+                }
+                break;
+        }
+        return true;
     }
 
+    setError(target,errorMessage) {
+        const newState = update(this.state, {
+            current_error: {$set : { target: target, message: errorMessage}}
+            });
+        this.setState(newState);
+    }
 
     setOpenFolder(event) {
         event.preventDefault();
@@ -201,26 +58,57 @@ class Admin extends React.Component {
         this.setState(newState);
     }
 
-    /**
-     *
-     * @param event
-     */
-    itemSaveHandler(event) {
-        event.preventDefault();
-        alert("save");
+    singular(string) {
+        const singular = {
+            pages: 'page',
+            items: 'item',
+            categories: 'category'
+        }
+        return (singular[string] || string);
     }
 
-    /**
-     *
-     */
-    formResetHandler() {
-        this.getItem(this.state.type, this.state.slug);
+    getFromApi(url,callback) {
+        jQuery.getJSON({
+            url: url,
+            statusCode: {
+                403: function (xhr) {
+                    window.console && console.log(xhr.responseText);
+                    window.location.replace('/login');
+                }
+            }
+        }).done(callback);
     }
 
-    /**
-     *
-     * @returns {XML}
-     */
+    getEditor() {
+        switch(this.state.type) {
+            case 'categories':
+                return <CategoryEditor
+                    item={ this.state.item }
+                    itemInputChangeHandler={ item.changeHandler.bind(this) }
+                />;
+                break;
+            case 'images':
+                return <ImageEditor 
+                    folders={ this.state.images }
+                    open_folder={ this.state.open_folder }
+                    setOpenFolder={ this.setOpenFolder.bind(this) }
+                    itemInputChangeHandler={ item.changeHandler.bind(this) }
+                />
+                break;
+            case 'menu':
+                return <MenuEditor />
+                break;
+            default: 
+                return <ItemEditor
+                    type={ this.state.type }
+                    item={ this.state.item }
+                    changeHandler={ item.changeHandler.bind(this) }
+                    saveHandler={ item.saveHandler.bind(this) }
+                    resetHandler={ item.resetHandler.bind(this) }
+                />;
+            }
+    }
+
     render() {
         return (
             <div className="pure-g wrapper admin">
@@ -229,31 +117,24 @@ class Admin extends React.Component {
                         <span className="pure-menu-heading">admin</span>
                         <Menu
                             action={ this.state.type }
-                            menuClickHandler = { this.menuClickHandler.bind(this) }
+                            menuClickHandler = { nav.menuClickHandler.bind(this) }
                         />
                     </div>
                 </div>
                 <div className="pure-u-4-5">
-                { this.state.view == 'list' ?
-                    <List
+                { this.state.view == 'list' 
+                    ? <List
                         type={ this.singular(this.state.type) }
                         action={ this.state.type }
                         list={ this.state.list }
-                        listClickHandler = { this.listClickHandler.bind(this) }
-                    /> : ''
-                    }
-                { this.state.view == 'editor' ?
-                    <Editor
-                        action = { this.state.type }
-                        images = { this.state.images }
-                        setOpenFolder={ this.setOpenFolder.bind(this) }
-                        open_folder={ this.state.open_folder }
-                        item = { this.state.item }
-                        inputChangeHandler = { this.inputChangeHandler.bind(this) }
-                        itemSaveHandler = { this.itemSaveHandler.bind(this) }
-                        formResetHandler = { this.formResetHandler.bind(this) }
-                    /> : ''
-                    }
+                        listClickHandler = { nav.listClickHandler.bind(this) }
+                      /> 
+                    : ''
+                }
+                { this.state.view == 'editor' 
+                    ? this.getEditor() 
+                    : ''
+                }
                 </div>
             </div>
         );
@@ -261,8 +142,7 @@ class Admin extends React.Component {
 }
 
 
-var d = {key: "value"};
 ReactDOM.render(
-    <Admin initialdata={ d } />,
+    <Admin />,
     document.getElementById('container')
 );

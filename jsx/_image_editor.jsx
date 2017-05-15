@@ -1,5 +1,5 @@
 var ImageEditor = props =>
-<span>
+<div className="editor">
     <h1 className="item-title">images { props.open_folder && props.open_folder.length  ? ' : '+ props.open_folder[0].name : '' }</h1>
         <div className="pure-u-1-3">
             <ul>
@@ -19,7 +19,7 @@ var ImageEditor = props =>
         <br/>
         <fieldset>
             <legend>create a new folder</legend>
-            <label for="folder_name"><input type="text" name="folder_name" /></label>
+            <label for="folder_name"><input type="text" name="folder_name" onChange={ props.itemInputChangeHandler } /></label>
             <button type="submit" className ="pure-button pure-button-primary">submit</button>
         </fieldset>
     </form>
@@ -31,7 +31,7 @@ var ImageEditor = props =>
         </fieldset>
     </form>
 
-</span>;
+</div>;
 
 
 

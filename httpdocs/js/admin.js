@@ -6,13 +6,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 var CategoryEditor = function CategoryEditor(props) {
     return React.createElement(
-        "form",
-        { className: "pure-form pure-form-stacked" },
+        "div",
+        { className: "editor" },
         React.createElement(
-            "h1",
-            { className: "item-title" },
-            "categories :: ",
-            props.item.title || 'new category'
+            "form",
+            { className: "pure-form pure-form-stacked" },
+            React.createElement(
+                "h1",
+                { className: "item-title" },
+                "categories :: ",
+                props.item.title || 'new category'
+            )
         )
     );
 };
@@ -20,99 +24,35 @@ var CategoryEditor = function CategoryEditor(props) {
 exports.default = CategoryEditor;
 
 },{}],2:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _item_editor = require('./_item_editor');
-
-var _item_editor2 = _interopRequireDefault(_item_editor);
-
-var _category_editor = require('./_category_editor');
-
-var _category_editor2 = _interopRequireDefault(_category_editor);
-
-var _image_editor = require('./_image_editor');
-
-var _image_editor2 = _interopRequireDefault(_image_editor);
-
-var _menu_editor = require('./_menu_editor');
-
-var _menu_editor2 = _interopRequireDefault(_menu_editor);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Editor = function Editor(props) {
-    return React.createElement(
-        'div',
-        { className: 'editor' },
-        getEditor(props)
-    );
-};
-
-var getEditor = function getEditor(props) {
-    switch (props.action) {
-        case 'categories':
-            return React.createElement(_category_editor2.default, {
-                item: props.item,
-                inputChangeHandler: props.inputChangeHandler
-            });
-            break;
-        case 'images':
-            return React.createElement(_image_editor2.default, {
-                folders: props.images,
-                open_folder: props.open_folder,
-                setOpenFolder: props.setOpenFolder
-            });
-            break;
-        case 'menu':
-            return React.createElement(_menu_editor2.default, null);
-            break;
-        default:
-            return React.createElement(_item_editor2.default, {
-                type: props.action,
-                item: props.item,
-                inputChangeHandler: props.inputChangeHandler,
-                itemSaveHandler: props.itemSaveHandler,
-                formResetHandler: props.formResetHandler
-            });
-    }
-};
-
-exports.default = Editor;
-
-},{"./_category_editor":1,"./_image_editor":3,"./_item_editor":4,"./_menu_editor":7}],3:[function(require,module,exports){
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 var ImageEditor = function ImageEditor(props) {
     return React.createElement(
-        'span',
-        null,
+        "div",
+        { className: "editor" },
         React.createElement(
-            'h1',
-            { className: 'item-title' },
-            'images ',
+            "h1",
+            { className: "item-title" },
+            "images ",
             props.open_folder && props.open_folder.length ? ' : ' + props.open_folder[0].name : ''
         ),
         React.createElement(
-            'div',
-            { className: 'pure-u-1-3' },
+            "div",
+            { className: "pure-u-1-3" },
             React.createElement(
-                'ul',
+                "ul",
                 null,
                 props.folders.map(function (folder) {
                     return React.createElement(
-                        'li',
-                        { className: 'pure-menu-item', key: folder.id },
+                        "li",
+                        { className: "pure-menu-item", key: folder.id },
                         React.createElement(
-                            'a',
-                            { className: props.open_folder && props.open_folder[0].id == folder.id ? "folder active" : "folder ", onClick: props.setOpenFolder, 'data-folderid': folder.id },
-                            React.createElement('i', { className: 'fa fa-folder', 'data-folderid': folder.id }),
+                            "a",
+                            { className: props.open_folder && props.open_folder[0].id == folder.id ? "folder active" : "folder ", onClick: props.setOpenFolder, "data-folderid": folder.id },
+                            React.createElement("i", { className: "fa fa-folder", "data-folderid": folder.id }),
                             folder.name
                         )
                     );
@@ -123,42 +63,42 @@ var ImageEditor = function ImageEditor(props) {
             content: props.open_folder && props.open_folder.length ? props.open_folder[0].images : null
         }),
         React.createElement(
-            'form',
-            { className: 'pure-form pure-u-1' },
-            React.createElement('br', null),
+            "form",
+            { className: "pure-form pure-u-1" },
+            React.createElement("br", null),
             React.createElement(
-                'fieldset',
+                "fieldset",
                 null,
                 React.createElement(
-                    'legend',
+                    "legend",
                     null,
-                    'create a new folder'
+                    "create a new folder"
                 ),
                 React.createElement(
-                    'label',
-                    { 'for': 'folder_name' },
-                    React.createElement('input', { type: 'text', name: 'folder_name' })
+                    "label",
+                    { "for": "folder_name" },
+                    React.createElement("input", { type: "text", name: "folder_name", onChange: props.itemInputChangeHandler })
                 ),
                 React.createElement(
-                    'button',
-                    { type: 'submit', className: 'pure-button pure-button-primary' },
-                    'submit'
+                    "button",
+                    { type: "submit", className: "pure-button pure-button-primary" },
+                    "submit"
                 )
             )
         ),
         React.createElement(
-            'form',
-            { className: 'pure-form pure-form-stacked pure-u-1' },
-            React.createElement('br', null),
+            "form",
+            { className: "pure-form pure-form-stacked pure-u-1" },
+            React.createElement("br", null),
             React.createElement(
-                'fieldset',
+                "fieldset",
                 null,
                 React.createElement(
-                    'legend',
+                    "legend",
                     null,
-                    'add an image'
+                    "add an image"
                 ),
-                React.createElement('input', { type: 'file', name: 'image' })
+                React.createElement("input", { type: "file", name: "image" })
             )
         )
     );
@@ -166,17 +106,17 @@ var ImageEditor = function ImageEditor(props) {
 
 var FolderContents = function FolderContents(props) {
     return React.createElement(
-        'div',
-        { className: 'pure-u-1-2' },
+        "div",
+        { className: "pure-u-1-2" },
         props.content ? props.content.length == 0 ? '[empty]' : props.content.map(function (image) {
-            return React.createElement('img', { src: image.url, height: '80' });
+            return React.createElement("img", { src: image.url, height: "80" });
         }) : ''
     );
 };
 
 exports.default = ImageEditor;
 
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -184,120 +124,124 @@ Object.defineProperty(exports, "__esModule", {
 });
 var ItemEditor = function ItemEditor(props) {
     return React.createElement(
-        "form",
-        { className: "pure-form pure-form-aligned" },
+        "div",
+        { className: "editor" },
         React.createElement(
-            "h1",
-            { className: "item-title" },
-            props.type,
-            " :: ",
-            props.item.title || 'new item'
-        ),
-        React.createElement(
-            "fieldset",
-            null,
+            "form",
+            { className: "pure-form pure-form-aligned" },
             React.createElement(
-                "div",
-                { className: "pure-control-group" },
-                React.createElement(
-                    "label",
-                    { "for": "title" },
-                    "title"
-                ),
-                React.createElement("input", { name: "title", className: "pure-u-3-4", type: "text", value: props.item.title, onChange: props.inputChangeHandler })
+                "h1",
+                { className: "item-title" },
+                props.type,
+                " :: ",
+                props.item.title || 'new item'
             ),
             React.createElement(
-                "div",
-                { className: "pure-control-group" },
+                "fieldset",
+                null,
                 React.createElement(
-                    "label",
-                    { "for": "slug" },
-                    "slug"
-                ),
-                React.createElement("input", { name: "slug", type: "text", placeholder: "slug", value: props.item.slug, onChange: props.inputChangeHandler })
-            ),
-            props.type == "items" ? React.createElement(
-                "div",
-                { className: "pure-control-group" },
-                React.createElement(
-                    "label",
-                    { "for": "details" },
-                    "details"
-                ),
-                React.createElement("input", { name: "details", className: "pure-u-3-4", type: "text", placeholder: "details", value: props.item.details, onChange: props.inputChangeHandler })
-            ) : '',
-            props.type == "items" ? React.createElement(
-                "div",
-                { className: "pure-control-group" },
-                React.createElement(
-                    "label",
-                    { "for": "thumbnail" },
-                    "thumbnail"
-                ),
-                React.createElement("input", { name: "thumbnail", type: "text", placeholder: "thumbnail", value: props.item.thumbnail, onChange: props.inputChangeHandler })
-            ) : '',
-            props.type == "items" ? React.createElement(
-                "div",
-                { className: "pure-control-group" },
-                React.createElement(
-                    "label",
-                    { "for": "textcol" },
-                    "text"
+                    "div",
+                    { className: "pure-control-group" },
+                    React.createElement(
+                        "label",
+                        { "for": "title" },
+                        "title"
+                    ),
+                    React.createElement("input", { name: "title", className: "pure-u-3-4", type: "text", value: props.item.title, onChange: props.changeHandler })
                 ),
                 React.createElement(
-                    "textarea",
-                    { className: "pure-u-3-4 htmledit", name: "textcol" },
-                    props.item.textcol
-                )
-            ) : '',
-            React.createElement(
-                "div",
-                { className: "pure-control-group" },
+                    "div",
+                    { className: "pure-control-group" },
+                    React.createElement(
+                        "label",
+                        { "for": "slug" },
+                        "slug"
+                    ),
+                    React.createElement("input", { name: "slug", type: "text", placeholder: "slug", value: props.item.slug, onChange: props.changeHandler })
+                ),
+                props.type == "items" ? React.createElement(
+                    "div",
+                    { className: "pure-control-group" },
+                    React.createElement(
+                        "label",
+                        { "for": "details" },
+                        "details"
+                    ),
+                    React.createElement("input", { name: "details", className: "pure-u-3-4", type: "text", placeholder: "details", value: props.item.details, onChange: props.changeHandler })
+                ) : '',
+                props.type == "items" ? React.createElement(
+                    "div",
+                    { className: "pure-control-group" },
+                    React.createElement(
+                        "label",
+                        { "for": "thumbnail" },
+                        "thumbnail"
+                    ),
+                    React.createElement("input", { name: "thumbnail", type: "text", placeholder: "thumbnail", value: props.item.thumbnail, onChange: props.changeHandler })
+                ) : '',
+                props.type == "items" ? React.createElement(
+                    "div",
+                    { className: "pure-control-group" },
+                    React.createElement(
+                        "label",
+                        { "for": "textcol" },
+                        "text"
+                    ),
+                    React.createElement(
+                        "textarea",
+                        { className: "pure-u-3-4 htmledit", name: "textcol" },
+                        props.item.textcol
+                    )
+                ) : '',
                 React.createElement(
-                    "label",
-                    { "for": "raw" },
-                    "raw"
+                    "div",
+                    { className: "pure-control-group" },
+                    React.createElement(
+                        "label",
+                        { "for": "raw" },
+                        "raw"
+                    ),
+                    React.createElement(
+                        "textarea",
+                        { className: "pure-u-3-4 htmledit", name: "raw" },
+                        props.item.raw
+                    )
+                ),
+                props.type == "pages" ? React.createElement(
+                    "div",
+                    { className: "pure-controls" },
+                    React.createElement(
+                        "label",
+                        { "for": "in_menu", "class": "pure-checkbox" },
+                        React.createElement("input", { name: "in_menu", type: "checkbox", checked: props.item.in_menu == 1, onChange: props.changeHandler }),
+                        "show in menu"
+                    )
+                ) : '',
+                React.createElement(
+                    "div",
+                    { className: "pure-controls" },
+                    React.createElement(
+                        "label",
+                        { "for": "online", "class": "pure-checkbox" },
+                        React.createElement("input", { name: "online", type: "checkbox", checked: props.item.online == 1, onChange: props.changeHandler }),
+                        "published"
+                    )
                 ),
                 React.createElement(
-                    "textarea",
-                    { className: "pure-u-3-4 htmledit", name: "raw" },
-                    props.item.raw
-                )
-            ),
-            props.type == "pages" ? React.createElement(
-                "div",
-                { className: "pure-controls" },
-                React.createElement(
-                    "label",
-                    { "for": "in_menu", "class": "pure-checkbox" },
-                    React.createElement("input", { name: "in_menu", type: "checkbox", checked: props.item.in_menu == 1, onChange: props.inputChangeHandler }),
-                    "show in menu"
-                )
-            ) : '',
-            React.createElement(
-                "div",
-                { className: "pure-controls" },
-                React.createElement(
-                    "label",
-                    { "for": "online", "class": "pure-checkbox" },
-                    React.createElement("input", { name: "online", type: "checkbox", checked: props.item.online == 1, onChange: props.inputChangeHandler }),
-                    "published"
-                )
-            ),
-            React.createElement(
-                "div",
-                { className: "pure-controls" },
-                React.createElement(
-                    "button",
-                    { type: "reset", onClick: props.formResetHandler, className: "pure-button editorbutton" },
-                    React.createElement("i", { className: "fa fa-undo" }),
-                    "\xA0reset"
-                ),
-                React.createElement(
-                    "button",
-                    { type: "submit", onClick: props.itemSaveHandler, className: "pure-button pure-button-primary" },
-                    React.createElement("i", { className: "fa fa-save" }),
-                    "\xA0save"
+                    "div",
+                    { className: "pure-controls" },
+                    React.createElement(
+                        "button",
+                        { type: "reset", onClick: props.resetHandler, className: "pure-button editorbutton" },
+                        React.createElement("i", { className: "fa fa-undo" }),
+                        "\xA0reset"
+                    ),
+                    React.createElement(
+                        "button",
+                        { type: "submit", onClick: props.saveHandler, className: "pure-button pure-button-primary" },
+                        React.createElement("i", { className: "fa fa-save" }),
+                        "\xA0save"
+                    )
                 )
             )
         )
@@ -306,7 +250,48 @@ var ItemEditor = function ItemEditor(props) {
 
 exports.default = ItemEditor;
 
-},{}],5:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.changeHandler = changeHandler;
+exports.saveHandler = saveHandler;
+exports.resetHandler = resetHandler;
+
+var _immutabilityHelper = require('immutability-helper');
+
+var _immutabilityHelper2 = _interopRequireDefault(_immutabilityHelper);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function changeHandler(event) {
+    var target = event.target;
+    var value = target.type === 'checkbox' ? target.checked : target.value;
+    var name = target.name;
+
+    //if (this.validate(target.name,value)) {
+    var newState = (0, _immutabilityHelper2.default)(this.state, {
+        item: _defineProperty({}, name, { $set: value })
+    });
+    this.setState(newState);
+    //}
+}
+
+function saveHandler(event) {
+    event.preventDefault();
+    alert("save");
+}
+
+function resetHandler() {
+    alert('reset');
+    this.getItem(this.state.type, this.state.slug);
+}
+
+},{"immutability-helper":10}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -426,14 +411,18 @@ exports.default = Menu;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-var MenuEditor = function MenuEditor(props) {
+var MenuEditor = function MenuEditor() {
     return React.createElement(
-        "form",
-        { className: "pure-form pure-form-stacked" },
+        "div",
+        { className: "editor" },
         React.createElement(
-            "h1",
-            { className: "item-title" },
-            "menu"
+            "form",
+            { className: "pure-form pure-form-stacked" },
+            React.createElement(
+                "h1",
+                { className: "item-title" },
+                "menu"
+            )
         )
     );
 };
@@ -441,6 +430,101 @@ var MenuEditor = function MenuEditor(props) {
 exports.default = MenuEditor;
 
 },{}],8:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.listClickHandler = exports.menuClickHandler = undefined;
+
+var _immutabilityHelper = require('immutability-helper');
+
+var _immutabilityHelper2 = _interopRequireDefault(_immutabilityHelper);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _menuActionMenu() {
+    var newState = (0, _immutabilityHelper2.default)(this.state, {
+        view: { $set: 'editor' },
+        type: { $set: "menu" }
+    });
+    this.setState(newState);
+}
+
+function _menuActionLogout() {
+    var _this = this;
+
+    this.getFromApi('/admin/logout', function (data) {
+        var newState = (0, _immutabilityHelper2.default)(_this.state, {
+            type: { $set: "logout" }
+        });
+        _this.setState(newState);
+    });
+}
+
+function _menuActionImages() {
+    var _this2 = this;
+
+    this.getFromApi('/admin/images', function (data) {
+        var newState = (0, _immutabilityHelper2.default)(_this2.state, {
+            images: { $set: data },
+            view: { $set: 'editor' },
+            type: { $set: "images" }
+        });
+        _this2.setState(newState);
+    });
+}
+
+function _menuActionDefault(action) {
+    var _this3 = this;
+
+    this.getFromApi('/admin/' + action, function (data) {
+        var newState = (0, _immutabilityHelper2.default)(_this3.state, {
+            type: { $set: slug },
+            view: { $set: 'list' },
+            list: { $set: data }
+        });
+        _this3.setState(newState);
+    });
+}
+
+function menuClickHandler(event) {
+    event.preventDefault();
+    var action = event.target.getAttribute('data-action');
+    switch (action) {
+        case 'menu':
+            _menuActionMenu.call(this);
+            break;
+        case 'logout':
+            _menuActionLogout.call(this);
+            break;
+        case 'images':
+            _menuActionImages.call(this);
+            break;
+        default:
+            _menuActionDefault.call(this, action);
+    }
+}
+
+function listClickHandler(event) {
+    event.preventDefault();
+    var slug = event.target.getAttribute('data-item');
+    var type = this.state.type;
+    if (slug) {
+        this.getItem(type, slug);
+    } else {
+        var newState = (0, _immutabilityHelper2.default)(this.state, {
+            view: { $set: 'editor' },
+            item: { $set: { title: '[new ' + this.singular(type) + ']' } }
+        });
+        this.setState(newState);
+    }
+}
+
+exports.menuClickHandler = menuClickHandler;
+exports.listClickHandler = listClickHandler;
+
+},{"immutability-helper":10}],9:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -457,13 +541,33 @@ var _list = require('./_list');
 
 var _list2 = _interopRequireDefault(_list);
 
-var _editor = require('./_editor');
+var _item_editor = require('./_item_editor');
 
-var _editor2 = _interopRequireDefault(_editor);
+var _item_editor2 = _interopRequireDefault(_item_editor);
+
+var _category_editor = require('./_category_editor');
+
+var _category_editor2 = _interopRequireDefault(_category_editor);
+
+var _image_editor = require('./_image_editor');
+
+var _image_editor2 = _interopRequireDefault(_image_editor);
+
+var _menu_editor = require('./_menu_editor');
+
+var _menu_editor2 = _interopRequireDefault(_menu_editor);
+
+var _nav_event_handlers = require('./_nav_event_handlers');
+
+var nav = _interopRequireWildcard(_nav_event_handlers);
+
+var _item_editor_event_handlers = require('./_item_editor_event_handlers');
+
+var item = _interopRequireWildcard(_item_editor_event_handlers);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -479,220 +583,44 @@ var Admin = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (Admin.__proto__ || Object.getPrototypeOf(Admin)).call(this, props));
 
-        _this.state = {
-            type: '',
-            view: '',
-            list: [],
-            item: {}
-        };
+        _this.state = {};
         return _this;
     }
 
-    /**
-     *
-     * @param event
-     */
-
-
     _createClass(Admin, [{
-        key: 'menuClickHandler',
-        value: function menuClickHandler(event) {
-            event.preventDefault();
-            var slug = event.target.getAttribute('data-action');
-            switch (slug) {
-                case 'menu':
-                    this.menuActionMenu();
-                    break;
-                case 'logout':
-                    this.menuActionLogout();
-                    break;
-                case 'images':
-                    this.menuActionImages();
-                    break;
-                default:
-                    this.menuActionDefault(slug);
-            }
-        }
-
-        /**
-         *
-         * @param slug
-         */
-
-    }, {
-        key: 'menuActionDefault',
-        value: function menuActionDefault(slug) {
-            var _this2 = this;
-
-            jQuery.getJSON({
-                url: '/admin/' + slug,
-                statusCode: {
-                    403: function _(xhr) {
-                        window.console && console.log(xhr.responseText);
-                        window.location.replace('/login');
-                    }
-                }
-            }).done(function (data) {
-                var newState = (0, _immutabilityHelper2.default)(_this2.state, {
-                    type: { $set: slug },
-                    view: { $set: 'list' },
-                    list: { $set: data }
-                });
-                _this2.setState(newState);
-            });
-        }
-
-        /**
-         *
-         */
-
-    }, {
-        key: 'menuActionLogout',
-        value: function menuActionLogout() {
-            var _this3 = this;
-
-            jQuery.getJSON({
-                url: '/admin/logout',
-                statusCode: {
-                    403: function _(xhr) {
-                        window.console && console.log(xhr.responseText);
-                        window.location.replace('/login');
-                    }
-                }
-            }).done(function (data) {
-                var newState = (0, _immutabilityHelper2.default)(_this3.state, {
-                    type: { $set: "logout" }
-                });
-                _this3.setState(newState);
-            });
-        }
-
-        /**
-         *
-         */
-
-    }, {
-        key: 'menuActionMenu',
-        value: function menuActionMenu() {
-            var newState = (0, _immutabilityHelper2.default)(this.state, {
-                view: { $set: 'editor' },
-                type: { $set: "menu" }
-            });
-            this.setState(newState);
-        }
-
-        /**
-         *
-         */
-
-    }, {
-        key: 'menuActionImages',
-        value: function menuActionImages() {
-            var _this4 = this;
-
-            jQuery.getJSON({
-                url: '/admin/images',
-                statusCode: {
-                    403: function _(xhr) {
-                        window.console && console.log(xhr.responseText);
-                        window.location.replace('/login');
-                    }
-                }
-            }).done(function (data) {
-                var newState = (0, _immutabilityHelper2.default)(_this4.state, {
-                    images: { $set: data },
-                    view: { $set: 'editor' },
-                    type: { $set: "images" }
-                });
-
-                _this4.setState(newState);
-            });
-        }
-
-        /**
-         *
-         * @param string
-         * @returns {*}
-         */
-
-    }, {
-        key: 'singular',
-        value: function singular(string) {
-            var singular = {
-                pages: 'page',
-                items: 'item',
-                categories: 'category'
-            };
-            return singular[string] || string;
-        }
-
-        /**
-         *
-         * @param event
-         */
-
-    }, {
-        key: 'listClickHandler',
-        value: function listClickHandler(event) {
-            event.preventDefault();
-            var slug = event.target.getAttribute('data-item');
-            var type = this.state.type;
-            if (slug) {
-                this.getItem(type, slug);
-            } else {
-                var newState = (0, _immutabilityHelper2.default)(this.state, {
-                    view: { $set: 'editor' },
-                    item: { $set: { title: '[new ' + this.singular(type) + ']' } }
-                });
-                this.setState(newState);
-            }
-        }
-
-        /**
-         *
-         * @param type
-         * @param slug
-         */
-
-    }, {
         key: 'getItem',
         value: function getItem(type, slug) {
-            var _this5 = this;
+            var _this2 = this;
 
-            jQuery.getJSON({
-                url: '/admin/' + type + '/' + slug,
-                statusCode: {
-                    403: function _(xhr) {
-                        window.console && console.log(xhr.responseText);
-                        window.location.replace('/login');
-                    }
-                }
-            }).done(function (data) {
+            this.getFromApi('/admin/' + type + '/' + slug, function (data) {
                 if (data.length > 0) {
-                    var newState = (0, _immutabilityHelper2.default)(_this5.state, {
+                    var newState = (0, _immutabilityHelper2.default)(_this2.state, {
                         view: { $set: 'editor' },
                         slug: { $set: slug },
                         item: { $set: data[0] }
                     });
-                    _this5.setState(newState);
+                    _this2.setState(newState);
                 }
             });
         }
-
-        /**
-         *
-         * @param event
-         */
-
     }, {
-        key: 'inputChangeHandler',
-        value: function inputChangeHandler(event) {
-            var target = event.target;
-            var value = target.type === 'checkbox' ? target.checked : target.value;
-            var name = target.name;
-
+        key: 'validate',
+        value: function validate(name, value) {
+            switch (name) {
+                case 'folder_name':
+                    if (/[^a-zA-Z0-9]/.test(value)) {
+                        this.setError(name, 'invalid folder name');
+                        return false;
+                    }
+                    break;
+            }
+            return true;
+        }
+    }, {
+        key: 'setError',
+        value: function setError(target, errorMessage) {
             var newState = (0, _immutabilityHelper2.default)(this.state, {
-                item: _defineProperty({}, name, { $set: value })
+                current_error: { $set: { target: target, message: errorMessage } }
             });
             this.setState(newState);
         }
@@ -709,34 +637,60 @@ var Admin = function (_React$Component) {
             });
             this.setState(newState);
         }
-
-        /**
-         *
-         * @param event
-         */
-
     }, {
-        key: 'itemSaveHandler',
-        value: function itemSaveHandler(event) {
-            event.preventDefault();
-            alert("save");
+        key: 'singular',
+        value: function singular(string) {
+            var singular = {
+                pages: 'page',
+                items: 'item',
+                categories: 'category'
+            };
+            return singular[string] || string;
         }
-
-        /**
-         *
-         */
-
     }, {
-        key: 'formResetHandler',
-        value: function formResetHandler() {
-            this.getItem(this.state.type, this.state.slug);
+        key: 'getFromApi',
+        value: function getFromApi(url, callback) {
+            jQuery.getJSON({
+                url: url,
+                statusCode: {
+                    403: function _(xhr) {
+                        window.console && console.log(xhr.responseText);
+                        window.location.replace('/login');
+                    }
+                }
+            }).done(callback);
         }
-
-        /**
-         *
-         * @returns {XML}
-         */
-
+    }, {
+        key: 'getEditor',
+        value: function getEditor() {
+            switch (this.state.type) {
+                case 'categories':
+                    return React.createElement(_category_editor2.default, {
+                        item: this.state.item,
+                        itemInputChangeHandler: item.changeHandler.bind(this)
+                    });
+                    break;
+                case 'images':
+                    return React.createElement(_image_editor2.default, {
+                        folders: this.state.images,
+                        open_folder: this.state.open_folder,
+                        setOpenFolder: this.setOpenFolder.bind(this),
+                        itemInputChangeHandler: item.changeHandler.bind(this)
+                    });
+                    break;
+                case 'menu':
+                    return React.createElement(_menu_editor2.default, null);
+                    break;
+                default:
+                    return React.createElement(_item_editor2.default, {
+                        type: this.state.type,
+                        item: this.state.item,
+                        changeHandler: item.changeHandler.bind(this),
+                        saveHandler: item.saveHandler.bind(this),
+                        resetHandler: item.resetHandler.bind(this)
+                    });
+            }
+        }
     }, {
         key: 'render',
         value: function render() {
@@ -756,7 +710,7 @@ var Admin = function (_React$Component) {
                         ),
                         React.createElement(_menu2.default, {
                             action: this.state.type,
-                            menuClickHandler: this.menuClickHandler.bind(this)
+                            menuClickHandler: nav.menuClickHandler.bind(this)
                         })
                     )
                 ),
@@ -767,18 +721,9 @@ var Admin = function (_React$Component) {
                         type: this.singular(this.state.type),
                         action: this.state.type,
                         list: this.state.list,
-                        listClickHandler: this.listClickHandler.bind(this)
+                        listClickHandler: nav.listClickHandler.bind(this)
                     }) : '',
-                    this.state.view == 'editor' ? React.createElement(_editor2.default, {
-                        action: this.state.type,
-                        images: this.state.images,
-                        setOpenFolder: this.setOpenFolder.bind(this),
-                        open_folder: this.state.open_folder,
-                        item: this.state.item,
-                        inputChangeHandler: this.inputChangeHandler.bind(this),
-                        itemSaveHandler: this.itemSaveHandler.bind(this),
-                        formResetHandler: this.formResetHandler.bind(this)
-                    }) : ''
+                    this.state.view == 'editor' ? this.getEditor() : ''
                 )
             );
         }
@@ -787,10 +732,9 @@ var Admin = function (_React$Component) {
     return Admin;
 }(React.Component);
 
-var d = { key: "value" };
-ReactDOM.render(React.createElement(Admin, { initialdata: d }), document.getElementById('container'));
+ReactDOM.render(React.createElement(Admin, null), document.getElementById('container'));
 
-},{"./_editor":2,"./_list":5,"./_menu":6,"immutability-helper":9}],9:[function(require,module,exports){
+},{"./_category_editor":1,"./_image_editor":2,"./_item_editor":3,"./_item_editor_event_handlers":4,"./_list":5,"./_menu":6,"./_menu_editor":7,"./_nav_event_handlers":8,"immutability-helper":10}],10:[function(require,module,exports){
 var invariant = require('invariant');
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -990,7 +934,7 @@ function invariantMerge(target, specValue) {
   );
 }
 
-},{"invariant":10}],10:[function(require,module,exports){
+},{"invariant":11}],11:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -1045,7 +989,7 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 
 }).call(this,require('_process'))
-},{"_process":11}],11:[function(require,module,exports){
+},{"_process":12}],12:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -1231,4 +1175,4 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}]},{},[8]);
+},{}]},{},[9]);
