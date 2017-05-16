@@ -1,14 +1,14 @@
 'use strict'
 
 import update from 'immutability-helper';
-import Menu from './_menu';
-import List from './_list';
-import ItemEditor from './_item_editor';
-import CategoryEditor from './_category_editor';
-import ImageEditor from './_image_editor';
-import MenuEditor from './_menu_editor';
-import * as nav from './_nav_event_handlers';
-import * as item from './_item_editor_event_handlers';
+import Menu from './components/menu';
+import List from './components/list';
+import ItemEditor from './components/item_editor';
+import CategoryEditor from './components/category_editor';
+import ImageEditor from './components/image_editor';
+import MenuEditor from './components/menu_editor';
+import * as nav from './lib/nav';
+import * as item from './lib/item';
 
 class Admin extends React.Component {
     constructor(props) {

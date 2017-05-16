@@ -31,7 +31,7 @@ function _menuActionImages(){
 function _menuActionDefault(action){
     this.getFromApi('/admin/' + action,data => {
         const newState = update(this.state, {
-            type: {$set: slug},
+            type: {$set: action},
             view: {$set: 'list'},
             list: {$set: data}
         });
