@@ -51,6 +51,20 @@ class Admin extends React.Component {
         }).done(callback);
     }
 
+    postToApi(url,data,callback) {
+        jQuery.post({
+            url: url,
+            data: data,
+            dataType: 'json',
+            statusCode: {
+                403: function (xhr) {
+                    window.console && console.log(xhr.responseText);
+                    window.location.replace('/login');
+                }
+            }
+        }).done(callback);
+    }
+
     getEditor() {
         switch(this.state.type) {
             case 'categories':
@@ -67,6 +81,7 @@ class Admin extends React.Component {
                     open_folder={ this.state.open_folder }
                     setOpenFolder={ image.setOpenFolder.bind(this) }
                     changeHandler={ image.changeHandler.bind(this) }
+                    createFolder={ image.createFolder.bind(this) }
                 />
                 break;
             case 'menu':

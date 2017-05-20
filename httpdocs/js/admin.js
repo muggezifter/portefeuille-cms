@@ -107,6 +107,21 @@ var Admin = function (_React$Component) {
             }).done(callback);
         }
     }, {
+        key: 'postToApi',
+        value: function postToApi(url, data, callback) {
+            jQuery.post({
+                url: url,
+                data: data,
+                dataType: 'json',
+                statusCode: {
+                    403: function _(xhr) {
+                        window.console && console.log(xhr.responseText);
+                        window.location.replace('/login');
+                    }
+                }
+            }).done(callback);
+        }
+    }, {
         key: 'getEditor',
         value: function getEditor() {
             switch (this.state.type) {
@@ -123,7 +138,8 @@ var Admin = function (_React$Component) {
                         new_folder_name: this.state.new_folder_name,
                         open_folder: this.state.open_folder,
                         setOpenFolder: image.setOpenFolder.bind(this),
-                        changeHandler: image.changeHandler.bind(this)
+                        changeHandler: image.changeHandler.bind(this),
+                        createFolder: image.createFolder.bind(this)
                     });
                     break;
                 case 'menu':
@@ -270,7 +286,7 @@ var ImageEditor = function ImageEditor(props) {
                 ),
                 React.createElement(
                     "button",
-                    { type: "submit", className: "pure-button pure-button-primary" },
+                    { onClick: props.createFolder, className: "pure-button pure-button-primary" },
                     "submit"
                 )
             )
@@ -581,9 +597,9 @@ exports.default = MenuEditor;
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+	value: true
 });
-exports.changeHandler = exports.setOpenFolder = undefined;
+exports.createFolder = exports.changeHandler = exports.setOpenFolder = undefined;
 
 var _immutabilityHelper = require('immutability-helper');
 
@@ -594,52 +610,81 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function setOpenFolder(event) {
-    event.preventDefault();
-    var id = event.target.getAttribute('data-folderid');
-    var opened_folder = this.state.images.filter(function (item) {
-        return item.id == id;
-    });
-    var newState = (0, _immutabilityHelper2.default)(this.state, {
-        open_folder: { $set: opened_folder }
-    });
-    this.setState(newState);
+	event.preventDefault();
+	var id = event.target.getAttribute('data-folderid');
+	var opened_folder = this.state.images.filter(function (item) {
+		return item.id == id;
+	});
+	var newState = (0, _immutabilityHelper2.default)(this.state, {
+		open_folder: { $set: opened_folder }
+	});
+	this.setState(newState);
 }
 
 function changeHandler(event) {
-    var target = event.target;
-    var value = target.type === 'checkbox' ? target.checked : target.value;
-    var fieldname = target.name;
+	var target = event.target;
+	var value = target.type === 'checkbox' ? target.checked : target.value;
+	var fieldname = target.name;
 
-    if (isValid.call(this, fieldname, value)) {
-        var _update;
+	if (_isValid.call(this, fieldname, value)) {
+		var _update;
 
-        var e = jQuery.extend({}, this.state.errors);
-        delete e[fieldname];
-        var newState = (0, _immutabilityHelper2.default)(this.state, (_update = {}, _defineProperty(_update, fieldname, { $set: value }), _defineProperty(_update, 'errors', { $set: e }), _update));
-        this.setState(newState);
-    }
+		var e = jQuery.extend({}, this.state.errors);
+		delete e[fieldname];
+		var newState = (0, _immutabilityHelper2.default)(this.state, (_update = {}, _defineProperty(_update, fieldname, { $set: value }), _defineProperty(_update, 'errors', { $set: e }), _update));
+		this.setState(newState);
+	}
 }
 
-function isValid(fieldname, value) {
-    if (fieldname == 'new_folder_name') {
-        if (value == '' || /^[a-zA-Z0-9\-_]+$/i.test(value)) return true;
-        setError.call(this, fieldname, 'invalid folder name');
-        return false;
-    }
-    return false;
+function _isValid(fieldname, value) {
+	switch (fieldname) {
+		case 'new_folder_name':
+			if (value == '' || /^[a-zA-Z0-9\-_]+$/i.test(value)) return true;
+			_setError.call(this, fieldname, 'invalid folder name');
+			return false;
+			break;
+	}
+	return false;
 }
 
-function setError(fieldname, message) {
-    var e = {};
-    e[fieldname] = message;
-    var newState = (0, _immutabilityHelper2.default)(this.state, {
-        errors: { $merge: e }
-    });
-    this.setState(newState);
+function _setError(fieldname, message) {
+	var e = _defineProperty({}, fieldname, message);
+	var newState = (0, _immutabilityHelper2.default)(this.state, {
+		errors: { $merge: e }
+	});
+	this.setState(newState);
+}
+
+function createFolder(event) {
+	var _this = this;
+
+	event.preventDefault();
+	if (this.state.new_folder_name) {
+		this.postToApi('/admin/folders/new', { name: this.state.new_folder_name }, function (data) {
+			switch (data.status) {
+				case "error":
+					_setError.call(_this, 'new_folder_name', data.message);
+					break;
+				case "ok":
+					var open_folder = data.images.filter(function (item) {
+						return item.id == data.folder_id;
+					});
+					var newState = (0, _immutabilityHelper2.default)(_this.state, {
+						images: { $set: data.images },
+						open_folder: { $set: open_folder }
+					});
+					_this.setState(newState);
+					break;
+			}
+		});
+	} else {
+		_setError.call(this, 'new_folder_name', 'folder name can not be empty');
+	}
 }
 
 exports.setOpenFolder = setOpenFolder;
 exports.changeHandler = changeHandler;
+exports.createFolder = createFolder;
 
 },{"immutability-helper":11}],9:[function(require,module,exports){
 'use strict';

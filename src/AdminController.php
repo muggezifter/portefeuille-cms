@@ -48,9 +48,6 @@ class AdminController extends BaseController
         }
     }
 
-    /**
-     *
-     */
     private function renderAdminPage()
     {
         if ($this->isLoggedIn()) {
@@ -72,9 +69,6 @@ class AdminController extends BaseController
         return true;
     }
 
-    /**
-     *
-     */
     private function renderLoginPage()
     {
         $template = new Template('login');
@@ -83,9 +77,6 @@ class AdminController extends BaseController
         $this->response($content);
     }
 
-    /**
-     *
-     */
     public function login()
     {
         $username = $this->request->request->get('username');
@@ -104,18 +95,12 @@ class AdminController extends BaseController
         }
     }
 
-    /**
-     *
-     */
     public function apiLogout()
     {
         $this->session->invalidate();
         $this->jsonResponse(['authentication_required'], Response::HTTP_FORBIDDEN);
     }
 
-    /**
-     *
-     */
     public function apiInit()
     {
         $initdata = [];
@@ -149,6 +134,26 @@ class AdminController extends BaseController
     {
         $images = ImageFolder::with('images')->orderBy('name')->get()->toArray();
         $this->jsonResponse($images);
+    }
+
+    public function apiCreateFolder()
+    {
+        $name = $this->request->request->get('name');
+        if (ImageFolder::where('name',$name)->count()){
+            $response=['status'=>'error','message'=>'folder "'.$name.'" already exists'];
+        } else {
+            $folder = new ImageFolder();
+            $folder->name=$name;
+            $folder->save();
+            $response = [
+                "status"=>"ok",
+                "images"=>ImageFolder::with('images')->orderBy('name')->get()->toArray(),
+                "folder_id"=>$folder->id
+            ];
+        }
+        
+
+        $this->jsonResponse($response);
     }
 
     /**

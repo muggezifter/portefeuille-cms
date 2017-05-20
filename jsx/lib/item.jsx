@@ -18,7 +18,7 @@ function changeHandler(event) {
 function saveHandler(event) {
         event.preventDefault();
         alert("save");
-    }
+}
 
  
 function resetHandler() {

@@ -15,35 +15,61 @@ function changeHandler(event) {
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const fieldname = target.name;
     
-    if (isValid.call(this,fieldname,value)) {
+    if (_isValid.call(this,fieldname,value)) {
     	var e = jQuery.extend({},this.state.errors);
     	delete(e[fieldname]);
         const newState = update(this.state, {
             [fieldname]: {$set: value},
-            //errors: {$apply: err=>err.filter(e=>e.fieldname!=name) }
             errors: {$set: e}
         });
         this.setState(newState);
     } 
 }
 
-function isValid(fieldname,value) {
-	if (fieldname=='new_folder_name') {
-		if (value=='' || /^[a-zA-Z0-9\-_]+$/i.test(value)) return true;
-		setError.call(this,fieldname,'invalid folder name');
-		return false;
+function _isValid(fieldname,value) {
+	switch(fieldname) {
+		case 'new_folder_name':
+			if (value=='' || /^[a-zA-Z0-9\-_]+$/i.test(value)) return true;
+			_setError.call(this,fieldname,'invalid folder name');
+			return false;
+			break;
 	}
 	return false;
 }
 
-function setError(fieldname,message) {
-	var e = {};
-	e[fieldname]= message;
+function _setError(fieldname,message) {
+	const e = {[fieldname] : message};
 	const newState = update(this.state, {
         errors: {$merge: e}  	    	
     });
     this.setState(newState);
 }
 
+function createFolder(event) {
+	event.preventDefault();
+	if(this.state.new_folder_name){
+		this.postToApi(
+			'/admin/folders/new',
+			{ name :this.state.new_folder_name },
+			data=>{
+				switch(data.status){
+					case "error":
+						_setError.call(this,'new_folder_name',data.message);
+						break;
+					case "ok":
+						const open_folder = data.images.filter(item=>item.id==data.folder_id);
+					    const newState = update(this.state, {
+				            images: {$set: data.images},
+				            open_folder: {$set: open_folder}
+				        });
+				        this.setState(newState); 
+						break;			
+				}
+			});
+	} else {
+		_setError.call(this,'new_folder_name','folder name can not be empty');
+	}
+}
 
-export { setOpenFolder,changeHandler }
+
+export { setOpenFolder,changeHandler,createFolder }

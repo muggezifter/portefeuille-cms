@@ -21,7 +21,7 @@ var ImageEditor = props =>
             <legend>create a new folder</legend>
             <label for="new_folder_name"><input type="text" name="new_folder_name" value={ props.new_folder_name || "" }onChange={ props.changeHandler } /><span className="pure-form-message error">{ props.errors.new_folder_name || '' }</span></label>
             
-            <button type="submit" className ="pure-button pure-button-primary">submit</button>
+            <button onClick={ props.createFolder } className ="pure-button pure-button-primary">submit</button>
         </fieldset>
     </form>
     <form className="pure-form pure-form-stacked pure-u-1"> 
@@ -31,7 +31,6 @@ var ImageEditor = props =>
             <input type="file" name="image" />
         </fieldset>
     </form>
-
 </div>;
 
 
