@@ -39,6 +39,10 @@ var _item = require('./lib/item');
 
 var item = _interopRequireWildcard(_item);
 
+var _image = require('./lib/image');
+
+var image = _interopRequireWildcard(_image);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -57,7 +61,9 @@ var Admin = function (_React$Component) {
 
         var _this = _possibleConstructorReturn(this, (Admin.__proto__ || Object.getPrototypeOf(Admin)).call(this, props));
 
-        _this.state = {};
+        _this.state = {
+            errors: {}
+        };
         return _this;
     }
 
@@ -76,40 +82,6 @@ var Admin = function (_React$Component) {
                     _this2.setState(newState);
                 }
             });
-        }
-    }, {
-        key: 'validate',
-        value: function validate(name, value) {
-            switch (name) {
-                case 'folder_name':
-                    if (/[^a-zA-Z0-9]/.test(value)) {
-                        this.setError(name, 'invalid folder name');
-                        return false;
-                    }
-                    break;
-            }
-            return true;
-        }
-    }, {
-        key: 'setError',
-        value: function setError(target, errorMessage) {
-            var newState = (0, _immutabilityHelper2.default)(this.state, {
-                current_error: { $set: { target: target, message: errorMessage } }
-            });
-            this.setState(newState);
-        }
-    }, {
-        key: 'setOpenFolder',
-        value: function setOpenFolder(event) {
-            event.preventDefault();
-            var id = event.target.getAttribute('data-folderid');
-            var opened_folder = this.state.images.filter(function (item) {
-                return item.id == id;
-            });
-            var newState = (0, _immutabilityHelper2.default)(this.state, {
-                open_folder: { $set: opened_folder }
-            });
-            this.setState(newState);
         }
     }, {
         key: 'singular',
@@ -146,10 +118,12 @@ var Admin = function (_React$Component) {
                     break;
                 case 'images':
                     return React.createElement(_image_editor2.default, {
+                        errors: this.state.errors,
                         folders: this.state.images,
+                        new_folder_name: this.state.new_folder_name,
                         open_folder: this.state.open_folder,
-                        setOpenFolder: this.setOpenFolder.bind(this),
-                        itemInputChangeHandler: item.changeHandler.bind(this)
+                        setOpenFolder: image.setOpenFolder.bind(this),
+                        changeHandler: image.changeHandler.bind(this)
                     });
                     break;
                 case 'menu':
@@ -208,7 +182,7 @@ var Admin = function (_React$Component) {
 
 ReactDOM.render(React.createElement(Admin, null), document.getElementById('container'));
 
-},{"./components/category_editor":2,"./components/image_editor":3,"./components/item_editor":4,"./components/list":5,"./components/menu":6,"./components/menu_editor":7,"./lib/item":8,"./lib/nav":9,"immutability-helper":10}],2:[function(require,module,exports){
+},{"./components/category_editor":2,"./components/image_editor":3,"./components/item_editor":4,"./components/list":5,"./components/menu":6,"./components/menu_editor":7,"./lib/image":8,"./lib/item":9,"./lib/nav":10,"immutability-helper":11}],2:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -274,7 +248,7 @@ var ImageEditor = function ImageEditor(props) {
         }),
         React.createElement(
             "form",
-            { className: "pure-form pure-u-1" },
+            { className: "pure-form pure-form-stacked pure-u-1" },
             React.createElement("br", null),
             React.createElement(
                 "fieldset",
@@ -286,8 +260,13 @@ var ImageEditor = function ImageEditor(props) {
                 ),
                 React.createElement(
                     "label",
-                    { "for": "folder_name" },
-                    React.createElement("input", { type: "text", name: "folder_name", onChange: props.itemInputChangeHandler })
+                    { "for": "new_folder_name" },
+                    React.createElement("input", { type: "text", name: "new_folder_name", value: props.new_folder_name || "", onChange: props.changeHandler }),
+                    React.createElement(
+                        "span",
+                        { className: "pure-form-message error" },
+                        props.errors.new_folder_name || ''
+                    )
                 ),
                 React.createElement(
                     "button",
@@ -604,9 +583,71 @@ exports.default = MenuEditor;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.changeHandler = exports.setOpenFolder = undefined;
+
+var _immutabilityHelper = require('immutability-helper');
+
+var _immutabilityHelper2 = _interopRequireDefault(_immutabilityHelper);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function setOpenFolder(event) {
+    event.preventDefault();
+    var id = event.target.getAttribute('data-folderid');
+    var opened_folder = this.state.images.filter(function (item) {
+        return item.id == id;
+    });
+    var newState = (0, _immutabilityHelper2.default)(this.state, {
+        open_folder: { $set: opened_folder }
+    });
+    this.setState(newState);
+}
+
+function changeHandler(event) {
+    var target = event.target;
+    var value = target.type === 'checkbox' ? target.checked : target.value;
+    var fieldname = target.name;
+
+    if (isValid.call(this, fieldname, value)) {
+        var _update;
+
+        var e = jQuery.extend({}, this.state.errors);
+        delete e[fieldname];
+        var newState = (0, _immutabilityHelper2.default)(this.state, (_update = {}, _defineProperty(_update, fieldname, { $set: value }), _defineProperty(_update, 'errors', { $set: e }), _update));
+        this.setState(newState);
+    }
+}
+
+function isValid(fieldname, value) {
+    if (fieldname == 'new_folder_name') {
+        if (value == '' || /^[a-zA-Z0-9\-_]+$/i.test(value)) return true;
+        setError.call(this, fieldname, 'invalid folder name');
+        return false;
+    }
+    return false;
+}
+
+function setError(fieldname, message) {
+    var e = {};
+    e[fieldname] = message;
+    var newState = (0, _immutabilityHelper2.default)(this.state, {
+        errors: { $merge: e }
+    });
+    this.setState(newState);
+}
+
+exports.setOpenFolder = setOpenFolder;
 exports.changeHandler = changeHandler;
-exports.saveHandler = saveHandler;
-exports.resetHandler = resetHandler;
+
+},{"immutability-helper":11}],9:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.resetHandler = exports.saveHandler = exports.changeHandler = undefined;
 
 var _immutabilityHelper = require('immutability-helper');
 
@@ -635,11 +676,14 @@ function saveHandler(event) {
 }
 
 function resetHandler() {
-    alert('reset');
     this.getItem(this.state.type, this.state.slug);
 }
 
-},{"immutability-helper":10}],9:[function(require,module,exports){
+exports.changeHandler = changeHandler;
+exports.saveHandler = saveHandler;
+exports.resetHandler = resetHandler;
+
+},{"immutability-helper":11}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -734,7 +778,7 @@ function listClickHandler(event) {
 exports.menuClickHandler = menuClickHandler;
 exports.listClickHandler = listClickHandler;
 
-},{"immutability-helper":10}],10:[function(require,module,exports){
+},{"immutability-helper":11}],11:[function(require,module,exports){
 var invariant = require('invariant');
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -934,7 +978,7 @@ function invariantMerge(target, specValue) {
   );
 }
 
-},{"invariant":11}],11:[function(require,module,exports){
+},{"invariant":12}],12:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2015, Facebook, Inc.
@@ -989,7 +1033,7 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 
 }).call(this,require('_process'))
-},{"_process":12}],12:[function(require,module,exports){
+},{"_process":13}],13:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 

@@ -8,6 +8,7 @@
   "author": "Gert Rietveld",
   "license": "ISC",
   "dependencies": {
+    "babel-preset-babili": "^0.0.12",
     "babel-preset-es2015": "^6.16.0",
     "babel-preset-react": "^6.16.0",
     "babelify": "^7.3.0",

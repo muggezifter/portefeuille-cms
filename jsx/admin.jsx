@@ -1,5 +1,3 @@
-'use strict'
-
 import update from 'immutability-helper';
 import Menu from './components/menu';
 import List from './components/list';
@@ -9,11 +7,14 @@ import ImageEditor from './components/image_editor';
 import MenuEditor from './components/menu_editor';
 import * as nav from './lib/nav';
 import * as item from './lib/item';
+import * as image from './lib/image';
 
 class Admin extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            errors:{}
+        };
     }
 
     getItem(type, slug) {
@@ -27,35 +28,6 @@ class Admin extends React.Component {
                 this.setState(newState);
             }
         });
-    }
-
-    validate(name,value) {
-        switch (name) {
-            case 'folder_name':
-                if( /[^a-zA-Z0-9]/.test(value) ) {
-                    this.setError(name, 'invalid folder name');
-                    return false;
-                }
-                break;
-        }
-        return true;
-    }
-
-    setError(target,errorMessage) {
-        const newState = update(this.state, {
-            current_error: {$set : { target: target, message: errorMessage}}
-            });
-        this.setState(newState);
-    }
-
-    setOpenFolder(event) {
-        event.preventDefault();
-        const id = event.target.getAttribute('data-folderid');
-        const opened_folder = this.state.images.filter(item=>item.id==id);
-        const newState = update(this.state, {
-            open_folder: {$set: opened_folder}
-        });
-        this.setState(newState);
     }
 
     singular(string) {
@@ -89,10 +61,12 @@ class Admin extends React.Component {
                 break;
             case 'images':
                 return <ImageEditor 
+                    errors={ this.state.errors }
                     folders={ this.state.images }
+                    new_folder_name={ this.state.new_folder_name }
                     open_folder={ this.state.open_folder }
-                    setOpenFolder={ this.setOpenFolder.bind(this) }
-                    itemInputChangeHandler={ item.changeHandler.bind(this) }
+                    setOpenFolder={ image.setOpenFolder.bind(this) }
+                    changeHandler={ image.changeHandler.bind(this) }
                 />
                 break;
             case 'menu':

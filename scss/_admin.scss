@@ -68,5 +68,8 @@ body.admin {
         color: $text-color;
         /*border-bottom: 1px solid #777;*/
     }
+    .pure-form-message.error {
+        color: red;
+    }
 }
 

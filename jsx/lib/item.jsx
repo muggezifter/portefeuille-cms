@@ -1,6 +1,6 @@
 import update from 'immutability-helper';
 
-export function changeHandler(event) {
+function changeHandler(event) {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
@@ -15,14 +15,15 @@ export function changeHandler(event) {
     //}
 }
 
-export function saveHandler(event) {
+function saveHandler(event) {
         event.preventDefault();
         alert("save");
     }
 
  
-export function resetHandler() {
-    alert('reset');
+function resetHandler() {
     this.getItem(this.state.type, this.state.slug);
 }
 
+
+export { changeHandler, saveHandler, resetHandler }
