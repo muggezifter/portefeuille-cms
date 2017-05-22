@@ -37,13 +37,6 @@ function _isValid(fieldname,value) {
 	return false;
 }
 
-function _setError(fieldname,message) {
-	const e = {[fieldname] : message};
-	const newState = update(this.state, {
-        errors: {$merge: e}  	    	
-    });
-    this.setState(newState);
-}
 
 function createFolder(event) {
 	event.preventDefault();
@@ -67,9 +60,36 @@ function createFolder(event) {
 				}
 			});
 	} else {
-		_setError.call(this,'new_folder_name','folder name can not be empty');
+		this.setError('new_folder_name','folder name can not be empty');
 	}
 }
 
+function uploadHandler(event) {
+	event.preventDefault();
+	const files = document.getElementById('image_upload').files;
+	
+	if (!files.length) return this.setError('image_upload','choose a file');
+	
+	if (!(this.state.open_folder && this.state.open_folder.length)) return this.setError('image_upload','no folder selected');
 
-export { setOpenFolder,changeHandler,createFolder }
+
+	
+	var data = new FormData(document.getElementById('image_form'));
+	data.append('folder_id',this.state.open_folder[0].id);
+
+	jQuery.ajax({
+	    url: 'admin/images/new',
+	    data: data,
+	    cache: false,
+	    contentType: false,
+	    processData: false,
+	    type: 'POST',
+	    success: function(data){
+	        console.log(data);
+	    }
+	});
+
+}
+
+
+export { setOpenFolder, changeHandler, createFolder, uploadHandler }

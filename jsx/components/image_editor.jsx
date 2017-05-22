@@ -15,20 +15,27 @@ var ImageEditor = props =>
             content = { props.open_folder && props.open_folder.length ? props.open_folder[0].images : null }
         />
 
-    <form className="pure-form pure-form-stacked pure-u-1"> 
+    <form className="pure-form pure-form-stacked pure-u-1" id="new_folder_form"> 
         <br/>
         <fieldset>
             <legend>create a new folder</legend>
-            <label for="new_folder_name"><input type="text" name="new_folder_name" value={ props.new_folder_name || "" }onChange={ props.changeHandler } /><span className="pure-form-message error">{ props.errors.new_folder_name || '' }</span></label>
+            <label for="new_folder_name">
+                <input type="text" name="new_folder_name" value={ props.new_folder_name || "" }onChange={ props.changeHandler } />
+                <span className="pure-form-message error">{ props.errors.new_folder_name || '' }</span>
+            </label>
             
             <button onClick={ props.createFolder } className ="pure-button pure-button-primary">submit</button>
         </fieldset>
     </form>
-    <form className="pure-form pure-form-stacked pure-u-1"> 
-        <br/>
+    <form className="pure-form pure-form-stacked pure-u-1" id="image_form"> 
+        <br />
         <fieldset>
-            <legend>add an image</legend>
-            <input type="file" name="image" />
+        <legend>add an image</legend>
+        <label for="image_upload">
+            <input type="file" name="image" id="image_upload" />
+            <span className="pure-form-message error">{ props.errors.image_upload || '' }</span>
+        </label>
+        <button onClick={ props.uploadHandler } className ="pure-button pure-button-primary">submit</button>
         </fieldset>
     </form>
 </div>;

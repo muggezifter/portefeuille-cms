@@ -10,6 +10,7 @@ use Portefeuille\Models\ImageFolder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 /**
  * Class AdminController
@@ -152,6 +153,29 @@ class AdminController extends BaseController
             ];
         }
         
+
+        $this->jsonResponse($response);
+    }
+
+    public function apiSaveImage() {
+
+        $folder_id = $this->request->request->get('folder_id');
+        $file = $this->request->files->get('image');
+        
+        $file_name = md5(uniqid()).'.'.$file->guessExtension();
+        
+        $response["file"] = $file->getClientOriginalName();
+        $response["folder_id"] = $folder_id;
+
+        try {
+            $file->move('images/uploads',$file_name);  
+            $response = ["status"=>"ok"];
+        } catch(FileException $e) {
+            $response = [
+                'status'=>'error',
+                'message'=>'file could not be saved'
+                ];
+        } 
 
         $this->jsonResponse($response);
     }

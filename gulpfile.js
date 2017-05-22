@@ -8,7 +8,7 @@ var cleanCSS = require('gulp-clean-css');
 var merge = require('merge-stream');
 
 gulp.task('watch', function () {
-    gulp.watch('jsx/*.jsx', ['bundle']);
+    gulp.watch('jsx/**/*.jsx', ['bundle']);
     gulp.watch('scss/*.scss', ['sass']);
 });
 

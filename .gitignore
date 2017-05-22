@@ -2,3 +2,4 @@
 node_modules/
 vendor/
 config/*.ini
+httpdocs/images/uploads/

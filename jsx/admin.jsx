@@ -17,6 +17,23 @@ class Admin extends React.Component {
         };
     }
 
+    setError(fieldname,message) {
+        const error = { [fieldname] : message };
+        const newState = update(this.state, {
+            errors: { $merge: error }           
+        });
+        this.setState(newState);
+    }
+
+    clearError(fieldname) {
+        var errors = this.state.errors;
+        delete errors[fieldname];
+        const newState = update(this.state, {
+            errors: { $set: errors }            
+        });
+        this.setState(newState);
+    }
+
     getItem(type, slug) {
         this.getFromApi('/admin/' + type + '/' + slug,data => {
             if (data.length > 0) {
@@ -81,6 +98,7 @@ class Admin extends React.Component {
                     open_folder={ this.state.open_folder }
                     setOpenFolder={ image.setOpenFolder.bind(this) }
                     changeHandler={ image.changeHandler.bind(this) }
+                    uploadHandler={ image.uploadHandler.bind(this)}
                     createFolder={ image.createFolder.bind(this) }
                 />
                 break;

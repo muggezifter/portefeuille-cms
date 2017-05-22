@@ -20,6 +20,7 @@ $router->addRoutes([
 	['GET','/admin/init', function()use($ac){ $ac->apiChecks() && $ac->apiInit(); },'init'],
 	['GET','/admin/images', function()use($ac){ $ac->apiChecks() && $ac->apiImages(); },'images'],
 	['POST','/admin/folders/new', function()use($ac){ $ac->apiChecks() && $ac->apiCreateFolder(); },'folders_new'],
+	['POST','/admin/images/new', function()use($ac){ $ac->apiChecks() && $ac->apiSaveImage(); },'images_new'],
 	['GET', '/admin/[pages|items|categories:type]', function($type)use($ac){ $ac->apiChecks() && $ac->apiList($type); },'admin_list'],
 	['GET','/admin/[pages|items|categories:type]/[a:slug]', function($type,$slug)use($ac){ $ac->apiChecks() && $ac->apiItem($type,$slug); },'admin_item'],
 

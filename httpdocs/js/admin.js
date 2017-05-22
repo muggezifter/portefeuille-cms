@@ -47,6 +47,8 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -68,6 +70,25 @@ var Admin = function (_React$Component) {
     }
 
     _createClass(Admin, [{
+        key: 'setError',
+        value: function setError(fieldname, message) {
+            var error = _defineProperty({}, fieldname, message);
+            var newState = (0, _immutabilityHelper2.default)(this.state, {
+                errors: { $merge: error }
+            });
+            this.setState(newState);
+        }
+    }, {
+        key: 'clearError',
+        value: function clearError(fieldname) {
+            var errors = this.state.errors;
+            delete errors[fieldname];
+            var newState = (0, _immutabilityHelper2.default)(this.state, {
+                errors: { $set: errors }
+            });
+            this.setState(newState);
+        }
+    }, {
         key: 'getItem',
         value: function getItem(type, slug) {
             var _this2 = this;
@@ -139,6 +160,7 @@ var Admin = function (_React$Component) {
                         open_folder: this.state.open_folder,
                         setOpenFolder: image.setOpenFolder.bind(this),
                         changeHandler: image.changeHandler.bind(this),
+                        uploadHandler: image.uploadHandler.bind(this),
                         createFolder: image.createFolder.bind(this)
                     });
                     break;
@@ -264,7 +286,7 @@ var ImageEditor = function ImageEditor(props) {
         }),
         React.createElement(
             "form",
-            { className: "pure-form pure-form-stacked pure-u-1" },
+            { className: "pure-form pure-form-stacked pure-u-1", id: "new_folder_form" },
             React.createElement("br", null),
             React.createElement(
                 "fieldset",
@@ -293,7 +315,7 @@ var ImageEditor = function ImageEditor(props) {
         ),
         React.createElement(
             "form",
-            { className: "pure-form pure-form-stacked pure-u-1" },
+            { className: "pure-form pure-form-stacked pure-u-1", id: "image_form" },
             React.createElement("br", null),
             React.createElement(
                 "fieldset",
@@ -303,7 +325,21 @@ var ImageEditor = function ImageEditor(props) {
                     null,
                     "add an image"
                 ),
-                React.createElement("input", { type: "file", name: "image" })
+                React.createElement(
+                    "label",
+                    { "for": "image_upload" },
+                    React.createElement("input", { type: "file", name: "image", id: "image_upload" }),
+                    React.createElement(
+                        "span",
+                        { className: "pure-form-message error" },
+                        props.errors.image_upload || ''
+                    )
+                ),
+                React.createElement(
+                    "button",
+                    { onClick: props.uploadHandler, className: "pure-button pure-button-primary" },
+                    "submit"
+                )
             )
         )
     );
@@ -599,7 +635,7 @@ exports.default = MenuEditor;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.createFolder = exports.changeHandler = exports.setOpenFolder = undefined;
+exports.uploadHandler = exports.createFolder = exports.changeHandler = exports.setOpenFolder = undefined;
 
 var _immutabilityHelper = require('immutability-helper');
 
@@ -647,14 +683,6 @@ function _isValid(fieldname, value) {
 	return false;
 }
 
-function _setError(fieldname, message) {
-	var e = _defineProperty({}, fieldname, message);
-	var newState = (0, _immutabilityHelper2.default)(this.state, {
-		errors: { $merge: e }
-	});
-	this.setState(newState);
-}
-
 function createFolder(event) {
 	var _this = this;
 
@@ -678,13 +706,38 @@ function createFolder(event) {
 			}
 		});
 	} else {
-		_setError.call(this, 'new_folder_name', 'folder name can not be empty');
+		this.setError('new_folder_name', 'folder name can not be empty');
 	}
+}
+
+function uploadHandler(event) {
+	event.preventDefault();
+	var files = document.getElementById('image_upload').files;
+
+	if (!files.length) return this.setError('image_upload', 'choose a file');
+
+	if (!(this.state.open_folder && this.state.open_folder.length)) return this.setError('image_upload', 'no folder selected');
+
+	var data = new FormData(document.getElementById('image_form'));
+	data.append('folder_id', this.state.open_folder[0].id);
+
+	jQuery.ajax({
+		url: 'admin/images/new',
+		data: data,
+		cache: false,
+		contentType: false,
+		processData: false,
+		type: 'POST',
+		success: function success(data) {
+			console.log(data);
+		}
+	});
 }
 
 exports.setOpenFolder = setOpenFolder;
 exports.changeHandler = changeHandler;
 exports.createFolder = createFolder;
+exports.uploadHandler = uploadHandler;
 
 },{"immutability-helper":11}],9:[function(require,module,exports){
 'use strict';
