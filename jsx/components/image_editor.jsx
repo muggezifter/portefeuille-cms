@@ -20,7 +20,7 @@ var ImageEditor = props =>
         <fieldset>
             <legend>create a new folder</legend>
             <label for="new_folder_name">
-                <input type="text" name="new_folder_name" value={ props.new_folder_name || "" }onChange={ props.changeHandler } />
+                <input type="text" name="new_folder_name" value={ props.new_folder_name || "" } onChange={ props.changeHandler } />
                 <span className="pure-form-message error">{ props.errors.new_folder_name || '' }</span>
             </label>
             
@@ -32,7 +32,7 @@ var ImageEditor = props =>
         <fieldset>
         <legend>add an image</legend>
         <label for="image_upload">
-            <input type="file" name="image" id="image_upload" />
+            <input type="file" name="image_upload" id="image_upload" onChange={ props.changeHandler } />
             <span className="pure-form-message error">{ props.errors.image_upload || '' }</span>
         </label>
         <button onClick={ props.uploadHandler } className ="pure-button pure-button-primary">submit</button>
@@ -43,11 +43,13 @@ var ImageEditor = props =>
 
 
 var FolderContents = props =>
-<div className="pure-u-1-2">
+<div className="pure-u-1-2 image-folder">
     { props.content 
         ? props.content.length==0 
             ? '[empty]'
-            : props.content.map(image => <img src={ image.url } height='80' />)
+            : props.content.map(
+                image => <img src={ image.url } title={ image.filename + ' (' + image.width + 'x' + image.height + ')' } />
+            )
         :''
      }
 </div>

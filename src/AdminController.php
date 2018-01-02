@@ -6,6 +6,7 @@ use Portefeuille\Models\Category;
 use Portefeuille\Models\Post;
 use Portefeuille\Models\SidebarItemType;
 use Portefeuille\Models\User;
+use Portefeuille\Models\Image;
 use Portefeuille\Models\ImageFolder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -160,24 +161,38 @@ class AdminController extends BaseController
     public function apiSaveImage() {
 
         $folder_id = $this->request->request->get('folder_id');
-        $file = $this->request->files->get('image');
-        
-        $file_name = md5(uniqid()).'.'.$file->guessExtension();
-        
-        $response["file"] = $file->getClientOriginalName();
-        $response["folder_id"] = $folder_id;
+        $file = $this->request->files->get('image_upload');
+        list($width,$height)=getimagesize($file);
+        $filename = md5(uniqid()).'.'.$file->guessExtension();
+        $mimetype = $file->getMimeType();
+
+        $original_filename = $file->getClientOriginalName();
 
         try {
-            $file->move('images/uploads',$file_name);  
-            $response = ["status"=>"ok"];
+            $file->move('images/uploads',$filename); 
+
+            $image = new Image();
+            $image->url='/images/uploads/'.$filename;
+            $image->filename=$original_filename;
+            $image->mimetype=$mimetype;
+            $image->width=$width;
+            $image->height=$height;
+            $image->image_folder_id=$folder_id;
+            $image->save();
+
+            $response = [
+                "status"=>"ok",
+                "images" => ImageFolder::with('images')->orderBy('name')->get()->toArray(),
+                "folder_id" => $folder_id
+            ];
         } catch(FileException $e) {
             $response = [
                 'status'=>'error',
                 'message'=>'file could not be saved'
                 ];
+               
         } 
-
-        $this->jsonResponse($response);
+        $this->jsonResponse($response);     
     }
 
     /**

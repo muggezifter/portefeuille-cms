@@ -82,6 +82,7 @@ var Admin = function (_React$Component) {
         key: 'clearError',
         value: function clearError(fieldname) {
             var errors = this.state.errors;
+
             delete errors[fieldname];
             var newState = (0, _immutabilityHelper2.default)(this.state, {
                 errors: { $set: errors }
@@ -328,7 +329,7 @@ var ImageEditor = function ImageEditor(props) {
                 React.createElement(
                     "label",
                     { "for": "image_upload" },
-                    React.createElement("input", { type: "file", name: "image", id: "image_upload" }),
+                    React.createElement("input", { type: "file", name: "image_upload", id: "image_upload", onChange: props.changeHandler }),
                     React.createElement(
                         "span",
                         { className: "pure-form-message error" },
@@ -348,9 +349,9 @@ var ImageEditor = function ImageEditor(props) {
 var FolderContents = function FolderContents(props) {
     return React.createElement(
         "div",
-        { className: "pure-u-1-2" },
+        { className: "pure-u-1-2 image-folder" },
         props.content ? props.content.length == 0 ? '[empty]' : props.content.map(function (image) {
-            return React.createElement("img", { src: image.url, height: "80" });
+            return React.createElement("img", { src: image.url, title: image.filename + ' (' + image.width + 'x' + image.height + ')' });
         }) : ''
     );
 };
@@ -643,8 +644,6 @@ var _immutabilityHelper2 = _interopRequireDefault(_immutabilityHelper);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function setOpenFolder(event) {
 	event.preventDefault();
 	var id = event.target.getAttribute('data-folderid');
@@ -654,6 +653,7 @@ function setOpenFolder(event) {
 	var newState = (0, _immutabilityHelper2.default)(this.state, {
 		open_folder: { $set: opened_folder }
 	});
+	this.clearError('image_upload');
 	this.setState(newState);
 }
 
@@ -663,12 +663,14 @@ function changeHandler(event) {
 	var fieldname = target.name;
 
 	if (_isValid.call(this, fieldname, value)) {
-		var _update;
-
-		var e = jQuery.extend({}, this.state.errors);
-		delete e[fieldname];
-		var newState = (0, _immutabilityHelper2.default)(this.state, (_update = {}, _defineProperty(_update, fieldname, { $set: value }), _defineProperty(_update, 'errors', { $set: e }), _update));
-		this.setState(newState);
+		this.clearError(fieldname);
+		// var e = jQuery.extend({},this.state.errors);
+		// delete(e[fieldname]);
+		//    const newState = update(this.state, {
+		//        [fieldname]: {$set: value},
+		//        errors: {$set: e}
+		//    });
+		//    this.setState(newState);
 	}
 }
 
@@ -678,6 +680,9 @@ function _isValid(fieldname, value) {
 			if (value == '' || /^[a-zA-Z0-9\-_]+$/i.test(value)) return true;
 			_setError.call(this, fieldname, 'invalid folder name');
 			return false;
+			break;
+		case 'image_upload':
+			return true;
 			break;
 	}
 	return false;
@@ -691,7 +696,7 @@ function createFolder(event) {
 		this.postToApi('/admin/folders/new', { name: this.state.new_folder_name }, function (data) {
 			switch (data.status) {
 				case "error":
-					_setError.call(_this, 'new_folder_name', data.message);
+					_this.setError('new_folder_name', data.message);
 					break;
 				case "ok":
 					var open_folder = data.images.filter(function (item) {
@@ -711,6 +716,8 @@ function createFolder(event) {
 }
 
 function uploadHandler(event) {
+	var _this2 = this;
+
 	event.preventDefault();
 	var files = document.getElementById('image_upload').files;
 
@@ -721,15 +728,34 @@ function uploadHandler(event) {
 	var data = new FormData(document.getElementById('image_form'));
 	data.append('folder_id', this.state.open_folder[0].id);
 
-	jQuery.ajax({
+	jQuery.post({
 		url: 'admin/images/new',
 		data: data,
 		cache: false,
 		contentType: false,
 		processData: false,
-		type: 'POST',
-		success: function success(data) {
-			console.log(data);
+		statusCode: {
+			403: function _(xhr) {
+				window.console && console.log(xhr.responseText);
+				window.location.replace('/login');
+			}
+		}
+	}).done(function (data) {
+		switch (data.status) {
+			case "error":
+				_this2.setError('image_upload', data.message);
+				break;
+			case "ok":
+				document.getElementById('image_upload').value = '';
+				var open_folder = data.images.filter(function (item) {
+					return item.id == data.folder_id;
+				});
+				var newState = (0, _immutabilityHelper2.default)(_this2.state, {
+					images: { $set: data.images },
+					open_folder: { $set: open_folder }
+				});
+				_this2.setState(newState);
+				break;
 		}
 	});
 }

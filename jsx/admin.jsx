@@ -27,6 +27,7 @@ class Admin extends React.Component {
 
     clearError(fieldname) {
         var errors = this.state.errors;
+        
         delete errors[fieldname];
         const newState = update(this.state, {
             errors: { $set: errors }            
