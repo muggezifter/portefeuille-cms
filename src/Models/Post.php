@@ -53,6 +53,7 @@ class Post extends Model
     }
 
     /**
+     * used for posttype category_index
      * @return mixed
      */
     public function category()

@@ -6,12 +6,17 @@ var ImageEditor = props =>
             { props.folders.map(
                 folder => 
                 <li className = 'pure-menu-item' key={ folder.id }>
-                <a className = { props.open_folder && props.open_folder[0].id == folder.id ? "folder active" : "folder " } onClick = { props.setOpenFolder } data-folderid={ folder.id }><i className='fa fa-folder'  data-folderid={ folder.id }></i>{ folder.name }</a>
+                    <a className = { props.open_folder && props.open_folder[0].id == folder.id ? "folder active" : "folder " } onClick = { props.setOpenFolder } data-folderid={ folder.id }><i className='fa fa-folder'  data-folderid={ folder.id }></i>
+                    { folder.name }
+                    ({ folder.images.length })
+                    </a>
                 </li>
             )}
             </ul>
          </div>
         <FolderContents
+            deleteFolder = { props.deleteFolder }
+            folderid = { props.open_folder && props.open_folder.length ? props.open_folder[0].id : null }
             content = { props.open_folder && props.open_folder.length ? props.open_folder[0].images : null }
         />
 
@@ -46,7 +51,7 @@ var FolderContents = props =>
 <div className="pure-u-1-2 image-folder">
     { props.content 
         ? props.content.length==0 
-            ? '[empty]'
+            ? <span>[empty] <a onClick={ props.deleteFolder } data-folderid={ props.folderid }>delete this folder</a></span>
             : props.content.map(
                 image => <img src={ image.url } title={ image.filename + ' (' + image.width + 'x' + image.height + ')' } />
             )

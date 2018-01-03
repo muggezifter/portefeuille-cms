@@ -1,10 +1,25 @@
 import update from 'immutability-helper';
 
+function _getMultiSelectVal(select) {
+    const options = select.options;
+    var value = [];
+    for (var i = 0, l = options.length; i < l; i++) {
+        if (options[i].selected) {
+            value.push(options[i].value);
+        }
+    }
+    return(value)
+}
+
 function changeHandler(event) {
     const target = event.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const value = target.multiple
+        ? _getMultiSelectVal(target)
+        : target.type === 'checkbox'
+            ? target.checked
+            : target.value;
     const name = target.name;
-
+    
     //if (this.validate(target.name,value)) {
         const newState = update(this.state, {
             item: {

@@ -162,7 +162,8 @@ var Admin = function (_React$Component) {
                         setOpenFolder: image.setOpenFolder.bind(this),
                         changeHandler: image.changeHandler.bind(this),
                         uploadHandler: image.uploadHandler.bind(this),
-                        createFolder: image.createFolder.bind(this)
+                        createFolder: image.createFolder.bind(this),
+                        deleteFolder: image.deleteFolder.bind(this)
                     });
                     break;
                 case 'menu':
@@ -276,13 +277,18 @@ var ImageEditor = function ImageEditor(props) {
                             "a",
                             { className: props.open_folder && props.open_folder[0].id == folder.id ? "folder active" : "folder ", onClick: props.setOpenFolder, "data-folderid": folder.id },
                             React.createElement("i", { className: "fa fa-folder", "data-folderid": folder.id }),
-                            folder.name
+                            folder.name,
+                            "(",
+                            folder.images.length,
+                            ")"
                         )
                     );
                 })
             )
         ),
         React.createElement(FolderContents, {
+            deleteFolder: props.deleteFolder,
+            folderid: props.open_folder && props.open_folder.length ? props.open_folder[0].id : null,
             content: props.open_folder && props.open_folder.length ? props.open_folder[0].images : null
         }),
         React.createElement(
@@ -350,7 +356,16 @@ var FolderContents = function FolderContents(props) {
     return React.createElement(
         "div",
         { className: "pure-u-1-2 image-folder" },
-        props.content ? props.content.length == 0 ? '[empty]' : props.content.map(function (image) {
+        props.content ? props.content.length == 0 ? React.createElement(
+            "span",
+            null,
+            "[empty] ",
+            React.createElement(
+                "a",
+                { onClick: props.deleteFolder, "data-folderid": props.folderid },
+                "delete this folder"
+            )
+        ) : props.content.map(function (image) {
             return React.createElement("img", { src: image.url, title: image.filename + ' (' + image.width + 'x' + image.height + ')' });
         }) : ''
     );
@@ -454,9 +469,29 @@ var ItemEditor = function ItemEditor(props) {
                     { className: "pure-controls" },
                     React.createElement(
                         "label",
-                        { "for": "in_menu", "class": "pure-checkbox" },
+                        { "for": "in_menu", className: "pure-checkbox" },
                         React.createElement("input", { name: "in_menu", type: "checkbox", checked: props.item.in_menu == 1, onChange: props.changeHandler }),
                         "show in menu"
+                    )
+                ) : '',
+                props.type == "items" ? React.createElement(
+                    "div",
+                    { className: "pure-control-group" },
+                    React.createElement(
+                        "label",
+                        { "for": "categories" },
+                        "categories:"
+                    ),
+                    React.createElement(
+                        "select",
+                        { name: "categories", multiple: "multiple", value: props.item.categories, onChange: props.changeHandler },
+                        props.item.all_categories.map(function (category) {
+                            return React.createElement(
+                                "option",
+                                { value: category.id },
+                                category.name
+                            );
+                        })
                     )
                 ) : '',
                 React.createElement(
@@ -464,7 +499,7 @@ var ItemEditor = function ItemEditor(props) {
                     { className: "pure-controls" },
                     React.createElement(
                         "label",
-                        { "for": "online", "class": "pure-checkbox" },
+                        { "for": "online", className: "pure-checkbox" },
                         React.createElement("input", { name: "online", type: "checkbox", checked: props.item.online == 1, onChange: props.changeHandler }),
                         "published"
                     )
@@ -636,13 +671,15 @@ exports.default = MenuEditor;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.uploadHandler = exports.createFolder = exports.changeHandler = exports.setOpenFolder = undefined;
+exports.uploadHandler = exports.deleteFolder = exports.createFolder = exports.changeHandler = exports.setOpenFolder = undefined;
 
 var _immutabilityHelper = require('immutability-helper');
 
 var _immutabilityHelper2 = _interopRequireDefault(_immutabilityHelper);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function setOpenFolder(event) {
 	event.preventDefault();
@@ -664,13 +701,10 @@ function changeHandler(event) {
 
 	if (_isValid.call(this, fieldname, value)) {
 		this.clearError(fieldname);
-		// var e = jQuery.extend({},this.state.errors);
-		// delete(e[fieldname]);
-		//    const newState = update(this.state, {
-		//        [fieldname]: {$set: value},
-		//        errors: {$set: e}
-		//    });
-		//    this.setState(newState);
+		//var e = jQuery.extend({},this.state.errors);
+		//delete(e[fieldname]);
+		var newState = (0, _immutabilityHelper2.default)(this.state, _defineProperty({}, fieldname, { $set: value }));
+		this.setState(newState);
 	}
 }
 
@@ -678,7 +712,7 @@ function _isValid(fieldname, value) {
 	switch (fieldname) {
 		case 'new_folder_name':
 			if (value == '' || /^[a-zA-Z0-9\-_]+$/i.test(value)) return true;
-			_setError.call(this, fieldname, 'invalid folder name');
+			this.setError(this, fieldname, 'invalid folder name');
 			return false;
 			break;
 		case 'image_upload':
@@ -686,6 +720,11 @@ function _isValid(fieldname, value) {
 			break;
 	}
 	return false;
+}
+
+function deleteFolder(event) {
+	event.preventDefault();
+	var folderid = event.target.attributes["data-folderid"].value;
 }
 
 function createFolder(event) {
@@ -763,6 +802,7 @@ function uploadHandler(event) {
 exports.setOpenFolder = setOpenFolder;
 exports.changeHandler = changeHandler;
 exports.createFolder = createFolder;
+exports.deleteFolder = deleteFolder;
 exports.uploadHandler = uploadHandler;
 
 },{"immutability-helper":11}],9:[function(require,module,exports){
@@ -781,9 +821,20 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+function _getMultiSelectVal(select) {
+    var options = select.options;
+    var value = [];
+    for (var i = 0, l = options.length; i < l; i++) {
+        if (options[i].selected) {
+            value.push(options[i].value);
+        }
+    }
+    return value;
+}
+
 function changeHandler(event) {
     var target = event.target;
-    var value = target.type === 'checkbox' ? target.checked : target.value;
+    var value = target.multiple ? _getMultiSelectVal(target) : target.type === 'checkbox' ? target.checked : target.value;
     var name = target.name;
 
     //if (this.validate(target.name,value)) {

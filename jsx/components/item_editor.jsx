@@ -35,14 +35,24 @@ var ItemEditor = props =>
         </div>
     { props.type == "pages" ?
         <div className="pure-controls">
-            <label for="in_menu" class="pure-checkbox">
+            <label for="in_menu" className="pure-checkbox">
                 <input name="in_menu" type="checkbox" checked={ props.item.in_menu == 1 } onChange={ props.changeHandler } />
                 show in menu
             </label>
         </div> : ''
     }
+    { props.type == "items" ?
+        <div className="pure-control-group">
+            <label for="categories">categories:</label>
+            <select name="categories" multiple="multiple" value={ props.item.categories }  onChange={ props.changeHandler }>
+            { props.item.all_categories.map(category =>
+                <option value={ category.id }>{ category.name }</option>)
+            }
+            </select>
+        </div>: ''
+    }
         <div className="pure-controls">
-            <label for="online" class="pure-checkbox">
+            <label for="online" className="pure-checkbox">
                 <input name="online" type="checkbox" checked={ props.item.online == 1 } onChange={ props.changeHandler } />
                 published
             </label>

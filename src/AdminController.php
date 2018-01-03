@@ -141,58 +141,59 @@ class AdminController extends BaseController
     public function apiCreateFolder()
     {
         $name = $this->request->request->get('name');
-        if (ImageFolder::where('name',$name)->count()){
-            $response=['status'=>'error','message'=>'folder "'.$name.'" already exists'];
+        if (ImageFolder::where('name', $name)->count()) {
+            $response = ['status' => 'error', 'message' => 'folder "' . $name . '" already exists'];
         } else {
             $folder = new ImageFolder();
-            $folder->name=$name;
+            $folder->name = $name;
             $folder->save();
             $response = [
-                "status"=>"ok",
-                "images"=>ImageFolder::with('images')->orderBy('name')->get()->toArray(),
-                "folder_id"=>$folder->id
+                "status" => "ok",
+                "images" => ImageFolder::with('images')->orderBy('name')->get()->toArray(),
+                "folder_id" => $folder->id
             ];
         }
-        
+
 
         $this->jsonResponse($response);
     }
 
-    public function apiSaveImage() {
+    public function apiSaveImage()
+    {
 
         $folder_id = $this->request->request->get('folder_id');
         $file = $this->request->files->get('image_upload');
-        list($width,$height)=getimagesize($file);
-        $filename = md5(uniqid()).'.'.$file->guessExtension();
+        list($width, $height) = getimagesize($file);
+        $filename = md5(uniqid()) . '.' . $file->guessExtension();
         $mimetype = $file->getMimeType();
 
         $original_filename = $file->getClientOriginalName();
 
         try {
-            $file->move('images/uploads',$filename); 
+            $file->move('images/uploads', $filename);
 
             $image = new Image();
-            $image->url='/images/uploads/'.$filename;
-            $image->filename=$original_filename;
-            $image->mimetype=$mimetype;
-            $image->width=$width;
-            $image->height=$height;
-            $image->image_folder_id=$folder_id;
+            $image->url = '/images/uploads/' . $filename;
+            $image->filename = $original_filename;
+            $image->mimetype = $mimetype;
+            $image->width = $width;
+            $image->height = $height;
+            $image->image_folder_id = $folder_id;
             $image->save();
 
             $response = [
-                "status"=>"ok",
+                "status" => "ok",
                 "images" => ImageFolder::with('images')->orderBy('name')->get()->toArray(),
                 "folder_id" => $folder_id
             ];
-        } catch(FileException $e) {
+        } catch (FileException $e) {
             $response = [
-                'status'=>'error',
-                'message'=>'file could not be saved'
-                ];
-               
-        } 
-        $this->jsonResponse($response);     
+                'status' => 'error',
+                'message' => 'file could not be saved'
+            ];
+
+        }
+        $this->jsonResponse($response);
     }
 
     /**
@@ -213,15 +214,15 @@ class AdminController extends BaseController
         $item = [];
         switch ($type) {
             case "pages":
+                $item = Post::where('slug', $slug)->get()->toArray();
+                break;
             case "items":
                 $item = Post::where('slug', $slug)->with('categories')->get()->toArray();
                 if (count($item)) {
-                    $item[0]['categories'] = array_map(
-                        function ($i) {
+                    $item[0]['categories'] = array_map(function ($i) {
                             return $i["id"];
-                        },
-                        $item[0]['categories']
-                    );
+                         }, $item[0]['categories']);
+                    $item[0]['all_categories'] = $this->getCategories();
                 }
                 break;
             case "categories":
@@ -230,6 +231,23 @@ class AdminController extends BaseController
         }
         $this->jsonResponse($item);
     }
+
+    /**
+     * @param array $item_categories
+     * @return array
+     */
+    private function getCategories()
+    {
+        //$ids = array_map(function ($i) {
+        //    return $i["id"];
+       // }, $item_categories);
+
+        return array_map(function ($i) {
+            return ['id' => $i["id"],
+                'name' => $i["name"]];
+        }, Category::all()->toArray());
+    }
+
 
     /**
      * @return bool

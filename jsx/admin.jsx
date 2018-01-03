@@ -101,6 +101,7 @@ class Admin extends React.Component {
                     changeHandler={ image.changeHandler.bind(this) }
                     uploadHandler={ image.uploadHandler.bind(this)}
                     createFolder={ image.createFolder.bind(this) }
+                    deleteFolder={ image.deleteFolder.bind(this) }
                 />
                 break;
             case 'menu':

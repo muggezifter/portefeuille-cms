@@ -18,13 +18,13 @@ function changeHandler(event) {
     
     if (_isValid.call(this,fieldname,value)) {
     	this.clearError(fieldname);
-    	// var e = jQuery.extend({},this.state.errors);
-    	// delete(e[fieldname]);
-     //    const newState = update(this.state, {
-     //        [fieldname]: {$set: value},
-     //        errors: {$set: e}
-     //    });
-     //    this.setState(newState);
+    	//var e = jQuery.extend({},this.state.errors);
+    	//delete(e[fieldname]);
+        const newState = update(this.state, {
+            [fieldname]: {$set: value},
+            //errors: {$set: e}
+        });
+        this.setState(newState);
     } 
 }
 
@@ -32,7 +32,7 @@ function _isValid(fieldname,value) {
 	switch(fieldname) {
 		case 'new_folder_name':
 			if (value=='' || /^[a-zA-Z0-9\-_]+$/i.test(value)) return true;
-			_setError.call(this,fieldname,'invalid folder name');
+			this.setError(this,fieldname,'invalid folder name');
 			return false;
 			break;
 		case 'image_upload':
@@ -42,6 +42,10 @@ function _isValid(fieldname,value) {
 	return false;
 }
 
+function deleteFolder(event) {
+    event.preventDefault();
+    const folderid = event.target.attributes["data-folderid"].value;
+}
 
 function createFolder(event) {
 	event.preventDefault();
@@ -114,4 +118,4 @@ function uploadHandler(event) {
 }
 
 
-export { setOpenFolder, changeHandler, createFolder, uploadHandler }
+export { setOpenFolder, changeHandler, createFolder, deleteFolder, uploadHandler }
