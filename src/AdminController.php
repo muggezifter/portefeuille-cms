@@ -158,6 +158,22 @@ class AdminController extends BaseController
         $this->jsonResponse($response);
     }
 
+    public function apiDeleteFolder()
+    {
+        $id = (int) $this->request->request->get('id');
+        $folder = ImageFolder::find($id);
+        if (!$folder) {
+            $response = ['status' => 'error', 'message' => 'folder not found'];
+        } else {
+
+            $folder->delete();
+            $images = ImageFolder::with('images')->orderBy('name')->get()->toArray();
+       
+            $response = ['status' => 'ok', 'images' => $images];   
+        }
+        $this->jsonResponse($response);
+    }
+
     public function apiSaveImage()
     {
 

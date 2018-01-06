@@ -97,11 +97,13 @@ class Admin extends React.Component {
                     folders={ this.state.images }
                     new_folder_name={ this.state.new_folder_name }
                     open_folder={ this.state.open_folder }
+                    selected_image_id={ this.state.selected_image_id }
                     setOpenFolder={ image.setOpenFolder.bind(this) }
                     changeHandler={ image.changeHandler.bind(this) }
                     uploadHandler={ image.uploadHandler.bind(this)}
                     createFolder={ image.createFolder.bind(this) }
                     deleteFolder={ image.deleteFolder.bind(this) }
+                    selectImage={ image.selectImage.bind(this) }
                 />
                 break;
             case 'menu':

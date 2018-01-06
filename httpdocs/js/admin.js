@@ -159,11 +159,13 @@ var Admin = function (_React$Component) {
                         folders: this.state.images,
                         new_folder_name: this.state.new_folder_name,
                         open_folder: this.state.open_folder,
+                        selected_image_id: this.state.selected_image_id,
                         setOpenFolder: image.setOpenFolder.bind(this),
                         changeHandler: image.changeHandler.bind(this),
                         uploadHandler: image.uploadHandler.bind(this),
                         createFolder: image.createFolder.bind(this),
-                        deleteFolder: image.deleteFolder.bind(this)
+                        deleteFolder: image.deleteFolder.bind(this),
+                        selectImage: image.selectImage.bind(this)
                     });
                     break;
                 case 'menu':
@@ -287,9 +289,12 @@ var ImageEditor = function ImageEditor(props) {
             )
         ),
         React.createElement(FolderContents, {
+            errors: props.errors,
             deleteFolder: props.deleteFolder,
+            selectImage: props.selectImage,
             folderid: props.open_folder && props.open_folder.length ? props.open_folder[0].id : null,
-            content: props.open_folder && props.open_folder.length ? props.open_folder[0].images : null
+            content: props.open_folder && props.open_folder.length ? props.open_folder[0].images : null,
+            selected_image_id: props.selected_image_id
         }),
         React.createElement(
             "form",
@@ -359,14 +364,47 @@ var FolderContents = function FolderContents(props) {
         props.content ? props.content.length == 0 ? React.createElement(
             "span",
             null,
-            "[empty] ",
+            "[empty]",
             React.createElement(
-                "a",
-                { onClick: props.deleteFolder, "data-folderid": props.folderid },
+                "button",
+                { className: "pure-button pure-button-primary", onClick: props.deleteFolder, "data-folderid": props.folderid },
                 "delete this folder"
+            ),
+            React.createElement(
+                "span",
+                { className: "pure-form-message error" },
+                props.errors.delete_folder || ''
             )
         ) : props.content.map(function (image) {
-            return React.createElement("img", { src: image.url, title: image.filename + ' (' + image.width + 'x' + image.height + ')' });
+            return React.createElement(
+                "span",
+                null,
+                React.createElement("img", { className: "preview",
+                    src: image.url,
+                    title: image.filename + ' (' + image.width + 'x' + image.height + ')' + image.id,
+                    onClick: props.selectImage,
+                    "data-imageid": image.id
+                }),
+                React.createElement(
+                    "div",
+                    { className: props.selected_image_id == image.id ? "overlay visible" : "overlay hidden" },
+                    React.createElement(
+                        "div",
+                        { className: "frame" },
+                        React.createElement("img", {
+                            onClick: props.selectImage,
+                            src: image.url,
+                            title: image.filename + ' (' + image.width + ' x' + image.height + ')',
+                            "data-imageid": "0"
+                        }),
+                        React.createElement(
+                            "div",
+                            null,
+                            image.filename + ' (' + image.width + 'x' + image.height + ')'
+                        )
+                    )
+                )
+            );
         }) : ''
     );
 };
@@ -669,9 +707,9 @@ exports.default = MenuEditor;
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+    value: true
 });
-exports.uploadHandler = exports.deleteFolder = exports.createFolder = exports.changeHandler = exports.setOpenFolder = undefined;
+exports.selectImage = exports.uploadHandler = exports.deleteFolder = exports.createFolder = exports.changeHandler = exports.setOpenFolder = undefined;
 
 var _immutabilityHelper = require('immutability-helper');
 
@@ -682,121 +720,148 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function setOpenFolder(event) {
-	event.preventDefault();
-	var id = event.target.getAttribute('data-folderid');
-	var opened_folder = this.state.images.filter(function (item) {
-		return item.id == id;
-	});
-	var newState = (0, _immutabilityHelper2.default)(this.state, {
-		open_folder: { $set: opened_folder }
-	});
-	this.clearError('image_upload');
-	this.setState(newState);
+    event.preventDefault();
+    var id = event.target.getAttribute('data-folderid');
+    var opened_folder = this.state.images.filter(function (item) {
+        return item.id == id;
+    });
+    var newState = (0, _immutabilityHelper2.default)(this.state, {
+        open_folder: { $set: opened_folder }
+    });
+    this.clearError('image_upload');
+    this.setState(newState);
 }
 
 function changeHandler(event) {
-	var target = event.target;
-	var value = target.type === 'checkbox' ? target.checked : target.value;
-	var fieldname = target.name;
+    var target = event.target;
+    var value = target.type === 'checkbox' ? target.checked : target.value;
+    var fieldname = target.name;
 
-	if (_isValid.call(this, fieldname, value)) {
-		this.clearError(fieldname);
-		//var e = jQuery.extend({},this.state.errors);
-		//delete(e[fieldname]);
-		var newState = (0, _immutabilityHelper2.default)(this.state, _defineProperty({}, fieldname, { $set: value }));
-		this.setState(newState);
-	}
+    if (_isValid.call(this, fieldname, value)) {
+        this.clearError(fieldname);
+        //var e = jQuery.extend({},this.state.errors);
+        //delete(e[fieldname]);
+        var newState = (0, _immutabilityHelper2.default)(this.state, _defineProperty({}, fieldname, { $set: value }));
+        this.setState(newState);
+    }
 }
 
 function _isValid(fieldname, value) {
-	switch (fieldname) {
-		case 'new_folder_name':
-			if (value == '' || /^[a-zA-Z0-9\-_]+$/i.test(value)) return true;
-			this.setError(this, fieldname, 'invalid folder name');
-			return false;
-			break;
-		case 'image_upload':
-			return true;
-			break;
-	}
-	return false;
+    switch (fieldname) {
+        case 'new_folder_name':
+            if (value == '' || /^[a-zA-Z0-9\-_]+$/i.test(value)) return true;
+            this.setError(this, fieldname, 'invalid folder name');
+            return false;
+            break;
+        case 'image_upload':
+            return true;
+            break;
+    }
+    return false;
 }
 
 function deleteFolder(event) {
-	event.preventDefault();
-	var folderid = event.target.attributes["data-folderid"].value;
+    var _this = this;
+
+    event.preventDefault();
+    var folderid = event.target.attributes["data-folderid"].value;
+    this.postToApi('/admin/folders/delete', { id: folderid }, function (data) {
+        switch (data.status) {
+            case "error":
+                _this.setError('delete_folder', data.message);
+                break;
+            case "ok":
+                //const open_folder = data.images.filter(item=>item.id==data.folder_id);
+                var newState = (0, _immutabilityHelper2.default)(_this.state, {
+                    images: { $set: data.images },
+                    open_folder: { $set: null }
+                });
+                _this.setState(newState);
+                break;
+        }
+    });
 }
 
 function createFolder(event) {
-	var _this = this;
+    var _this2 = this;
 
-	event.preventDefault();
-	if (this.state.new_folder_name) {
-		this.postToApi('/admin/folders/new', { name: this.state.new_folder_name }, function (data) {
-			switch (data.status) {
-				case "error":
-					_this.setError('new_folder_name', data.message);
-					break;
-				case "ok":
-					var open_folder = data.images.filter(function (item) {
-						return item.id == data.folder_id;
-					});
-					var newState = (0, _immutabilityHelper2.default)(_this.state, {
-						images: { $set: data.images },
-						open_folder: { $set: open_folder }
-					});
-					_this.setState(newState);
-					break;
-			}
-		});
-	} else {
-		this.setError('new_folder_name', 'folder name can not be empty');
-	}
+    event.preventDefault();
+    if (this.state.new_folder_name) {
+        this.postToApi('/admin/folders/new', { name: this.state.new_folder_name }, function (data) {
+            switch (data.status) {
+                case "error":
+                    _this2.setError('new_folder_name', data.message);
+                    break;
+                case "ok":
+                    var open_folder = data.images.filter(function (item) {
+                        return item.id == data.folder_id;
+                    });
+                    var newState = (0, _immutabilityHelper2.default)(_this2.state, {
+                        images: { $set: data.images },
+                        open_folder: { $set: open_folder },
+                        new_folder_name: { $set: null }
+                    });
+                    _this2.setState(newState);
+                    break;
+            }
+        });
+    } else {
+        this.setError('new_folder_name', 'folder name can not be empty');
+    }
+}
+
+function selectImage(event) {
+    var imageid = event.target.attributes["data-imageid"].value;
+    console.log(imageid);
+    var newState = (0, _immutabilityHelper2.default)(this.state, {
+        selected_image_id: { $set: imageid }
+    });
+    this.setState(newState);
 }
 
 function uploadHandler(event) {
-	var _this2 = this;
+    var _this3 = this;
 
-	event.preventDefault();
-	var files = document.getElementById('image_upload').files;
+    event.preventDefault();
+    var files = document.getElementById('image_upload').files;
 
-	if (!files.length) return this.setError('image_upload', 'choose a file');
+    if (!files.length) return this.setError('image_upload', 'choose a file');
 
-	if (!(this.state.open_folder && this.state.open_folder.length)) return this.setError('image_upload', 'no folder selected');
+    if (!(this.state.open_folder && this.state.open_folder.length)) return this.setError('image_upload', 'no folder selected');
 
-	var data = new FormData(document.getElementById('image_form'));
-	data.append('folder_id', this.state.open_folder[0].id);
+    var data = new FormData(document.getElementById('image_form'));
+    data.append('folder_id', this.state.open_folder[0].id);
 
-	jQuery.post({
-		url: 'admin/images/new',
-		data: data,
-		cache: false,
-		contentType: false,
-		processData: false,
-		statusCode: {
-			403: function _(xhr) {
-				window.console && console.log(xhr.responseText);
-				window.location.replace('/login');
-			}
-		}
-	}).done(function (data) {
-		switch (data.status) {
-			case "error":
-				_this2.setError('image_upload', data.message);
-				break;
-			case "ok":
-				document.getElementById('image_upload').value = '';
-				var open_folder = data.images.filter(function (item) {
-					return item.id == data.folder_id;
-				});
-				var newState = (0, _immutabilityHelper2.default)(_this2.state, {
-					images: { $set: data.images },
-					open_folder: { $set: open_folder }
-				});
-				_this2.setState(newState);
-				break;
-		}
-	});
+    jQuery.post({
+        url: 'admin/images/new',
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        statusCode: {
+            403: function _(xhr) {
+                window.console && console.log(xhr.responseText);
+                window.location.replace('/login');
+            }
+        }
+    }).done(function (data) {
+        switch (data.status) {
+            case "error":
+                _this3.setError('image_upload', data.message);
+                break;
+            case "ok":
+                document.getElementById('image_upload').value = '';
+                var open_folder = data.images.filter(function (item) {
+                    return item.id == data.folder_id;
+                });
+                var newState = (0, _immutabilityHelper2.default)(_this3.state, {
+                    images: { $set: data.images },
+                    open_folder: { $set: open_folder }
+                });
+                _this3.setState(newState);
+                break;
+        }
+    });
 }
 
 exports.setOpenFolder = setOpenFolder;
@@ -804,6 +869,7 @@ exports.changeHandler = changeHandler;
 exports.createFolder = createFolder;
 exports.deleteFolder = deleteFolder;
 exports.uploadHandler = uploadHandler;
+exports.selectImage = selectImage;
 
 },{"immutability-helper":11}],9:[function(require,module,exports){
 'use strict';
