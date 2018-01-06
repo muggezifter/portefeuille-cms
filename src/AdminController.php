@@ -212,6 +212,50 @@ class AdminController extends BaseController
         $this->jsonResponse($response);
     }
 
+    public function apiMoveImage() 
+    {
+        $imgid = (int) $this->request->request->get('imgid');
+        $folderid = (int) $this->request->request->get('folderid');
+        $image = Image::find($imgid);
+        $folder = ImageFolder::find($folderid);
+        if (!$image) {
+            $response = ['status' => 'error', 'message' => 'image not found'];
+        } else if (!$folder) {
+            $response = ['status' => 'error', 'message' => 'folder not found'];
+        } else {
+            $image->image_folder_id = $folderid;
+            $image->save();
+            $images = ImageFolder::with('images')->orderBy('name')->get()->toArray();
+            $open_folder = ImageFolder::with('images')->find($folderid)->toArray();
+    
+            $response = ['status' => 'ok', 'images' => $images, 'open_folder' => $open_folder];  
+ 
+        }
+        $this->jsonResponse($response);
+   }
+
+    public function apiDeleteImage() 
+    {
+        $id = (int) $this->request->request->get('id');
+
+        $image = Image::find($id);
+        if (!$image) {
+            $response = ['status' => 'error', 'message' => 'image not found'];
+        } else {
+            $path = getcwd() . $image->url;
+            $folderid = $image->image_folder_id;
+            $image->delete();
+            if (file_exists($path)) {
+                unlink($path);
+            }                  
+            $images = ImageFolder::with('images')->orderBy('name')->get()->toArray();
+            $open_folder = ImageFolder::with('images')->find($folderid)->toArray();
+    
+            $response = ['status' => 'ok', 'images' => $images, 'open_folder' => $open_folder];  
+        }
+        $this->jsonResponse($response);
+    }
+
     /**
      * @param $typeid
      * @return mixed
@@ -254,10 +298,6 @@ class AdminController extends BaseController
      */
     private function getCategories()
     {
-        //$ids = array_map(function ($i) {
-        //    return $i["id"];
-       // }, $item_categories);
-
         return array_map(function ($i) {
             return ['id' => $i["id"],
                 'name' => $i["name"]];

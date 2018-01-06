@@ -165,7 +165,9 @@ var Admin = function (_React$Component) {
                         uploadHandler: image.uploadHandler.bind(this),
                         createFolder: image.createFolder.bind(this),
                         deleteFolder: image.deleteFolder.bind(this),
-                        selectImage: image.selectImage.bind(this)
+                        selectImage: image.selectImage.bind(this),
+                        deleteImage: image.deleteImage.bind(this),
+                        moveImageToFolder: image.moveImageToFolder.bind(this)
                     });
                     break;
                 case 'menu':
@@ -292,6 +294,9 @@ var ImageEditor = function ImageEditor(props) {
             errors: props.errors,
             deleteFolder: props.deleteFolder,
             selectImage: props.selectImage,
+            deleteImage: props.deleteImage,
+            moveImageToFolder: props.moveImageToFolder,
+            folders: props.folders,
             folderid: props.open_folder && props.open_folder.length ? props.open_folder[0].id : null,
             content: props.open_folder && props.open_folder.length ? props.open_folder[0].images : null,
             selected_image_id: props.selected_image_id
@@ -399,8 +404,36 @@ var FolderContents = function FolderContents(props) {
                         }),
                         React.createElement(
                             "div",
-                            null,
-                            image.filename + ' (' + image.width + 'x' + image.height + ')'
+                            { className: "info" },
+                            image.filename + ' (' + image.width + 'x' + image.height + ')',
+                            React.createElement(
+                                "button",
+                                { onClick: props.deleteImage, className: "pure-button pure-button-primary" },
+                                "delete"
+                            ),
+                            React.createElement(
+                                "select",
+                                { onChange: props.moveImageToFolder, className: "pure-select" },
+                                React.createElement(
+                                    "option",
+                                    { value: "0" },
+                                    "move to folder..."
+                                ),
+                                props.folders.filter(function (folder) {
+                                    return folder.id != props.folderid;
+                                }).map(function (folder) {
+                                    return React.createElement(
+                                        "option",
+                                        { value: folder.id },
+                                        folder.name
+                                    );
+                                })
+                            ),
+                            React.createElement(
+                                "span",
+                                { className: "pure-form-message error" },
+                                props.errors.selected_image_error || ''
+                            )
                         )
                     )
                 )
@@ -523,13 +556,13 @@ var ItemEditor = function ItemEditor(props) {
                     React.createElement(
                         "select",
                         { name: "categories", multiple: "multiple", value: props.item.categories, onChange: props.changeHandler },
-                        props.item.all_categories.map(function (category) {
+                        props.item.all_categories ? props.item.all_categories.map(function (category) {
                             return React.createElement(
                                 "option",
                                 { value: category.id },
                                 category.name
                             );
-                        })
+                        }) : ''
                     )
                 ) : '',
                 React.createElement(
@@ -709,7 +742,7 @@ exports.default = MenuEditor;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.selectImage = exports.uploadHandler = exports.deleteFolder = exports.createFolder = exports.changeHandler = exports.setOpenFolder = undefined;
+exports.moveImageToFolder = exports.deleteImage = exports.selectImage = exports.uploadHandler = exports.deleteFolder = exports.createFolder = exports.changeHandler = exports.setOpenFolder = undefined;
 
 var _immutabilityHelper = require('immutability-helper');
 
@@ -810,17 +843,64 @@ function createFolder(event) {
     }
 }
 
+function moveImageToFolder(event) {
+    var _this3 = this;
+
+    var folderid = event.target.value;
+    var imgid = this.state.selected_image_id;
+    this.postToApi('/admin/images/move', { imgid: imgid, folderid: folderid }, function (data) {
+        switch (data.status) {
+            case "error":
+                _this3.setError('selected_image_error', data.message);
+                break;
+            case "ok":
+                ;
+                var newState = (0, _immutabilityHelper2.default)(_this3.state, {
+                    images: { $set: data.images },
+                    open_folder: { $set: [data.open_folder] },
+                    selected_image_id: { $set: null }
+                });
+                _this3.setState(newState);
+                break;
+        }
+    });
+}
+
 function selectImage(event) {
+    event.preventDefault();
     var imageid = event.target.attributes["data-imageid"].value;
-    console.log(imageid);
     var newState = (0, _immutabilityHelper2.default)(this.state, {
         selected_image_id: { $set: imageid }
     });
     this.setState(newState);
 }
 
+function deleteImage(event) {
+    var _this4 = this;
+
+    event.preventDefault();
+    if (confirm('Are you sure?')) {
+        var img_id = this.state.selected_image_id;
+        this.postToApi('/admin/images/delete', { id: img_id }, function (data) {
+            switch (data.status) {
+                case "error":
+                    _this4.setError('selected_image_error', data.message);
+                    break;
+                case "ok":
+                    var newState = (0, _immutabilityHelper2.default)(_this4.state, {
+                        images: { $set: data.images },
+                        open_folder: { $set: [data.open_folder] },
+                        selected_image_id: { $set: null }
+                    });
+                    _this4.setState(newState);
+                    break;
+            }
+        });
+    }
+}
+
 function uploadHandler(event) {
-    var _this3 = this;
+    var _this5 = this;
 
     event.preventDefault();
     var files = document.getElementById('image_upload').files;
@@ -847,18 +927,18 @@ function uploadHandler(event) {
     }).done(function (data) {
         switch (data.status) {
             case "error":
-                _this3.setError('image_upload', data.message);
+                _this5.setError('image_upload', data.message);
                 break;
             case "ok":
                 document.getElementById('image_upload').value = '';
                 var open_folder = data.images.filter(function (item) {
                     return item.id == data.folder_id;
                 });
-                var newState = (0, _immutabilityHelper2.default)(_this3.state, {
+                var newState = (0, _immutabilityHelper2.default)(_this5.state, {
                     images: { $set: data.images },
                     open_folder: { $set: open_folder }
                 });
-                _this3.setState(newState);
+                _this5.setState(newState);
                 break;
         }
     });
@@ -870,6 +950,8 @@ exports.createFolder = createFolder;
 exports.deleteFolder = deleteFolder;
 exports.uploadHandler = uploadHandler;
 exports.selectImage = selectImage;
+exports.deleteImage = deleteImage;
+exports.moveImageToFolder = moveImageToFolder;
 
 },{"immutability-helper":11}],9:[function(require,module,exports){
 'use strict';
@@ -888,14 +970,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _getMultiSelectVal(select) {
-    var options = select.options;
-    var value = [];
-    for (var i = 0, l = options.length; i < l; i++) {
-        if (options[i].selected) {
-            value.push(options[i].value);
-        }
-    }
-    return value;
+    return Array.from(select.options).filter(function (option) {
+        return option.selected;
+    }).map(function (option) {
+        return option.value;
+    });
 }
 
 function changeHandler(event) {

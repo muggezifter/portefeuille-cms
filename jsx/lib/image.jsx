@@ -93,13 +93,59 @@ function createFolder(event) {
     }
 }
 
+function moveImageToFolder(event) {
+    const folderid = event.target.value;
+    const imgid = this.state.selected_image_id;
+    this.postToApi(
+        '/admin/images/move',
+        { imgid : imgid, folderid: folderid },
+        data=>{
+            switch(data.status){
+            case "error":
+                this.setError('selected_image_error',data.message);
+                break;
+            case "ok":;
+                const newState = update(this.state, {
+                    images: {$set: data.images},
+                    open_folder: {$set: [data.open_folder]},
+                    selected_image_id: {$set: null}
+                });
+                this.setState(newState); 
+                break;          
+        }});
+}
+
 function selectImage(event) {
+    event.preventDefault();
     const imageid = event.target.attributes["data-imageid"].value; 
-    console.log(imageid);
     const newState = update(this.state, {
             selected_image_id: {$set: imageid},
     });
     this.setState(newState); 
+}
+
+function deleteImage(event) {
+    event.preventDefault();
+    if (confirm('Are you sure?')) {
+        const img_id = this.state.selected_image_id;
+        this.postToApi(
+            '/admin/images/delete',
+            { id : img_id },
+            data=>{
+                switch(data.status){
+                    case "error":
+                        this.setError('selected_image_error',data.message);
+                        break;
+                    case "ok":
+                        const newState = update(this.state, {
+                             images: {$set: data.images},
+                             open_folder: {$set: [data.open_folder]},
+                             selected_image_id: {$set: null}
+                        });
+                        this.setState(newState); 
+                        break;          
+        }});
+    }
 }
 
 function uploadHandler(event) {
@@ -147,4 +193,4 @@ function uploadHandler(event) {
 }
 
 
-export { setOpenFolder, changeHandler, createFolder, deleteFolder, uploadHandler, selectImage }
+export { setOpenFolder, changeHandler, createFolder, deleteFolder, uploadHandler, selectImage, deleteImage, moveImageToFolder }

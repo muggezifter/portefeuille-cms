@@ -18,6 +18,9 @@ var ImageEditor = props =>
             errors = { props.errors }
             deleteFolder = { props.deleteFolder }
             selectImage = { props.selectImage }
+            deleteImage = { props.deleteImage }
+            moveImageToFolder = { props.moveImageToFolder }
+            folders = { props.folders }
             folderid = { props.open_folder && props.open_folder.length ? props.open_folder[0].id : null }
             content = { props.open_folder && props.open_folder.length ? props.open_folder[0].images : null }
             selected_image_id = { props.selected_image_id }
@@ -74,7 +77,17 @@ var FolderContents = props =>
                                 title={ image.filename + ' (' + image.width + ' x' + image.height + ')' } 
                                 data-imageid="0"
                             />
-                            <div>{ image.filename + ' (' + image.width + 'x' + image.height + ')' }</div>
+                            <div className="info">
+                                { image.filename + ' (' + image.width + 'x' + image.height + ')' }
+                                <button onClick={ props.deleteImage } className="pure-button pure-button-primary">delete</button>
+                                <select onChange={ props.moveImageToFolder } className="pure-select">
+                                    <option value="0">move to folder...</option>
+                                    { props.folders.filter(folder => folder.id != props.folderid).map(
+                                        folder =>  <option value={ folder.id }>{folder.name }</option>
+                                        )}
+                                </select>
+                                <span className="pure-form-message error">{ props.errors.selected_image_error  || '' }</span>
+                            </div>
                         </div>
                     </div>
                 </span>

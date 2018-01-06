@@ -45,8 +45,8 @@ var ItemEditor = props =>
         <div className="pure-control-group">
             <label for="categories">categories:</label>
             <select name="categories" multiple="multiple" value={ props.item.categories }  onChange={ props.changeHandler }>
-            { props.item.all_categories.map(category =>
-                <option value={ category.id }>{ category.name }</option>)
+            { props.item.all_categories ? props.item.all_categories.map(category =>
+                <option value={ category.id }>{ category.name }</option> ) : ''
             }
             </select>
         </div>: ''

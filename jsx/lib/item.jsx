@@ -1,14 +1,9 @@
 import update from 'immutability-helper';
 
 function _getMultiSelectVal(select) {
-    const options = select.options;
-    var value = [];
-    for (var i = 0, l = options.length; i < l; i++) {
-        if (options[i].selected) {
-            value.push(options[i].value);
-        }
-    }
-    return(value)
+    return Array.from(select.options)
+        .filter(option=>option.selected)
+        .map(option => option.value);
 }
 
 function changeHandler(event) {

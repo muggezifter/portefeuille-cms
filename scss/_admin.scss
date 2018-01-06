@@ -66,14 +66,13 @@ body.admin {
     }
     .pure-form legend {
         color: $text-color;
-        /*border-bottom: 1px solid #777;*/
     }
     .pure-form-message.error {
         color: red;
     }
     .image-folder {
         img.preview {
-            height: 80px;
+            height: 120px;
             margin: 0 10px 10px 0;
         }
         .overlay {
@@ -95,11 +94,20 @@ body.admin {
             .frame {
                 display: inline-block;
                 overflow: hidden;
-                background-color: white;
+                background-color: rgba(255,255,255,0.9);
                 padding: 1em;
                 img {
                     max-width: 80vw;
                     max-height: 50vh;
+                }
+                .info {
+                    margin-top: 10px;
+                    text-align: left;
+                    button, .pure-form-message, .pure-select {
+                        float : right;
+                        margin-right: 0;
+                        margin-left: 5px;
+                    }
                 }
             }
         }

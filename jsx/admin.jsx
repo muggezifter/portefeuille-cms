@@ -104,6 +104,8 @@ class Admin extends React.Component {
                     createFolder={ image.createFolder.bind(this) }
                     deleteFolder={ image.deleteFolder.bind(this) }
                     selectImage={ image.selectImage.bind(this) }
+                    deleteImage={ image.deleteImage.bind(this) }
+                    moveImageToFolder={ image.moveImageToFolder.bind(this) }
                 />
                 break;
             case 'menu':
