@@ -23,7 +23,7 @@ class Template
         $loader = new Twig_Loader_Filesystem('../templates');
 
         $this->twig = new Twig_Environment($loader, array(
-            'cache' => '../cache',
+            'cache' => TWIG_CACHEDIR,
             'auto_reload' => true,
             'strict_variables' => true
         ));

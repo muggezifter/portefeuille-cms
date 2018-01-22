@@ -2,6 +2,9 @@
 sitename='[your sitename]'
 siteurl='[your site url]]'
 
+[twig]
+cachedir=../cache
+
 [database]
 ; database 
 driver = mysql
