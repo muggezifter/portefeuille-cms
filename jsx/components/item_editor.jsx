@@ -19,8 +19,21 @@ var ItemEditor = props =>
     }
     { props.type == "items" ?
         <div className="pure-control-group">
-            <label for="thumbnail">thumbnail</label>
-            <input name="thumbnail" type="text" placeholder="thumbnail" value={ props.item.thumbnail } onChange={ props.changeHandler } />
+            <label>thumbnail</label>
+            <div className="img-picker">
+            { !!props.item.thumbnail  ?
+                <img className="thumbnail" src={ props.item.thumbnail }  />
+                : <span className="no_thumbnail">[no image]</span>
+            }
+                <div class="btns">
+                    <button onClick={ props.pickImage } className="pure-button pure-button-primary" data-field="thumbnail">{ !!props.item.thumbnail ? "change":"select" }</button>
+                    { !!props.item.thumbnail  ?
+                        <button onClick={ props.removeImage } className="pure-button pure-button-primary" data-field="thumbnail">remove</button>
+                        :''
+                    }
+                </div>
+            <input name="thumbnail" type="hidden" placeholder="thumbnail" value={ props.item.thumbnail } />
+            </div>
         </div> : ''
     }
     { props.type == "items" ?

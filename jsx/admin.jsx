@@ -118,6 +118,8 @@ class Admin extends React.Component {
                     changeHandler={ item.changeHandler.bind(this) }
                     saveHandler={ item.saveHandler.bind(this) }
                     resetHandler={ item.resetHandler.bind(this) }
+                    pickImage = { item.pickImage.bind(this) }
+                    removeImage = { item.removeImage.bind(this) }
                 />;
             }
     }

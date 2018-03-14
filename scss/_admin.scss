@@ -12,6 +12,22 @@ body.admin {
             margin-right: 0.5em;
         }
         .pure-form-aligned {
+            .img-picker {
+                margin: -1em 0 0 8em;
+                .thumbnail {
+                    padding: 0;
+                    width: 200px;
+                }
+                .no_thumbnail {
+                    display: block;
+                    text-align: center;
+                    width: 200px;
+                    line-height: 8em;
+                    margin-bottom: 5px;
+                    border: 1px solid $text-color;
+
+                }
+            }
             .pure-control-group label {
                 width: 7em;
             }

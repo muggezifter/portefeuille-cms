@@ -179,7 +179,9 @@ var Admin = function (_React$Component) {
                         item: this.state.item,
                         changeHandler: item.changeHandler.bind(this),
                         saveHandler: item.saveHandler.bind(this),
-                        resetHandler: item.resetHandler.bind(this)
+                        resetHandler: item.resetHandler.bind(this),
+                        pickImage: item.pickImage.bind(this),
+                        removeImage: item.removeImage.bind(this)
                     });
             }
         }
@@ -502,10 +504,33 @@ var ItemEditor = function ItemEditor(props) {
                     { className: "pure-control-group" },
                     React.createElement(
                         "label",
-                        { "for": "thumbnail" },
+                        null,
                         "thumbnail"
                     ),
-                    React.createElement("input", { name: "thumbnail", type: "text", placeholder: "thumbnail", value: props.item.thumbnail, onChange: props.changeHandler })
+                    React.createElement(
+                        "div",
+                        { className: "img-picker" },
+                        !!props.item.thumbnail ? React.createElement("img", { className: "thumbnail", src: props.item.thumbnail }) : React.createElement(
+                            "span",
+                            { className: "no_thumbnail" },
+                            "[no image]"
+                        ),
+                        React.createElement(
+                            "div",
+                            { "class": "btns" },
+                            React.createElement(
+                                "button",
+                                { onClick: props.pickImage, className: "pure-button pure-button-primary", "data-field": "thumbnail" },
+                                !!props.item.thumbnail ? "change" : "select"
+                            ),
+                            !!props.item.thumbnail ? React.createElement(
+                                "button",
+                                { onClick: props.removeImage, className: "pure-button pure-button-primary", "data-field": "thumbnail" },
+                                "remove"
+                            ) : ''
+                        ),
+                        React.createElement("input", { name: "thumbnail", type: "hidden", placeholder: "thumbnail", value: props.item.thumbnail })
+                    )
                 ) : '',
                 props.type == "items" ? React.createElement(
                     "div",
@@ -959,7 +984,7 @@ exports.moveImageToFolder = moveImageToFolder;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.resetHandler = exports.saveHandler = exports.changeHandler = undefined;
+exports.resetHandler = exports.saveHandler = exports.removeImage = exports.pickImage = exports.changeHandler = undefined;
 
 var _immutabilityHelper = require('immutability-helper');
 
@@ -990,6 +1015,20 @@ function changeHandler(event) {
     //}
 }
 
+function pickImage(event) {
+    event.preventDefault();
+    alert("pick image");
+}
+
+function removeImage(event) {
+    event.preventDefault();
+    var field = event.target.attributes["data-field"].value;
+    var newState = (0, _immutabilityHelper2.default)(this.state, {
+        item: _defineProperty({}, field, { $set: null })
+    });
+    this.setState(newState);
+}
+
 function saveHandler(event) {
     event.preventDefault();
     alert("save");
@@ -1000,6 +1039,8 @@ function resetHandler() {
 }
 
 exports.changeHandler = changeHandler;
+exports.pickImage = pickImage;
+exports.removeImage = removeImage;
 exports.saveHandler = saveHandler;
 exports.resetHandler = resetHandler;
 

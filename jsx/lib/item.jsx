@@ -25,9 +25,25 @@ function changeHandler(event) {
     //}
 }
 
+function pickImage(event) {
+    event.preventDefault();
+    alert("pick image");
+}
+
+function removeImage(event) {
+    event.preventDefault();
+    const field = event.target.attributes["data-field"].value;
+    const newState = update(this.state, {
+        item: {
+            [field]: {$set: null}
+        }
+    });
+    this.setState(newState);  
+}
+
 function saveHandler(event) {
-        event.preventDefault();
-        alert("save");
+    event.preventDefault();
+    alert("save");
 }
 
  
@@ -36,4 +52,4 @@ function resetHandler() {
 }
 
 
-export { changeHandler, saveHandler, resetHandler }
+export { changeHandler, pickImage, removeImage, saveHandler, resetHandler }
