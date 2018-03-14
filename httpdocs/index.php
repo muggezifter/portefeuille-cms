@@ -10,7 +10,7 @@ $ac = new AdminController();
 
 
 $router->addRoutes([
-	// home route 
+	// home route
 	['GET', '/', function()use($pc){ $pc->redirect('/work'); },'home_redirect'],
 
 	// admin routes
@@ -25,7 +25,7 @@ $router->addRoutes([
 	['POST','/admin/images/move', function()use($ac){ $ac->apiChecks() && $ac->apiMoveImage(); },'images_move'],
 	['POST','/admin/images/delete', function()use($ac){ $ac->apiChecks() && $ac->apiDeleteImage(); },'images_delete'],
 	['GET', '/admin/[pages|items|categories:type]', function($type)use($ac){ $ac->apiChecks() && $ac->apiList($type); },'admin_list'],
-	['GET','/admin/[pages|items|categories:type]/[a:slug]', function($type,$slug)use($ac){ $ac->apiChecks() && $ac->apiItem($type,$slug); },'admin_item'],
+	['GET','/admin/[pages|items|categories:type]/[a:slug]', function($type,$slug)use($ac){ $ac->apiChecks() && $ac->apiGetItem($type,$slug); },'admin_item'],
 
 	// frontend routes
 	['GET', '/[a:slug]/', function($slug)use($pc){ $pc->renderPage($slug);  },'page_legacy'],
@@ -38,7 +38,7 @@ $router->addRoutes([
 $match = $router->match();
 
 if( $match && is_callable( $match['target'] ) ) {
-	call_user_func_array( $match['target'], $match['params'] ); 
+	call_user_func_array( $match['target'], $match['params'] );
 } else {
 	$pc->pageNotFound();
 }

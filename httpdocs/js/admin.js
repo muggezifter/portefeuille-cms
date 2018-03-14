@@ -1125,15 +1125,15 @@ function listClickHandler(event) {
     event.preventDefault();
     var slug = event.target.getAttribute('data-item');
     var type = this.state.type;
-    if (slug) {
-        this.getItem(type, slug);
-    } else {
-        var newState = (0, _immutabilityHelper2.default)(this.state, {
-            view: { $set: 'editor' },
-            item: { $set: { title: '[new ' + this.singular(type) + ']' } }
-        });
-        this.setState(newState);
-    }
+    //if (slug) {
+    this.getItem(type, slug || 'new');
+    //} else {
+    //    const newState = update(this.state, {
+    //        view: {$set: 'editor'},
+    //        item: {$set: {title: '[new ' + this.singular(type) + ']'}}
+    //    });
+    //    this.setState(newState);
+    //}
 }
 
 exports.menuClickHandler = menuClickHandler;

@@ -168,8 +168,8 @@ class AdminController extends BaseController
 
             $folder->delete();
             $images = ImageFolder::with('images')->orderBy('name')->get()->toArray();
-       
-            $response = ['status' => 'ok', 'images' => $images];   
+
+            $response = ['status' => 'ok', 'images' => $images];
         }
         $this->jsonResponse($response);
     }
@@ -212,7 +212,7 @@ class AdminController extends BaseController
         $this->jsonResponse($response);
     }
 
-    public function apiMoveImage() 
+    public function apiMoveImage()
     {
         $imgid = (int) $this->request->request->get('imgid');
         $folderid = (int) $this->request->request->get('folderid');
@@ -227,14 +227,14 @@ class AdminController extends BaseController
             $image->save();
             $images = ImageFolder::with('images')->orderBy('name')->get()->toArray();
             $open_folder = ImageFolder::with('images')->find($folderid)->toArray();
-    
-            $response = ['status' => 'ok', 'images' => $images, 'open_folder' => $open_folder];  
- 
+
+            $response = ['status' => 'ok', 'images' => $images, 'open_folder' => $open_folder];
+
         }
         $this->jsonResponse($response);
    }
 
-    public function apiDeleteImage() 
+    public function apiDeleteImage()
     {
         $id = (int) $this->request->request->get('id');
 
@@ -247,11 +247,11 @@ class AdminController extends BaseController
             $image->delete();
             if (file_exists($path)) {
                 unlink($path);
-            }                  
+            }
             $images = ImageFolder::with('images')->orderBy('name')->get()->toArray();
             $open_folder = ImageFolder::with('images')->find($folderid)->toArray();
-    
-            $response = ['status' => 'ok', 'images' => $images, 'open_folder' => $open_folder];  
+
+            $response = ['status' => 'ok', 'images' => $images, 'open_folder' => $open_folder];
         }
         $this->jsonResponse($response);
     }
@@ -269,7 +269,7 @@ class AdminController extends BaseController
      * @param $type
      * @param $slug
      */
-    public function apiItem($type, $slug)
+    public function apiGetItem($type, $slug)
     {
         $item = [];
         switch ($type) {
@@ -277,7 +277,9 @@ class AdminController extends BaseController
                 $item = Post::where('slug', $slug)->get()->toArray();
                 break;
             case "items":
-                $item = Post::where('slug', $slug)->with('categories')->get()->toArray();
+                $item = ($slug == 'new')
+                    ? [['title'=>'new item','categories'=>[]]]
+                    : Post::where('slug', $slug)->with('categories')->get()->toArray();
                 if (count($item)) {
                     $item[0]['categories'] = array_map(function ($i) {
                             return $i["id"];

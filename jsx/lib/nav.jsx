@@ -14,7 +14,7 @@ function _menuActionLogout(){
             type: {$set: "logout"}
         });
         this.setState(newState);
-    });   
+    });
 }
 
 function _menuActionImages(){
@@ -25,7 +25,7 @@ function _menuActionImages(){
             type: {$set: "images"}
         });
         this.setState(newState);
-    });    
+    });
 }
 
 function _menuActionDefault(action){
@@ -39,8 +39,6 @@ function _menuActionDefault(action){
     });
 }
 
-
-
 function menuClickHandler(event) {
     event.preventDefault();
     const action = event.target.getAttribute('data-action');
@@ -53,7 +51,7 @@ function menuClickHandler(event) {
             break;
         case 'images':
             _menuActionImages.call(this);
-            break;    
+            break;
         default:
             _menuActionDefault.call(this,action);
     }
@@ -63,15 +61,15 @@ function listClickHandler(event){
     event.preventDefault();
     const slug = event.target.getAttribute('data-item');
     const type = this.state.type;
-    if (slug) {
-        this.getItem(type, slug);
-    } else {
-        const newState = update(this.state, {
-            view: {$set: 'editor'},
-            item: {$set: {title: '[new ' + this.singular(type) + ']'}}
-        });
-        this.setState(newState);
-    }
+    //if (slug) {
+    this.getItem(type, slug || 'new');
+    //} else {
+    //    const newState = update(this.state, {
+    //        view: {$set: 'editor'},
+    //        item: {$set: {title: '[new ' + this.singular(type) + ']'}}
+    //    });
+    //    this.setState(newState);
+    //}
 }
 
 export { menuClickHandler, listClickHandler }
