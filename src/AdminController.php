@@ -278,7 +278,7 @@ class AdminController extends BaseController
                 break;
             case "items":
                 $item = ($slug == 'new')
-                    ? [['title'=>'new item','categories'=>[]]]
+                    ? [['categories'=>[]]]
                     : Post::where('slug', $slug)->with('categories')->get()->toArray();
                 if (count($item)) {
                     $item[0]['categories'] = array_map(function ($i) {
@@ -292,6 +292,10 @@ class AdminController extends BaseController
                 break;
         }
         $this->jsonResponse($item);
+    }
+
+    public function apiSaveItem($type, $slug) {
+        $this->jsonResponse([]);
     }
 
     /**

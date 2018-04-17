@@ -477,7 +477,7 @@ var ItemEditor = function ItemEditor(props) {
                         { "for": "title" },
                         "title"
                     ),
-                    React.createElement("input", { name: "title", className: "pure-u-3-4", type: "text", value: props.item.title, onChange: props.changeHandler })
+                    React.createElement("input", { name: "title", className: "pure-u-3-4", type: "text", placeholder: "title", value: props.item.title, onChange: props.changeHandler })
                 ),
                 React.createElement(
                     "div",
@@ -1031,7 +1031,11 @@ function removeImage(event) {
 
 function saveHandler(event) {
     event.preventDefault();
-    alert("save");
+    var id = !this.state.item.id ? "new" : this.state.item.id;
+    alert(id);
+    this.postToApi('admin/items/' + id, this.state.item, function (date) {
+        alert("hoera");
+    });
 }
 
 function resetHandler() {

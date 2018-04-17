@@ -26,7 +26,8 @@ $router->addRoutes([
 	['POST','/admin/images/delete', function()use($ac){ $ac->apiChecks() && $ac->apiDeleteImage(); },'images_delete'],
 	['GET', '/admin/[pages|items|categories:type]', function($type)use($ac){ $ac->apiChecks() && $ac->apiList($type); },'admin_list'],
 	['GET','/admin/[pages|items|categories:type]/[a:slug]', function($type,$slug)use($ac){ $ac->apiChecks() && $ac->apiGetItem($type,$slug); },'admin_item'],
-
+	['POST','/admin/[pages|items|categories:type]/[a:slug]', function($type,$slug)use($ac){ $ac->apiChecks() && $ac->apiSaveItem($type,$slug); },'admin_item_save'],
+	
 	// frontend routes
 	['GET', '/[a:slug]/', function($slug)use($pc){ $pc->renderPage($slug);  },'page_legacy'],
 	['GET', '/[a:slug]', function($slug)use($pc){ $pc->renderPage($slug); },'page'],

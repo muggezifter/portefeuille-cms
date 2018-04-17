@@ -5,7 +5,7 @@ var ItemEditor = props =>
     <fieldset>
         <div className="pure-control-group">
             <label for="title">title</label>
-            <input name="title" className="pure-u-3-4" type="text" value={ props.item.title } onChange={ props.changeHandler } />
+            <input name="title" className="pure-u-3-4" type="text" placeholder="title" value={ props.item.title } onChange={ props.changeHandler } />
         </div>
         <div className="pure-control-group">
             <label for="slug">slug</label>
@@ -21,7 +21,7 @@ var ItemEditor = props =>
         <div className="pure-control-group">
             <label>thumbnail</label>
             <div className="img-picker">
-            { !!props.item.thumbnail  ?
+            { !!props.item.thumbnail ?
                 <img className="thumbnail" src={ props.item.thumbnail }  />
                 : <span className="no_thumbnail">[no image]</span>
             }

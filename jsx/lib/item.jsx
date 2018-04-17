@@ -43,7 +43,9 @@ function removeImage(event) {
 
 function saveHandler(event) {
     event.preventDefault();
-    alert("save");
+    const id = (!this.state.item.id)? "new" : this.state.item.id;
+    alert(id);
+    this.postToApi('admin/items/' + id,this.state.item,(date)=>{alert("hoera");})
 }
 
  
