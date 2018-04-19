@@ -193,7 +193,7 @@ var Admin = function (_React$Component) {
                 { className: 'pure-g wrapper admin' },
                 React.createElement(
                     'div',
-                    { className: 'pure-u-1-5 inverted' },
+                    { className: 'menu-sidebar inverted' },
                     React.createElement(
                         'div',
                         { className: 'pure-menu' },
@@ -210,7 +210,7 @@ var Admin = function (_React$Component) {
                 ),
                 React.createElement(
                     'div',
-                    { className: 'pure-u-4-5' },
+                    { className: 'admin-page' },
                     this.state.view == 'list' ? React.createElement(_list2.default, {
                         type: this.singular(this.state.type),
                         action: this.state.type,
@@ -1126,6 +1126,7 @@ function menuClickHandler(event) {
 }
 
 function listClickHandler(event) {
+    alert(event);
     event.preventDefault();
     var slug = event.target.getAttribute('data-item');
     var type = this.state.type;

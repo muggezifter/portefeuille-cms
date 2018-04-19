@@ -127,7 +127,7 @@ class Admin extends React.Component {
     render() {
         return (
             <div className="pure-g wrapper admin">
-                <div className="pure-u-1-5 inverted">
+                <div className="menu-sidebar inverted">
                     <div className="pure-menu">
                         <span className="pure-menu-heading">admin</span>
                         <Menu
@@ -136,7 +136,7 @@ class Admin extends React.Component {
                         />
                     </div>
                 </div>
-                <div className="pure-u-4-5">
+                <div className="admin-page">
                 { this.state.view == 'list' 
                     ? <List
                         type={ this.singular(this.state.type) }

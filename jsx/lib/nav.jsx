@@ -58,6 +58,7 @@ function menuClickHandler(event) {
 }
 
 function listClickHandler(event){
+    alert(event);
     event.preventDefault();
     const slug = event.target.getAttribute('data-item');
     const type = this.state.type;

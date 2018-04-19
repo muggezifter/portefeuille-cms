@@ -1,11 +1,25 @@
+
 body.admin {
     .wrapper {
+        letter-spacing: 0.12rem;
         max-width: 100%;
     }
-    background: $text-color;
-    background-image: -webkit-linear-gradient(left, $text-color 20%, #fff 20%, #fff 100%);
-    background-image: linear-gradient(left, $text-color 20%, #fff 20%, #fff 100%);
+
+
+    background-image: -webkit-linear-gradient(left, $text-color 200px, #fff 200px, #fff 100%);
+    background-image: linear-gradient(left, $text-color 200px, #fff 200px, #fff 100%);
+    
+    .menu-sidebar {
+        width: 200px;
+        position: absolute;
+    }
+    .admin-page {
+        width: 100%;
+        padding-left: 200px;
+    }
     .editor {
+        min-width: 800px;
+        max-width: 1000px;
         margin-left: 1em;
         button {
             font-size: 0.8em;
