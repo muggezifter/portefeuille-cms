@@ -5,11 +5,11 @@ var List = props =>
         { props.list.map(
             list => 
             <li className='pure-menu-item' key={ list.id }>
-                <a href="#" onClick={ props.listClickHandler } className="pure-menu-link" data-item={ list.slug }>{ list.name }</a>
+                <a href="#" onClick={ props.listClickHandler } className="pure-menu-link" data-item-id={ list.id }>{ list.name }</a>
             </li>
         )}
         <li className='pure-menu-item' key='0'>
-            <a href="#" onClick={ props.listClickHandler } className="pure-menu-link addnew" data-item=''>+ new { props.type }</a>
+            <a href="#" onClick={ props.listClickHandler } className="pure-menu-link addnew" data-item-id='0'>+ new { props.type }</a>
         </li>
     </ul>
 </div>

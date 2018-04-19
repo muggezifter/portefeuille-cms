@@ -58,12 +58,11 @@ function menuClickHandler(event) {
 }
 
 function listClickHandler(event){
-    alert(event);
     event.preventDefault();
-    const slug = event.target.getAttribute('data-item');
+    const id = event.target.getAttribute('data-item-id');
     const type = this.state.type;
     //if (slug) {
-    this.getItem(type, slug || 'new');
+    this.getItem(type, id);
     //} else {
     //    const newState = update(this.state, {
     //        view: {$set: 'editor'},

@@ -91,14 +91,13 @@ var Admin = function (_React$Component) {
         }
     }, {
         key: 'getItem',
-        value: function getItem(type, slug) {
+        value: function getItem(type, id) {
             var _this2 = this;
 
-            this.getFromApi('/admin/' + type + '/' + slug, function (data) {
+            this.getFromApi('/admin/' + type + '/' + id, function (data) {
                 if (data.length > 0) {
                     var newState = (0, _immutabilityHelper2.default)(_this2.state, {
                         view: { $set: 'editor' },
-                        slug: { $set: slug },
                         item: { $set: data[0] }
                     });
                     _this2.setState(newState);
@@ -150,7 +149,7 @@ var Admin = function (_React$Component) {
                 case 'categories':
                     return React.createElement(_category_editor2.default, {
                         item: this.state.item,
-                        itemInputChangeHandler: item.changeHandler.bind(this)
+                        changeHandler: item.changeHandler.bind(this)
                     });
                     break;
                 case 'images':
@@ -240,12 +239,77 @@ var CategoryEditor = function CategoryEditor(props) {
         { className: "editor" },
         React.createElement(
             "form",
-            { className: "pure-form pure-form-stacked" },
+            { className: "pure-form pure-form-aligned" },
             React.createElement(
                 "h1",
                 { className: "item-title" },
                 "categories :: ",
-                props.item.title || 'new category'
+                props.item.name || 'new category'
+            ),
+            React.createElement(
+                "fieldset",
+                null,
+                React.createElement(
+                    "div",
+                    { className: "pure-control-group" },
+                    React.createElement(
+                        "label",
+                        { "for": "name" },
+                        "name"
+                    ),
+                    React.createElement("input", { name: "name",
+                        type: "text",
+                        placeholder: "name",
+                        value: props.item.name,
+                        onChange: props.changeHandler })
+                ),
+                React.createElement(
+                    "div",
+                    { className: "pure-control-group" },
+                    React.createElement(
+                        "label",
+                        { "for": "slug" },
+                        "slug"
+                    ),
+                    React.createElement("input", { name: "slug",
+                        type: "text",
+                        placeholder: "slug",
+                        value: props.item.slug,
+                        onChange: props.changeHandler })
+                ),
+                React.createElement(
+                    "div",
+                    { className: "pure-controls" },
+                    React.createElement(
+                        "label",
+                        { "for": "online", className: "pure-checkbox" },
+                        React.createElement("input", { name: "online",
+                            type: "checkbox",
+                            checked: props.item.online == 1,
+                            onChange: props.changeHandler }),
+                        "online"
+                    )
+                ),
+                React.createElement(
+                    "div",
+                    { className: "pure-controls" },
+                    React.createElement(
+                        "button",
+                        { type: "reset",
+                            onClick: props.resetHandler,
+                            className: "pure-button editorbutton" },
+                        React.createElement("i", { className: "fa fa-undo" }),
+                        "\xA0reset"
+                    ),
+                    React.createElement(
+                        "button",
+                        { type: "submit",
+                            onClick: props.saveHandler,
+                            className: "pure-button pure-button-primary" },
+                        React.createElement("i", { className: "fa fa-save" }),
+                        "\xA0save"
+                    )
+                )
             )
         )
     );
@@ -464,7 +528,7 @@ var ItemEditor = function ItemEditor(props) {
                 { className: "item-title" },
                 props.type,
                 " :: ",
-                props.item.title || 'new item'
+                props.item.id ? props.item.title : props.type === 'items' ? 'new item' : 'new page'
             ),
             React.createElement(
                 "fieldset",
@@ -647,7 +711,7 @@ var List = function List(props) {
                     { className: "pure-menu-item", key: list.id },
                     React.createElement(
                         "a",
-                        { href: "#", onClick: props.listClickHandler, className: "pure-menu-link", "data-item": list.slug },
+                        { href: "#", onClick: props.listClickHandler, className: "pure-menu-link", "data-item-id": list.id },
                         list.name
                     )
                 );
@@ -657,7 +721,7 @@ var List = function List(props) {
                 { className: "pure-menu-item", key: "0" },
                 React.createElement(
                     "a",
-                    { href: "#", onClick: props.listClickHandler, className: "pure-menu-link addnew", "data-item": "" },
+                    { href: "#", onClick: props.listClickHandler, className: "pure-menu-link addnew", "data-item-id": "0" },
                     "+ new ",
                     props.type
                 )
@@ -1126,12 +1190,11 @@ function menuClickHandler(event) {
 }
 
 function listClickHandler(event) {
-    alert(event);
     event.preventDefault();
-    var slug = event.target.getAttribute('data-item');
+    var id = event.target.getAttribute('data-item-id');
     var type = this.state.type;
     //if (slug) {
-    this.getItem(type, slug || 'new');
+    this.getItem(type, id);
     //} else {
     //    const newState = update(this.state, {
     //        view: {$set: 'editor'},

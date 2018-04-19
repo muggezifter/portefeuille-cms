@@ -1,7 +1,11 @@
 var ItemEditor = props =>
 <div className="editor">
 <form className="pure-form pure-form-aligned">
-    <h1 className="item-title">{props.type} :: { props.item.title || 'new item' }</h1>
+    <h1 className="item-title">{props.type} :: { props.item.id 
+        ? props.item.title 
+        : (props.type  === 'items') 
+            ? 'new item' 
+            : 'new page' }</h1>
     <fieldset>
         <div className="pure-control-group">
             <label for="title">title</label>

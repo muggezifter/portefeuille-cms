@@ -267,19 +267,22 @@ class AdminController extends BaseController
 
     /**
      * @param $type
-     * @param $slug
+     * @param $id
      */
-    public function apiGetItem($type, $slug)
+    public function apiGetItem($type, $id)
     {
+        
         $item = [];
         switch ($type) {
             case "pages":
-                $item = Post::where('slug', $slug)->get()->toArray();
+                $item = ($id === '0')
+                    ? [[]]
+                    : Post::where('id',$id)->get()->toArray();
                 break;
             case "items":
-                $item = ($slug == 'new')
+                $item = ($id === '0')
                     ? [['categories'=>[]]]
-                    : Post::where('slug', $slug)->with('categories')->get()->toArray();
+                    : Post::where('id',$id)->with('categories')->get()->toArray();
                 if (count($item)) {
                     $item[0]['categories'] = array_map(function ($i) {
                             return $i["id"];
@@ -288,13 +291,15 @@ class AdminController extends BaseController
                 }
                 break;
             case "categories":
-                $item = Category::where('slug', $slug)->with('posts')->get()->toArray();
+                $item = ($id === '0')
+                    ? [[]]
+                    : Category::where('id',$id)->with('posts')->get()->toArray();
                 break;
         }
         $this->jsonResponse($item);
     }
 
-    public function apiSaveItem($type, $slug) {
+    public function apiSaveItem($type, $id) {
         $this->jsonResponse([]);
     }
 

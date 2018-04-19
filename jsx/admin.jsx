@@ -35,12 +35,11 @@ class Admin extends React.Component {
         this.setState(newState);
     }
 
-    getItem(type, slug) {
-        this.getFromApi('/admin/' + type + '/' + slug,data => {
+    getItem(type, id) {
+        this.getFromApi('/admin/' + type + '/' + id, data => {
             if (data.length > 0) {
                 const newState = update(this.state, {
                     view: {$set: 'editor'},
-                    slug: {$set: slug},
                     item: {$set: data[0]}
                 });
                 this.setState(newState);
@@ -88,7 +87,7 @@ class Admin extends React.Component {
             case 'categories':
                 return <CategoryEditor
                     item={ this.state.item }
-                    itemInputChangeHandler={ item.changeHandler.bind(this) }
+                    changeHandler={ item.changeHandler.bind(this) }
                 />;
                 break;
             case 'images':
