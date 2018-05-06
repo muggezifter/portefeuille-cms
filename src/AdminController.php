@@ -8,6 +8,7 @@ use Portefeuille\Models\SidebarItemType;
 use Portefeuille\Models\User;
 use Portefeuille\Models\Image;
 use Portefeuille\Models\ImageFolder;
+use Portefeuille\Validators\CategoryValidator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -262,7 +263,10 @@ class AdminController extends BaseController
      */
     private function getPostList($typeid)
     {
-        return Post::where('post_type_id', $typeid)->select('id', 'title AS name', 'slug', 'online')->get()->toArray();
+        return Post::where('post_type_id', $typeid)
+            ->select('id', 'title AS name', 'slug', 'online')
+            ->get()
+            ->toArray();
     }
 
     /**
@@ -270,8 +274,17 @@ class AdminController extends BaseController
      * @param $id
      */
     public function apiGetItem($type, $id)
-    {
-        
+    { 
+        $item = $this->retrieveItem($type, $id);
+        $this->jsonResponse($item);
+    }
+
+    /**
+     * @param $type
+     * @param $id
+     * @return mixed
+     */
+    private function retrieveItem($type, $id) {
         $item = [];
         switch ($type) {
             case "pages":
@@ -296,11 +309,57 @@ class AdminController extends BaseController
                     : Category::where('id',$id)->with('posts')->get()->toArray();
                 break;
         }
-        $this->jsonResponse($item);
+        return $item;
     }
 
     public function apiSaveItem($type, $id) {
-        $this->jsonResponse([]);
+        switch ($type) {
+            case "pages":
+                $this->jsonResponse($this->savePage($id));
+                break;
+            case "items":
+                $this->jsonResponse($this->saveItem($id));
+                break;
+            case "categories":
+                $this->jsonResponse($this->saveCategory($id));
+                break;
+            default: 
+                $this->jsonResponse(['status' => 'error', 'message' => 'item not found']);
+        }
+    }
+
+    private function saveCategory($id) {
+        $data = $this->request->request->all();
+        $validator = new CategoryValidator($data);
+        $val = $validator->validate($data);
+        if ($val['status'] != 'ok') { return $val; }
+        $cat = Category::find($id);
+        $cat->name = $data['name'];
+        $cat->slug = $data['slug'];
+        $cat->online = (int) $data['online'];
+        $cat->save();
+        return [
+            'status' => 'ok', 
+            'message' => sprintf('category "%s" saved successfully', $data['name']),
+            'type' => 'categories', 
+            'id' => 'id'
+        ];
+    }
+
+    private function validateCategory($cat) {
+        return ['status' => 'ok'];
+    }
+    private function saveItem($id) {
+        return ["item"];
+    }
+
+    private function savePage($id) {
+        return ["page"];
+
+    }
+
+    public function apiCreateItem($type) {
+        $this->jsonResponse(['create item']);
     }
 
     /**

@@ -44,13 +44,24 @@ function removeImage(event) {
 function saveHandler(event) {
     event.preventDefault();
     const id = (!this.state.item.id)? "new" : this.state.item.id;
-    alert(id);
-    this.postToApi('admin/items/' + id,this.state.item,(date)=>{alert("hoera");})
+    this.postToApi(
+        'admin/' + this.state.type + '/' + id,
+        this.state.item,
+        (data)=>{
+            console.log(data);
+            switch(data.status){
+                case "error":
+                    //
+                    break;
+                case "ok":
+                    this.setFlashMessage('success', data.message);
+            }
+        })
 }
 
  
 function resetHandler() {
-    this.getItem(this.state.type, this.state.slug);
+    this.getItem(this.state.type, this.state.item.id);
 }
 
 

@@ -38,7 +38,13 @@ var CategoryEditor = props =>
                     className="pure-button pure-button-primary">
                     <i className="fa fa-save"></i>&nbsp;save</button>
             </div>
+            { props.flashmessage ? 
+                <span className={'flash ' +  props.flashmessage.type }>{ props.flashmessage.text }</span> 
+                :''
+            }
+       
         </fieldset>
+
     </form>
 </div>;
 

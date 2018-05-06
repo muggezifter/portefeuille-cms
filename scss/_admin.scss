@@ -18,6 +18,20 @@ body.admin {
         padding-left: 200px;
     }
     .editor {
+        .flash {
+            width: 80%;
+            color: white;
+            font-weight: bold;
+            position: absolute;
+            left: 10%;
+            background-color: black;
+            top: 5em;
+            padding: 1em 2em;
+            border-radius: 1.5em;
+            &.success {
+                background-color: $active-item-color
+            }
+        }
         min-width: 800px;
         max-width: 1000px;
         margin-left: 1em;

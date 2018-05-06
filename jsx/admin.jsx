@@ -15,6 +15,25 @@ class Admin extends React.Component {
         this.state = {
             errors:{}
         };
+        update.extend('$unset', function(keysToRemove, original) {
+  var copy = Object.assign({}, original)
+  for (const key of keysToRemove) delete copy[key]
+  return copy
+});
+    }
+
+    setFlashMessage(type,text) {
+        const message = { type: type, text : text };
+        const newState = update(this.state, {
+            flashmessage:  { $set: message }        
+        });
+        this.setState(newState);
+        setTimeout(() => {
+            const newState = update(this.state, {
+                flashmessage:  { $set: null }  
+            });
+            this.setState(newState);
+        }, 2000);
     }
 
     setError(fieldname,message) {
@@ -26,8 +45,7 @@ class Admin extends React.Component {
     }
 
     clearError(fieldname) {
-        var errors = this.state.errors;
-        
+        var errors = this.state.errors; 
         delete errors[fieldname];
         const newState = update(this.state, {
             errors: { $set: errors }            
@@ -87,6 +105,9 @@ class Admin extends React.Component {
             case 'categories':
                 return <CategoryEditor
                     item={ this.state.item }
+                    flashmessage={ this.state.flashmessage }
+                    resetHandler={ item.resetHandler.bind(this) }
+                    saveHandler={ item.saveHandler.bind(this) }
                     changeHandler={ item.changeHandler.bind(this) }
                 />;
                 break;
@@ -94,6 +115,7 @@ class Admin extends React.Component {
                 return <ImageEditor 
                     errors={ this.state.errors }
                     folders={ this.state.images }
+                    flashmessage={ this.state.flashmessage }
                     new_folder_name={ this.state.new_folder_name }
                     open_folder={ this.state.open_folder }
                     selected_image_id={ this.state.selected_image_id }
@@ -114,6 +136,7 @@ class Admin extends React.Component {
                 return <ItemEditor
                     type={ this.state.type }
                     item={ this.state.item }
+                    flashmessage={ this.state.flashmessage }
                     changeHandler={ item.changeHandler.bind(this) }
                     saveHandler={ item.saveHandler.bind(this) }
                     resetHandler={ item.resetHandler.bind(this) }

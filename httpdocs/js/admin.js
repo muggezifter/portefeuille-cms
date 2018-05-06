@@ -66,10 +66,55 @@ var Admin = function (_React$Component) {
         _this.state = {
             errors: {}
         };
+        _immutabilityHelper2.default.extend('$unset', function (keysToRemove, original) {
+            var copy = Object.assign({}, original);
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = keysToRemove[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var key = _step.value;
+                    delete copy[key];
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+
+            return copy;
+        });
         return _this;
     }
 
     _createClass(Admin, [{
+        key: 'setFlashMessage',
+        value: function setFlashMessage(type, text) {
+            var _this2 = this;
+
+            var message = { type: type, text: text };
+            var newState = (0, _immutabilityHelper2.default)(this.state, {
+                flashmessage: { $set: message }
+            });
+            this.setState(newState);
+            setTimeout(function () {
+                var newState = (0, _immutabilityHelper2.default)(_this2.state, {
+                    flashmessage: { $set: null }
+                });
+                _this2.setState(newState);
+            }, 2000);
+        }
+    }, {
         key: 'setError',
         value: function setError(fieldname, message) {
             var error = _defineProperty({}, fieldname, message);
@@ -82,7 +127,6 @@ var Admin = function (_React$Component) {
         key: 'clearError',
         value: function clearError(fieldname) {
             var errors = this.state.errors;
-
             delete errors[fieldname];
             var newState = (0, _immutabilityHelper2.default)(this.state, {
                 errors: { $set: errors }
@@ -92,15 +136,15 @@ var Admin = function (_React$Component) {
     }, {
         key: 'getItem',
         value: function getItem(type, id) {
-            var _this2 = this;
+            var _this3 = this;
 
             this.getFromApi('/admin/' + type + '/' + id, function (data) {
                 if (data.length > 0) {
-                    var newState = (0, _immutabilityHelper2.default)(_this2.state, {
+                    var newState = (0, _immutabilityHelper2.default)(_this3.state, {
                         view: { $set: 'editor' },
                         item: { $set: data[0] }
                     });
-                    _this2.setState(newState);
+                    _this3.setState(newState);
                 }
             });
         }
@@ -149,6 +193,9 @@ var Admin = function (_React$Component) {
                 case 'categories':
                     return React.createElement(_category_editor2.default, {
                         item: this.state.item,
+                        flashmessage: this.state.flashmessage,
+                        resetHandler: item.resetHandler.bind(this),
+                        saveHandler: item.saveHandler.bind(this),
                         changeHandler: item.changeHandler.bind(this)
                     });
                     break;
@@ -156,6 +203,7 @@ var Admin = function (_React$Component) {
                     return React.createElement(_image_editor2.default, {
                         errors: this.state.errors,
                         folders: this.state.images,
+                        flashmessage: this.state.flashmessage,
                         new_folder_name: this.state.new_folder_name,
                         open_folder: this.state.open_folder,
                         selected_image_id: this.state.selected_image_id,
@@ -176,6 +224,7 @@ var Admin = function (_React$Component) {
                     return React.createElement(_item_editor2.default, {
                         type: this.state.type,
                         item: this.state.item,
+                        flashmessage: this.state.flashmessage,
                         changeHandler: item.changeHandler.bind(this),
                         saveHandler: item.saveHandler.bind(this),
                         resetHandler: item.resetHandler.bind(this),
@@ -309,7 +358,12 @@ var CategoryEditor = function CategoryEditor(props) {
                         React.createElement("i", { className: "fa fa-save" }),
                         "\xA0save"
                     )
-                )
+                ),
+                props.flashmessage ? React.createElement(
+                    "span",
+                    { className: 'flash ' + props.flashmessage.type },
+                    props.flashmessage.text
+                ) : ''
             )
         )
     );
@@ -1094,16 +1148,24 @@ function removeImage(event) {
 }
 
 function saveHandler(event) {
+    var _this = this;
+
     event.preventDefault();
     var id = !this.state.item.id ? "new" : this.state.item.id;
-    alert(id);
-    this.postToApi('admin/items/' + id, this.state.item, function (date) {
-        alert("hoera");
+    this.postToApi('admin/' + this.state.type + '/' + id, this.state.item, function (data) {
+        console.log(data);
+        switch (data.status) {
+            case "error":
+                //
+                break;
+            case "ok":
+                _this.setFlashMessage('success', data.message);
+        }
     });
 }
 
 function resetHandler() {
-    this.getItem(this.state.type, this.state.slug);
+    this.getItem(this.state.type, this.state.item.id);
 }
 
 exports.changeHandler = changeHandler;
