@@ -3,7 +3,9 @@
         "illuminate/database": "4.1.*",
         "twig/twig": "^2.0",
         "symfony/http-foundation": "^3.2",
-        "altorouter/altorouter": "^1.2"
+        "altorouter/altorouter": "^1.2",
+        "php-di/php-di": "^6.0",
+        "ocramius/proxy-manager": "^2.1"
     },
     "autoload": {
         "psr-4": {"Portefeuille\\": "src/"}

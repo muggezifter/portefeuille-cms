@@ -12,17 +12,20 @@ class Template
 {
     private $twig;
     private $template;
-
+    private $loader;
     /**
      * @param $template
      */
-    public function __construct($template)
+    public function __construct()
     {
+        $this->loader = new Twig_Loader_Filesystem('../templates');
+    }
+
+    public function load(string $template) {
         $this->template = $template . '.html.twig';
 
-        $loader = new Twig_Loader_Filesystem('../templates');
-
-        $this->twig = new Twig_Environment($loader, array(
+        
+        $this->twig = new Twig_Environment($this->loader, array(
             'cache' => TWIG_CACHEDIR,
             'auto_reload' => true,
             'strict_variables' => true

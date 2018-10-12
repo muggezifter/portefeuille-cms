@@ -54,7 +54,8 @@ class AdminController extends BaseController
     private function renderAdminPage()
     {
         if ($this->isLoggedIn()) {
-            $template = new Template('admin');
+            $template = new Template;
+            $template->load('admin');
             $content = $template->render([]);
             $this->response($content);
         }
@@ -74,7 +75,8 @@ class AdminController extends BaseController
 
     private function renderLoginPage()
     {
-        $template = new Template('login');
+        $template = new Template;
+        $template->load('login');
         $errors = $this->session->getFlashBag()->get('error', array());
         $content = $template->render(['errors' => $errors]);
         $this->response($content);

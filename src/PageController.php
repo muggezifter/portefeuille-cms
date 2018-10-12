@@ -39,7 +39,8 @@ class PageController extends BaseController
      */
     private function getCategoryIndex($category_id, $slug)
     {
-        $template = new Template('category');
+        $template = new Template();
+        $template->load('category');
         $items = [];
         $category = Category::with('posts')
             ->find($category_id);
@@ -85,7 +86,8 @@ class PageController extends BaseController
      */
     private function getPage($content, $slug)
     {
-        $template = new Template('raw');
+        $template = new Template;
+        $template->load('raw');
         return $template->render([
             'menu' => $this->getMenu($slug),
             'content' => $content
@@ -135,7 +137,8 @@ class PageController extends BaseController
         $vars['next'] = '/' . $category . '/' . $slugs[($i + 1) % $l];
         $vars['topbanner_type'] = $post->topbannerType->type;
 
-        $template = new Template('item');
+        $template = new Template;
+        $template->load('item');
         $content = $template->render($vars);
 
         $this->response($content);
