@@ -11,10 +11,15 @@ use Portefeuille\Models\Post;
 class PageController extends BaseController
 {
 
+    public function __construct(Template $template)
+    {
+        parent::__construct($template);
+    }
+
     /**
      * @param $slug
      */
-    public function renderPage($slug)
+    public function renderPage(string $slug)
     {
         $post = Post::with('postType', 'category')->where('slug', $slug)->first();
         if (!$post) return $this->pageNotFound();
@@ -37,10 +42,9 @@ class PageController extends BaseController
      * @param $slug
      * @return mixed
      */
-    private function getCategoryIndex($category_id, $slug)
+    private function getCategoryIndex(string $category_id, string $slug)
     {
-        $template = new Template();
-        $template->load('category');
+        $this->template->set('category');
         $items = [];
         $category = Category::with('posts')
             ->find($category_id);
@@ -53,7 +57,7 @@ class PageController extends BaseController
                 'legend' => $post->title
             ];
         }
-        return $template->render([
+        return $this->template->render([
             'menu' => $this->getMenu($slug),
             'items' => $items
         ]);
@@ -63,7 +67,7 @@ class PageController extends BaseController
      * @param $active
      * @return array
      */
-    private function getMenu($active)
+    private function getMenu(string $active) : array
     {
         $posts = Post::where('in_menu', 1)
             ->where('online', 1)
@@ -84,11 +88,10 @@ class PageController extends BaseController
      * @param $slug
      * @return mixed
      */
-    private function getPage($content, $slug)
+    private function getPage(string $content, string $slug) : ?string
     {
-        $template = new Template;
-        $template->load('raw');
-        return $template->render([
+        $this->template->set('raw');
+        return $this->template->render([
             'menu' => $this->getMenu($slug),
             'content' => $content
         ]);
@@ -137,9 +140,9 @@ class PageController extends BaseController
         $vars['next'] = '/' . $category . '/' . $slugs[($i + 1) % $l];
         $vars['topbanner_type'] = $post->topbannerType->type;
 
-        $template = new Template;
-        $template->load('item');
-        $content = $template->render($vars);
+
+        $this->template->set('item');
+        $content = $this->template->render($vars);
 
         $this->response($content);
     }

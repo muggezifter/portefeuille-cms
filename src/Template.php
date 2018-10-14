@@ -16,20 +16,17 @@ class Template
     /**
      * @param $template
      */
-    public function __construct()
-    {
+    public function __construct() {
         $this->loader = new Twig_Loader_Filesystem('../templates');
-    }
-
-    public function load(string $template) {
-        $this->template = $template . '.html.twig';
-
-        
         $this->twig = new Twig_Environment($this->loader, array(
             'cache' => TWIG_CACHEDIR,
             'auto_reload' => true,
             'strict_variables' => true
         ));
+    }
+
+    public function set(string $template) {
+        $this->template = $template . '.html.twig';
     }
 
     /**

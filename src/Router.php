@@ -1,6 +1,6 @@
 <?php
 namespace Portefeuille;
 
-class Router extends \AltoRouter { 
-
+class Router extends \AltoRouter implements RouterInterface { 
+    //
 }

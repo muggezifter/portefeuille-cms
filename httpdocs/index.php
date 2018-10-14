@@ -6,16 +6,23 @@ require "../vendor/autoload.php";
 
 use Illuminate\Database\Capsule\Manager;
 use Portefeuille\Portefeuille;
-use DI\Container;
+use DI\ContainerBuilder;
 
 $config = parse_ini_file('../config/config.ini', true);
 
 define("SITENAME", $config["general"]["sitename"]);
 define("TWIG_CACHEDIR", $config["twig"]["cachedir"]);
 
-$di = new Container();
+// Boot bootEloquent
+$manager = new Manager();
+$manager->addConnection($config['database']);
+$manager->bootEloquent();
 
+$container_builder = new ContainerBuilder();
+$container_builder->addDefinitions("../di_config.php");
+$container = $container_builder->build();
 
-$p = $di->get("Portefeuille\Portefeuille");
-$p->setDbConnection($config['database'])->run();
+$portefeuiile = $container->get(Portefeuille::class);
+$portefeuiile->run();
+
 

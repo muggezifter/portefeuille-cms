@@ -12,6 +12,12 @@ use Symfony\Component\HttpFoundation\Response;
 class BaseController
 {
 
+    protected $template;
+
+    public function __construct(Template $template)
+    {
+        $this->template= $template;
+    }
     /**
      *
      */
@@ -24,7 +30,7 @@ class BaseController
      * @param $content
      * @param $statusCode
      */
-    protected function response($content, $statusCode = Response::HTTP_OK)
+    protected function response(string $content, int $statusCode = Response::HTTP_OK)
     {
         $response = new Response();
         $response->headers->set('Content-Type', 'text/html');
@@ -34,7 +40,7 @@ class BaseController
     /**
      * @param $url
      */
-    public function redirect($url)
+    public function redirect(string $url)
     {
         $response = new RedirectResponse($url);
         $response->send();
@@ -44,7 +50,7 @@ class BaseController
      * @param array $content
      * @param $statusCode
      */
-    protected function jsonResponse(array $content, $statusCode = Response::HTTP_OK)
+    protected function jsonResponse(array $content, int $statusCode = Response::HTTP_OK)
     {
         $response = new JsonResponse($content, $statusCode);
         $response->send();

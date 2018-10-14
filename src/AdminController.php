@@ -27,17 +27,18 @@ class AdminController extends BaseController
     private $session;
     private $request;
 
-    public function __construct()
+    public function __construct(Template $template, Session $session)
     {
-        $this->session = new Session();
+        $this->session = $session;
         $this->session->start();
         $this->request = Request::createFromGlobals();
+        parent::__construct($template);
     }
 
     /**
      * @param $action
      */
-    public function renderPage($action)
+    public function renderPage(string $action)
     {
         switch ($action) {
             case 'admin':
@@ -54,9 +55,8 @@ class AdminController extends BaseController
     private function renderAdminPage()
     {
         if ($this->isLoggedIn()) {
-            $template = new Template;
-            $template->load('admin');
-            $content = $template->render([]);
+            $this->template->set('admin');
+            $content = $this->template->render([]);
             $this->response($content);
         }
     }
@@ -64,7 +64,7 @@ class AdminController extends BaseController
     /**
      * @return bool
      */
-    private function isLoggedIn()
+    private function isLoggedIn(): bool
     {
         if ($this->session->get('permissions') != 'admin') {
             $this->redirect('/login');
@@ -75,10 +75,9 @@ class AdminController extends BaseController
 
     private function renderLoginPage()
     {
-        $template = new Template;
-        $template->load('login');
+        $this->template->set('login');
         $errors = $this->session->getFlashBag()->get('error', array());
-        $content = $template->render(['errors' => $errors]);
+        $content = $this->template->render(['errors' => $errors]);
         $this->response($content);
     }
 
@@ -118,7 +117,7 @@ class AdminController extends BaseController
     /**
      * @param $type
      */
-    public function apiList($type)
+    public function apiList(string $type)
     {
         $list = [];
         switch ($type) {
@@ -263,7 +262,7 @@ class AdminController extends BaseController
      * @param $typeid
      * @return mixed
      */
-    private function getPostList($typeid)
+    private function getPostList(int $typeid): array
     {
         return Post::where('post_type_id', $typeid)
             ->select('id', 'title AS name', 'slug', 'online')
@@ -275,7 +274,7 @@ class AdminController extends BaseController
      * @param $type
      * @param $id
      */
-    public function apiGetItem($type, $id)
+    public function apiGetItem(string $type, int $id)
     { 
         $item = $this->retrieveItem($type, $id);
         $this->jsonResponse($item);
@@ -286,7 +285,7 @@ class AdminController extends BaseController
      * @param $id
      * @return mixed
      */
-    private function retrieveItem($type, $id) {
+    private function retrieveItem(string $type, int $id) {
         $item = [];
         switch ($type) {
             case "pages":
@@ -314,7 +313,7 @@ class AdminController extends BaseController
         return $item;
     }
 
-    public function apiSaveItem($type, $id) {
+    public function apiSaveItem(string $type, int $id) {
         switch ($type) {
             case "pages":
                 $this->jsonResponse($this->savePage($id));
@@ -330,7 +329,7 @@ class AdminController extends BaseController
         }
     }
 
-    private function saveCategory($id) {
+    private function saveCategory(int $id) {
         $data = $this->request->request->all();
         $validator = new CategoryValidator($data);
         $val = $validator->validate($data);
@@ -380,7 +379,7 @@ class AdminController extends BaseController
     /**
      * @return bool
      */
-    public function apiChecks()
+    public function apiChecks(): bool
     {
         //if (! $this->request->isXmlHttpRequest()) {
         //	$this->pageNotFound();

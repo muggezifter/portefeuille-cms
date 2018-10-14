@@ -1,8 +1,6 @@
 <?php
 namespace Portefeuille;
 
-use Illuminate\Database\Capsule\Manager;
-
 class Portefeuille {
 
     private $router;
@@ -10,26 +8,19 @@ class Portefeuille {
     private $pc;
 
     public function __construct(
-        Manager $manager,
-        Router $router,
+        RouterInterface $router,
         PageController $pc,
         AdminController $ac
         ){
         // boot eloquent
-        $this->manager = $manager;
         $this->router = $router;
         $this->pc = $pc;
         $this->ac = $ac;
         $this->setRouting($this->pc, $this->ac);
     }
 
-    public function setDbConnection(array $db_config) {
-        $this->manager->addConnection($db_config);
-        $this->manager->bootEloquent();
-        return $this;
-    }
 
-    public function run(){
+    public function run() {
         $match = $this->router->match();
 
         if( $match && is_callable( $match['target'] ) ) {
