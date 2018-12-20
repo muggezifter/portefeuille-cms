@@ -29,7 +29,7 @@ class AdminController extends BaseController
 
     public function __construct(Template $template, Session $session)
     {
-        $this->session = $session;
+        $this->session = $session; 
         $this->session->start();
         $this->request = Request::createFromGlobals();
         parent::__construct($template);
@@ -40,7 +40,7 @@ class AdminController extends BaseController
      */
     public function renderPage(string $action)
     {
-        switch ($action) {
+        switch ($action) { 
             case 'admin':
                 $this->renderAdminPage();
                 break;
@@ -54,6 +54,7 @@ class AdminController extends BaseController
 
     private function renderAdminPage()
     {
+
         if ($this->isLoggedIn()) {
             $this->template->set('admin');
             $content = $this->template->render([]);

@@ -12,7 +12,7 @@ $config = parse_ini_file('../config/config.ini', true);
 
 define("SITENAME", $config["general"]["sitename"]);
 define("TWIG_CACHEDIR", $config["twig"]["cachedir"]);
-
+define("TWIG_TEMPLATEDIR", $config["twig"]["templatedir"]);
 // Boot bootEloquent
 $manager = new Manager();
 $manager->addConnection($config['database']);

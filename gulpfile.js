@@ -6,10 +6,12 @@ var babelify = require('babelify');
 var source = require('vinyl-source-stream');
 var cleanCSS = require('gulp-clean-css');
 var merge = require('merge-stream');
+var phpunit = require('gulp-phpunit');
 
 gulp.task('watch', function () {
     gulp.watch('jsx/**/*.jsx', ['bundle']);
     gulp.watch('scss/*.scss', ['sass']);
+    gulp.watch('src/**/*.php',['phpunit'])
 });
 
 gulp.task('sass', function () {
@@ -18,6 +20,12 @@ gulp.task('sass', function () {
         .pipe(cleanCSS({compatibility: 'ie8'}))
         .pipe(gulp.dest('httpdocs/css'));
 });
+
+gulp.task('phpunit', function() {
+    var options = {debug: false};
+    gulp.src('phpunit.xml')
+      .pipe(phpunit('./vendor/bin/phpunit',options));
+  });
 
 gulp.task('bundle', function () {
     return browserify({

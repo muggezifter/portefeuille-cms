@@ -10,6 +10,7 @@ use Twig_Loader_Filesystem;
  */
 class Template
 {
+
     private $twig;
     private $template;
     private $loader;
@@ -17,7 +18,7 @@ class Template
      * @param $template
      */
     public function __construct() {
-        $this->loader = new Twig_Loader_Filesystem('../templates');
+        $this->loader = new Twig_Loader_Filesystem(TWIG_TEMPLATEDIR);
         $this->twig = new Twig_Environment($this->loader, array(
             'cache' => TWIG_CACHEDIR,
             'auto_reload' => true,
